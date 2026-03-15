@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Cyberpunk RED Character Sheet</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- TOP NAVIGATION BAR -->
+<div class="top-nav">
+  <div class="nav-brand">CYBERPUNK RED</div>
+  <div class="nav-links">
+    <a href="index.html" class="nav-link active">Character</a>
+    <a href="implants.html" class="nav-link">Implants</a>
+    <a href="notes.html" class="nav-link">Notes</a>
+    <button class="nav-btn" id="dice-roll-btn">🎲 Roll Dice</button>
+  </div>
+</div>
+
+<div class="sheet">
+
+<!-- LEFT COLUMN -->
+<div class="left-column">
+
+<!-- ID BLOCK -->
+<div class="block id-block">
+<div class="block-header">id</div>
+<div class="id-content">
+<div class="fingerprint-area">
+<div class="fingerprint"></div>
+<div class="id-date">[03-06-22]</div>
+</div>
+<div class="id-fields">
+<div class="id-row"><label>age</label><input type="text" id="age"></div>
+<div class="id-row"><label>role</label><input type="text" id="role"></div>
+<div class="id-row role-ability-row">
+  <label>role ability</label>
+  <div class="role-ability-container" id="role-ability-container">
+    <div class="role-ability-entry">
+      <input type="text" class="role-ability-name" placeholder="Ability name">
+      <input type="number" class="role-ability-lvl" placeholder="LVL">
+    </div>
+  </div>
+</div>
+<div class="id-row"><label>role rank</label><input type="text" id="role_rank"></div>
+<div class="id-row"><label>humanity</label><input type="number" id="humanity_current" class="humanity-input"><span>/</span><input type="number" id="humanity_max" class="humanity-input"></div>
+</div>
+</div>
+</div>
+
+<!-- INITIATIVE -->
+<div class="block initiative-block">
+<div class="block-header">initiative</div>
+<div class="initiative-content">
+<input type="text" id="initiative" class="initiative-input">
+</div>
+</div>
+
+<!-- STATS -->
+<div class="block stats-block">
+<div class="block-header">STATS</div>
+<div class="stats-vertical">
+<div class="stat-row"><label>INT</label><input type="number" id="stat_int" class="stat-input"><span class="stat-mod">MOD</span></div>
+<div class="stat-row"><label>REF</label><input type="number" id="stat_ref" class="stat-input"><span class="stat-mod">MOD</span></div>
+<div class="stat-row"><label>DEX</label><input type="number" id="stat_dex" class="stat-input"><span class="stat-mod">MOD</span></div>
+<div class="stat-row"><label>TECH</label><input type="number" id="stat_tech" class="stat-input"><span class="stat-mod">MOD</span></div>
+<div class="stat-row"><label>COOL</label><input type="number" id="stat_cool" class="stat-input"><span class="stat-mod">MOD</span></div>
+<div class="stat-row"><label>WILL</label><input type="number" id="stat_will" class="stat-input"><span class="stat-mod">MOD</span></div>
+<div class="stat-row"><label>LUCK</label><input type="number" id="stat_luck_current" class="stat-input"><span class="stat-mod-luck">/<input type="number" id="stat_luck_max" class="stat-input stat-input-small"></span></div>
+<div class="stat-row"><label>MOVE</label><input type="number" id="stat_move" class="stat-input"><span class="stat-mod">MOD</span></div>
+<div class="stat-row"><label>BODY</label><input type="number" id="stat_body" class="stat-input"><span class="stat-mod">MOD</span></div>
+<div class="stat-row"><label>EMP</label><input type="number" id="stat_emp_current" class="stat-input"><span class="stat-mod-emp">/<input type="number" id="stat_emp_max" class="stat-input stat-input-small"></span></div>
+</div>
+</div>
+
+</div>
+
+<!-- MIDDLE COLUMN -->
+<div class="middle-column">
+
+<!-- HEALTH & INJURIES -->
+<div class="row-blocks">
+<div class="block health-block">
+<div class="block-header"><span class="health-icons">⚡</span> HEALTH <span class="health-icons">⚡</span></div>
+<div class="health-content">
+<div class="health-row"><label>HIT points</label><input type="number" id="hp_current"><span>/</span><input type="number" id="hp_max"></div>
+<div class="health-row"><label>SERIOUSLY wounded</label><input type="checkbox" id="seriously_wounded"></div>
+<div class="health-penalty">-2 TO ALL ACTIONS WHEN SERIOUSLY WOUNDED</div>
+<div class="health-row"><label>DEATH save</label><input type="number" id="death_save"></div>
+</div>
+</div>
+
+<div class="block injuries-block">
+<div class="block-header">INJURIES / ADDICTIONS</div>
+<div class="injuries-content">
+<div class="injuries-section">
+<label>CRITICAL injuries</label>
+<textarea id="critical_injuries"></textarea>
+</div>
+<div class="injuries-section">
+<label>addictions</label>
+<textarea id="addictions"></textarea>
+</div>
+</div>
+</div>
+</div>
+
+<!-- ARMOR -->
+<div class="block armor-block">
+<div class="block-header">ARMOR</div>
+<div class="armor-content">
+<div class="armor-section">
+<div class="armor-header"><span>HEAD</span><span>SP</span><span>NOTES</span><span>PENALTY</span></div>
+<div class="armor-row">
+<input type="number" id="armor_head_sp" class="armor-sp">
+<input type="text" id="armor_head_notes" class="armor-notes">
+<input type="text" id="armor_head_penalty" class="armor-penalty">
+</div>
+</div>
+<div class="armor-section">
+<div class="armor-header"><span>BODY</span><span>SP</span><span>NOTES</span><span>PENALTY</span></div>
+<div class="armor-row">
+<input type="number" id="armor_body_sp" class="armor-sp">
+<input type="text" id="armor_body_notes" class="armor-notes">
+<input type="text" id="armor_body_penalty" class="armor-penalty">
+</div>
+</div>
+<div class="armor-section">
+<div class="armor-header"><span>SHIELD</span><span>SP</span><span>NOTES</span><span>PENALTY</span></div>
+<div class="armor-row">
+<input type="number" id="armor_shield_sp" class="armor-sp">
+<input type="text" id="armor_shield_notes" class="armor-notes">
+<input type="text" id="armor_shield_penalty" class="armor-penalty">
+</div>
+</div>
+</div>
+</div>
+
+<!-- SPECIALISED SKILLS -->
+<div class="block specialised-skills-block">
+<div class="block-header">SPECIALISED skills</div>
+<div class="specialised-skills-content">
+<table class="specialised-skills-table">
+<thead>
+<tr>
+<th>STAT</th>
+<th>NAME</th>
+<th>MOD</th>
+<th>LVL</th>
+<th>STAT</th>
+<th>BASE</th>
+</tr>
+</thead>
+<tbody id="specialised-skills-body">
+</tbody>
+</table>
+</div>
+</div>
+
+<!-- WEAPONS -->
+<div class="block weapons-block">
+<div class="block-header">WEAPONS <button class="add-btn" id="add-weapon-btn" title="Add Weapon">+</button></div>
+<div class="weapons-content" id="weapons-container"></div>
+</div>
+
+<!-- NOTES -->
+<div class="block notes-block">
+<div class="block-header">NOTES</div>
+<div class="notes-content">
+<textarea id="notes"></textarea>
+</div>
+</div>
+
+</div>
+
+<!-- RIGHT COLUMN -->
+<div class="right-column">
+<div class="block skills-block">
+<div class="block-header">SKILLS</div>
+<div class="skills-content" id="skills-container"></div>
+</div>
+</div>
+
+</div>
+<script src="script.js"></script>
+
+<!-- DICE ROLL DIALOG -->
+<div class="dialog-overlay" id="dice-dialog-overlay">
+  <div class="dialog dice-dialog">
+    <div class="dialog-header">
+      <span>Dice Roll</span>
+      <button class="dialog-close" id="dice-dialog-close">×</button>
+    </div>
+    <div class="dialog-content">
+      <div class="dice-options" id="dice-options">
+        <div class="dice-option-group">
+          <label>Dice Type</label>
+          <div class="dice-type-buttons">
+            <button class="dice-type-btn" data-dice="4">d4</button>
+            <button class="dice-type-btn" data-dice="6">d6</button>
+            <button class="dice-type-btn" data-dice="8">d8</button>
+            <button class="dice-type-btn active" data-dice="10">d10</button>
+            <button class="dice-type-btn" data-dice="12">d12</button>
+            <button class="dice-type-btn" data-dice="20">d20</button>
+          </div>
+        </div>
+        <div class="dice-option-group">
+          <label>Number of Dice</label>
+          <div class="dice-count-control">
+            <button class="dice-count-btn" id="dice-count-dec">-</button>
+            <input type="number" id="dice-count" value="1" min="1" max="10">
+            <button class="dice-count-btn" id="dice-count-inc">+</button>
+          </div>
+        </div>
+        <button class="dialog-btn dialog-btn-primary dice-roll-btn" id="dice-roll-confirm">Roll</button>
+      </div>
+      <div class="dice-result-section" id="dice-result-section" style="display: none;">
+        <div class="dice-rolls" id="dice-rolls"></div>
+        <div class="dice-total-display">
+          <span class="dice-total-label">Total:</span>
+          <span class="dice-total-value" id="dice-total-value">0</span>
+        </div>
+        <p class="dice-description" id="dice-description">Roll: 1d10</p>
+      </div>
+    </div>
+    <div class="dialog-footer">
+      <button class="dialog-btn" id="dice-dialog-cancel">Close</button>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>
