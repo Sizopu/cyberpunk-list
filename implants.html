@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Cyberpunk RED - Cyberware</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body class="cyber-page">
+
+<!-- TOP NAVIGATION BAR -->
+<div class="top-nav">
+  <div class="nav-brand">CYBERPUNK RED</div>
+  <div class="nav-links">
+    <a href="index.html" class="nav-link">Character</a>
+    <a href="implants.html" class="nav-link active">Implants</a>
+    <a href="notes.html" class="nav-link">Notes</a>
+    <a href="mobs.html" class="nav-link">Mobs</a>
+    <button class="nav-btn" id="dice-roll-btn">🎲 Roll Dice</button>
+    <button class="nav-btn save-btn" id="save-data-btn">💾 Save</button>
+    <button class="nav-btn load-btn" id="load-data-btn">📂 Load</button>
+  </div>
+</div>
+
+<!-- Hidden file input for loading -->
+<input type="file" id="load-file-input" accept=".json" style="display: none;">
+
+<div class="cyberware-page">
+  <div class="cyberware-container">
+    <!-- Left Panel - Lifepath & Inventory -->
+    <div class="left-panel">
+      <!-- ALIASES Block -->
+      <div class="cyber-block aliases-block">
+        <div class="cyber-block-header">ALIASES</div>
+        <div class="cyber-block-content">
+          <input type="text" class="aliases-input" placeholder="Enter aliases...">
+        </div>
+      </div>
+
+      <!-- IMPROVEMENT POINTS & REPUTATION -->
+      <div class="imp-row">
+        <div class="imp-block">
+          <div class="cyber-block-header">IMPROVEMENT POINTS</div>
+          <div class="imp-content">
+            <div class="imp-inputs">
+              <div class="imp-input-field">
+                <label>Current</label>
+                <input type="number" id="imp-current" value="0" min="0">
+              </div>
+              <div class="imp-input-field">
+                <label>Max</label>
+                <input type="number" id="imp-max" value="0" min="0">
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="rep-block">
+          <div class="cyber-block-header">REPUTATION</div>
+          <div class="rep-content">
+            <div class="rep-input-field">
+              <label>REP</label>
+              <input type="number" id="rep-value" value="0" min="0">
+            </div>
+            <textarea id="rep-events" placeholder="Reputation events..."></textarea>
+          </div>
+        </div>
+      </div>
+
+      <!-- LIFEPATH Block -->
+      <div class="cyber-block lifepath-block">
+        <div class="cyber-block-header lifepath-header">LIFEPATH</div>
+        <div class="lifepath-content">
+          <div class="lifepath-row">
+            <div class="lifepath-field">
+              <label>CULTURAL ORIGINS</label>
+              <input type="text" id="cultural-origins">
+            </div>
+            <div class="lifepath-field">
+              <label>PERSONALITY</label>
+              <input type="text" id="personality">
+            </div>
+          </div>
+          <div class="lifepath-row">
+            <div class="lifepath-field">
+              <label>CLOTHING STYLES</label>
+              <input type="text" id="clothing-styles">
+            </div>
+            <div class="lifepath-field">
+              <label>HAIRSTYLE</label>
+              <input type="text" id="hairstyle">
+            </div>
+          </div>
+          <div class="lifepath-row">
+            <div class="lifepath-field">
+              <label>WHAT DO YOU VALUE MOST?</label>
+              <input type="text" id="value-most">
+            </div>
+            <div class="lifepath-field">
+              <label>FEELINGS ABOUT PEOPLE?</label>
+              <input type="text" id="feelings-people">
+            </div>
+          </div>
+          <div class="lifepath-row">
+            <div class="lifepath-field">
+              <label>MOST VALUED PERSON</label>
+              <input type="text" id="valued-person">
+            </div>
+            <div class="lifepath-field">
+              <label>MOST VALUED POSSESSION</label>
+              <input type="text" id="valued-possession">
+            </div>
+          </div>
+          <div class="lifepath-row">
+            <div class="lifepath-field">
+              <label>FAMILY BACKGROUND</label>
+              <input type="text" id="family-background">
+            </div>
+            <div class="lifepath-field">
+              <label>CHILDHOOD ENVIRONMENT</label>
+              <input type="text" id="childhood-environment">
+            </div>
+          </div>
+          <div class="lifepath-row">
+            <div class="lifepath-field">
+              <label>FAMILY CRISIS</label>
+              <input type="text" id="family-crisis">
+            </div>
+            <div class="lifepath-field">
+              <label>LIFE GOALS</label>
+              <input type="text" id="life-goals">
+            </div>
+          </div>
+          <div class="lifepath-row full-width">
+            <div class="lifepath-field">
+              <label>FASHION</label>
+              <input type="text" id="fashion">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- INVENTORY Block -->
+      <div class="cyber-block inventory-block">
+        <div class="cyber-block-header inventory-header">INVENTORY</div>
+        <div class="inventory-content">
+          <table class="inventory-table">
+            <thead>
+              <tr>
+                <th class="gear-col">GEAR</th>
+                <th class="cost-col">COST</th>
+                <th class="weight-col">WEIGHT</th>
+                <th class="notes-col">NOTES</th>
+                <th class="cash-col">Cash €$</th>
+              </tr>
+            </thead>
+            <tbody id="inventory-body">
+            </tbody>
+          </table>
+          <div class="inventory-footer">
+            <div class="total-weight">
+              <label>TOTAL WEIGHT</label>
+              <span id="total-weight-value">0</span>
+            </div>
+          </div>
+          <button class="add-row-btn" id="add-inventory-row">+</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Middle Panel - Lifepath Details -->
+    <div class="middle-panel">
+      <!-- LIFEPATH Top -->
+      <div class="cyber-block lifepath-top-block">
+        <div class="cyber-block-header lifepath-header">LIFEPATH</div>
+        <div class="lifepath-top-content">
+          <div class="lifepath-sub-row">
+            <div class="lifepath-sub-field">
+              <label>Friends</label>
+              <textarea id="friends"></textarea>
+            </div>
+            <div class="lifepath-sub-field">
+              <label>Tragic love affairs</label>
+              <textarea id="tragic-love"></textarea>
+            </div>
+          </div>
+          <div class="lifepath-sub-row">
+            <div class="lifepath-sub-field enemies-field">
+              <label>Enemies</label>
+              <div class="enemies-grid">
+                <input type="text" placeholder="Who?">
+                <input type="text" placeholder="What caused it?">
+                <input type="text" placeholder="What can they throw at you?">
+                <input type="text" placeholder="What's gonna happen?">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ROLE SPECIFIC LIFEPATH -->
+      <div class="cyber-block role-lifepath-block">
+        <div class="cyber-block-header lifepath-header">ROLE SPECIFIC LIFEPATH</div>
+        <div class="role-lifepath-content">
+          <textarea id="role-lifepath-text"></textarea>
+        </div>
+      </div>
+
+      <!-- Housing -->
+      <div class="housing-block">
+        <div class="cyber-block-header lifepath-header">HOUSING</div>
+        <div class="housing-content">
+          <div class="housing-row">
+            <div class="lifepath-field">
+              <label>Housing</label>
+              <input type="text" id="housing">
+            </div>
+            <div class="lifepath-field">
+              <label>Rent</label>
+              <input type="text" id="rent">
+            </div>
+            <div class="lifepath-field">
+              <label>Lifestyle</label>
+              <input type="text" id="lifestyle">
+            </div>
+          </div>
+          <div class="money-display">
+            <label>Total Money</label>
+            <input type="number" class="money-input" id="money-total" placeholder="€$ 0">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Panel - Cyberware -->
+    <div class="right-panel">
+      <div class="cyberware-panel">
+        <div class="cyber-block cyberware-header-block">
+          <div class="cyber-block-header cyberware-main-header">CYBERWARE</div>
+        </div>
+
+        <!-- Top Right - Add Button -->
+        <div class="cyberware-controls">
+          <div class="add-implant-wrapper">
+            <button class="add-implant-btn" id="add-implant-btn">
+              <span>+</span> ADD CYBERWARE
+            </button>
+            <div class="implant-type-dropdown" id="implant-type-dropdown">
+              <button data-type="fashionware">Fashionware</button>
+              <button data-type="neuralware">Neuralware</button>
+              <button data-type="cyberoptics">Cyberoptics</button>
+              <button data-type="cyberaudio">Cyberaudio</button>
+              <button data-type="internal">Internal</button>
+              <button data-type="external">External</button>
+              <button data-type="limb">Cyberlimb</button>
+              <button data-type="borgware">Borgware</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Humanity Loss - Top Left -->
+        <div class="humanity-loss-top">
+          <label>Humanity Loss</label>
+          <div class="humanity-value" id="humanity-total">0</div>
+        </div>
+
+        <!-- Skeleton with markers - Left side -->
+        <div class="skeleton-wrapper">
+          <img src="images/screenshot.png" alt="Skeleton" class="skeleton-image" id="skeleton-image">
+          
+          <!-- Body Zone Markers (clickable areas) -->
+          <div class="body-markers">
+            <!-- Fashionware zones -->
+            <div class="body-marker-zone fashionware-zone" data-zone="hair" style="top: 4%; left: 50%;" title="Hair"></div>
+            <div class="body-marker-zone fashionware-zone" data-zone="skin" style="top: 25%; left: 55%;" title="Skin"></div>
+            
+            <!-- Neuralware zones -->
+            <div class="body-marker-zone neuralware-zone" data-zone="brain" style="top: 7%; left: 50%;" title="Brain"></div>
+            <div class="body-marker-zone neuralware-zone" data-zone="neck" style="top: 14%; left: 50%;" title="Neck"></div>
+            
+            <!-- Cyberoptics zones -->
+            <div class="body-marker-zone cyberoptics-zone" data-zone="eyes" style="top: 10%; left: 50%;" title="Eyes"></div>
+            
+            <!-- Cyberaudio zones -->
+            <div class="body-marker-zone cyberaudio-zone" data-zone="ears" style="top: 12%; left: 50%;" title="Ears"></div>
+            
+            <!-- Internal zones -->
+            <div class="body-marker-zone internal-zone" data-zone="ribs" style="top: 28%; left: 50%;" title="Ribs"></div>
+            <div class="body-marker-zone internal-zone" data-zone="heart" style="top: 24%; left: 50%;" title="Heart"></div>
+            
+            <!-- External zones -->
+            <div class="body-marker-zone external-zone" data-zone="right-shoulder" style="top: 19%; left: 30%;" title="Right Shoulder"></div>
+            <div class="body-marker-zone external-zone" data-zone="left-shoulder" style="top: 19%; left: 70%;" title="Left Shoulder"></div>
+            <div class="body-marker-zone external-zone" data-zone="chest" style="top: 22%; left: 50%;" title="Chest"></div>
+            
+            <!-- Limb zones -->
+            <div class="body-marker-zone limb-zone" data-zone="right-arm" style="top: 30%; left: 22%;" title="Right Arm"></div>
+            <div class="body-marker-zone limb-zone" data-zone="left-arm" style="top: 30%; left: 78%;" title="Left Arm"></div>
+            <div class="body-marker-zone limb-zone" data-zone="right-leg" style="top: 56%; left: 44%;" title="Right Leg"></div>
+            <div class="body-marker-zone limb-zone" data-zone="left-leg" style="top: 56%; left: 56%;" title="Left Leg"></div>
+            
+            <!-- Borgware zones -->
+            <div class="body-marker-zone borgware-zone" data-zone="borg-head" style="top: 5%; left: 50%;" title="Head"></div>
+            <div class="body-marker-zone borgware-zone" data-zone="borg-torso" style="top: 32%; left: 50%;" title="Torso"></div>
+          </div>
+
+          <!-- Implant markers (appear when implants are added) -->
+          <div class="implant-markers" id="implant-markers"></div>
+        </div>
+
+        <!-- Implant Cards Container - Right side of skeleton -->
+        <div class="implant-cards-container" id="implant-cards-container">
+          <!-- Cards will be added here dynamically -->
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="script.js"></script>
+<script src="implants.js"></script>
+</body>
+</html>

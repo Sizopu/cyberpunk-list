@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Cyberpunk RED - Mobs</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body class="cyber-page">
+
+<!-- TOP NAVIGATION BAR -->
+<div class="top-nav">
+  <div class="nav-brand">CYBERPUNK RED</div>
+  <div class="nav-links">
+    <a href="index.html" class="nav-link">Character</a>
+    <a href="implants.html" class="nav-link">Implants</a>
+    <a href="notes.html" class="nav-link">Notes</a>
+    <a href="mobs.html" class="nav-link">Mobs</a>
+    <button class="nav-btn" id="dice-roll-btn">🎲 Roll Dice</button>
+    <button class="nav-btn save-btn" id="save-data-btn">💾 Save</button>
+    <button class="nav-btn load-btn" id="load-data-btn">📂 Load</button>
+  </div>
+</div>
+
+<!-- Hidden file input for loading -->
+<input type="file" id="load-file-input" accept=".json" style="display: none;">
+
+<div class="mobs-page">
+  <div class="mobs-container">
+    <!-- Left Panel - Mobs List -->
+    <div class="mobs-sidebar">
+      <div class="mobs-header">
+        <span>MOBS</span>
+        <button class="add-mob-btn" id="add-mob-btn" title="Add Mob">+</button>
+      </div>
+      <div class="mobs-list" id="mobs-list">
+        <!-- Mobs will be added here -->
+      </div>
+    </div>
+
+    <!-- Right Panel - Mob Content -->
+    <div class="mob-content-panel">
+      <div class="mob-editor" id="mob-editor">
+        <div class="editor-placeholder">
+          <p>Select a mob or create a new one</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="script.js"></script>
+<script src="mobs.js"></script>
+</body>
+</html>

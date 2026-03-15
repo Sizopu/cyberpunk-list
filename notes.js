@@ -1,370 +1,368 @@
-const stats = {
-  INT: "stat_int",
-  REF: "stat_ref",
-  DEX: "stat_dex",
-  TECH: "stat_tech",
-  COOL: "stat_cool",
-  WILL: "stat_will",
-  LUCK: "stat_luck_current",
-  MOVE: "stat_move",
-  BODY: "stat_body",
-  EMP: "stat_emp_current"
-};
-
-// Skills that can have multiple entries (with add/remove buttons)
-const expandableSkills = {
-  "EDUCATION_SKILLS": ["language", "local expert", "science"],
-  "FIGHTING_SKILLS": ["martial arts"],
-  "PERFORMANCE_SKILLS": ["play instrument"]
-};
-
-const skillGroups = {
-  "AWARENESS_SKILLS": [
-    ["concentration", "WILL"],
-    ["conceal/reveal object", "INT"],
-    ["lip reading", "INT"],
-    ["perception", "INT"],
-    ["tracking", "INT"]
-  ],
-  "BODY_SKILLS": [
-    ["athletics", "DEX"],
-    ["contortionist", "DEX"],
-    ["dance", "DEX"],
-    ["endurance", "WILL"],
-    ["resist torture/drugs", "WILL"],
-    ["stealth", "DEX"]
-  ],
-  "CONTROL_SKILLS": [
-    ["drive land vehicle", "REF"],
-    ["pilot air vehicle", "REF"],
-    ["pilot sea vehicle", "REF"],
-    ["riding", "REF"]
-  ],
-  "EDUCATION_SKILLS": [
-    ["accounting", "INT"],
-    ["animal handling", "INT"],
-    ["bureaucracy", "INT"],
-    ["business", "INT"],
-    ["composition", "INT"],
-    ["criminology", "INT"],
-    ["cryptography", "INT"],
-    ["deduction", "INT"],
-    ["education", "INT"],
-    ["gamble", "INT"],
-    ["language", "INT"],
-    ["library search", "INT"],
-    ["local expert", "INT"],
-    ["science", "INT"],
-    ["tactics", "INT"],
-    ["wilderness survival", "INT"]
-  ],
-  "FIGHTING_SKILLS": [
-    ["brawling", "DEX"],
-    ["evasion", "DEX"],
-    ["martial arts", "DEX"],
-    ["melee weapon", "DEX"]
-  ],
-  "PERFORMANCE_SKILLS": [
-    ["acting", "COOL"],
-    ["play instrument", "COOL"]
-  ],
-  "RANGED_WEAPON_SKILLS": [
-    ["archery", "REF"],
-    ["autofire", "REF"],
-    ["handgun", "REF"],
-    ["heavy weapons", "REF"],
-    ["shoulder arms", "REF"]
-  ],
-  "SOCIAL_SKILLS": [
-    ["bribery", "COOL"],
-    ["conversation", "EMP"],
-    ["human perception", "EMP"],
-    ["interrogation", "COOL"],
-    ["persuasion", "COOL"],
-    ["personal grooming", "COOL"],
-    ["streetwise", "COOL"],
-    ["trading", "COOL"],
-    ["wardrobe/style", "COOL"]
-  ],
-  "TECHNIQUE_SKILLS": [
-    ["air vehicle tech", "TECH"],
-    ["basic tech", "TECH"],
-    ["cybertech", "TECH"],
-    ["demolitions", "TECH"],
-    ["electronics/security tech", "TECH"],
-    ["first aid", "TECH"],
-    ["forgery", "TECH"],
-    ["land vehicle tech", "TECH"],
-    ["paint/draw/sculpt", "TECH"],
-    ["paramedic", "TECH"],
-    ["photography", "TECH"],
-    ["pick lock", "TECH"],
-    ["pick pocket", "DEX"],
-    ["sea vehicle tech", "TECH"],
-    ["weaponstech", "TECH"]
-  ]
-};
-
-const skillsContainer = document.getElementById("skills-container");
-const specialisedSkillsBody = document.getElementById("specialised-skills-body");
-const weaponsContainer = document.getElementById("weapons-container");
-const roleAbilityContainer = document.getElementById("role-ability-container");
-const addWeaponBtn = document.getElementById("add-weapon-btn");
-
-// Dice state for nav button
-let currentDiceType = 10;
-let currentDiceCount = 1;
-
-// Generate main skills table
-for (const group in skillGroups) {
-  const groupDiv = document.createElement("div");
-  groupDiv.className = "skill-group";
-
-  const titleDiv = document.createElement("div");
-  titleDiv.className = "skill-group-title";
-  titleDiv.textContent = group.replaceAll("_", " ");
-  groupDiv.appendChild(titleDiv);
-
-  const table = document.createElement("table");
-  table.className = "skill-table";
-  table.innerHTML = `
-    <tr>
-      <th class="skill-name-cell">SKILL</th>
-      <th>MOD</th>
-      <th>LVL</th>
-      <th>STAT</th>
-      <th>BASE</th>
-      <th></th>
-    </tr>
-  `;
-
-  skillGroups[group].forEach(skill => {
-    const tr = document.createElement("tr");
-    tr.dataset.stat = skill[1];
-    tr.dataset.skillName = skill[0];
-    
-    const isExpandable = expandableSkills[group] && expandableSkills[group].includes(skill[0]);
-    
-    tr.innerHTML = `
-      <td class="skill-name-cell"><input type="text" class="skill-name-input" value="${skill[0]}" readonly></td>
-      <td><input type="number" class="mod-input" value="0"></td>
-      <td><input type="number" class="lvl-input" value="0"></td>
-      <td><input type="text" class="stat-input-display" readonly></td>
-      <td><input type="text" class="base-input" readonly></td>
-      <td class="skill-action-cell">
-        ${isExpandable ? '<button class="add-skill-btn" type="button" title="Add">+</button>' : ''}
-        <button class="roll-skill-btn" type="button" title="Roll">🎲</button>
-      </td>
-    `;
-    
-    table.appendChild(tr);
-    
-    // Add click handler for add button
-    if (isExpandable) {
-      const addBtn = tr.querySelector(".add-skill-btn");
-      addBtn.addEventListener("click", (e) => {
-        e.stopPropagation();
-        addExpandableSkillRow(group, skill[0], skill[1], tr);
-      });
-    }
-    
-    // Add click handler for roll button
-    const rollBtn = tr.querySelector(".roll-skill-btn");
-    rollBtn.addEventListener("click", (e) => {
-      e.stopPropagation();
-      const baseValue = parseInt(tr.querySelector(".base-input")?.value) || 0;
-      performSkillRoll(baseValue, skill[0]);
-    });
-  });
-
-  groupDiv.appendChild(table);
-  skillsContainer.appendChild(groupDiv);
-}
-
-// Function to add an expandable skill row
-function addExpandableSkillRow(group, skillName, statKey, referenceRow) {
-  const tr = document.createElement("tr");
-  tr.dataset.stat = statKey;
-  tr.dataset.skillName = skillName;
-  tr.className = "expandable-skill-row";
-  
-  tr.innerHTML = `
-    <td class="skill-name-cell"><input type="text" class="skill-name-input" value="${skillName}" readonly></td>
-    <td><input type="number" class="mod-input" value="0" min="0"></td>
-    <td><input type="number" class="lvl-input" value="0" min="0" max="10"></td>
-    <td><input type="text" class="stat-input-display" readonly></td>
-    <td><input type="text" class="base-input" readonly></td>
-    <td class="skill-action-cell">
-      <button class="delete-skill-btn" type="button" title="Delete">×</button>
-      <button class="roll-skill-btn" type="button" title="Roll">🎲</button>
-    </td>
-  `;
-  
-  // Add delete handler
-  const deleteBtn = tr.querySelector(".delete-skill-btn");
-  deleteBtn.addEventListener("click", (e) => {
-    e.stopPropagation();
-    tr.remove();
-  });
-  
-  // Add roll handler
-  const rollBtn = tr.querySelector(".roll-skill-btn");
-  rollBtn.addEventListener("click", (e) => {
-    e.stopPropagation();
-    const baseValue = parseInt(tr.querySelector(".base-input")?.value) || 0;
-    performSkillRoll(baseValue, skillName);
-  });
-  
-  // Insert after the reference row
-  referenceRow.parentNode.insertBefore(tr, referenceRow.nextSibling);
-  
-  // Update calculations
-  updateRow(tr);
-}
-
-// Generate specialised skills rows (6 empty rows)
-for (let i = 0; i < 6; i++) {
-  const tr = document.createElement("tr");
-  tr.innerHTML = `
-    <td><input type="text" class="ss-stat"></td>
-    <td><input type="text" class="ss-name"></td>
-    <td><input type="number" class="ss-mod" value="0"></td>
-    <td><input type="number" class="ss-lvl" value="0"></td>
-    <td><input type="text" class="ss-stat-val" readonly></td>
-    <td><input type="text" class="ss-base" readonly></td>
-  `;
-  specialisedSkillsBody.appendChild(tr);
-}
-
-// Generate initial weapon rows (6 weapons)
-for (let i = 0; i < 6; i++) {
-  addWeaponRow();
-}
-
-// Add role ability entries (3 total)
-for (let i = 0; i < 2; i++) {
-  addRoleAbilityEntry();
-}
-
-// Function to add a role ability entry
-function addRoleAbilityEntry() {
-  const entry = document.createElement("div");
-  entry.className = "role-ability-entry";
-  entry.innerHTML = `
-    <input type="text" class="role-ability-name" placeholder="Ability name">
-    <input type="number" class="role-ability-lvl" placeholder="LVL" min="1" max="10">
-  `;
-  roleAbilityContainer.appendChild(entry);
-}
-
-// Function to add a weapon row
-function addWeaponRow() {
-  const weaponRow = document.createElement("div");
-  weaponRow.className = "weapon-row";
-  weaponRow.innerHTML = `
-    <div class="weapon-label">Weapon</div>
-    <div class="weapon-label">DMG</div>
-    <div class="weapon-label">MAG</div>
-    <div class="weapon-label">ROF</div>
-    <div></div>
-    <input type="text" class="weapon-name-input" placeholder="Weapon name">
-    <input type="text" class="weapon-dmg-input" placeholder="DMG">
-    <input type="text" class="weapon-mag-input" placeholder="MAG">
-    <input type="text" class="weapon-rof-input" placeholder="ROF">
-    <button class="delete-btn" type="button" title="Delete">×</button>
-    <div class="weapon-notes">
-      <span class="weapon-notes-label">NOTES</span>
-      <input type="text" class="weapon-notes-input" placeholder="Notes">
-    </div>
-  `;
-
-  // Add delete functionality
-  const deleteBtn = weaponRow.querySelector(".delete-btn");
-  deleteBtn.addEventListener("click", () => {
-    weaponRow.remove();
-  });
-
-  weaponsContainer.appendChild(weaponRow);
-}
-
-// Add weapon button event listener
-addWeaponBtn.addEventListener("click", addWeaponRow);
-
-// Update row calculation
-function updateRow(row) {
-  const statKey = row.dataset.stat;
-  if (!statKey) return;
-
-  const statId = stats[statKey];
-  const statValue = parseInt(document.getElementById(statId)?.value) || 0;
-  const mod = parseInt(row.querySelector(".mod-input")?.value) || 0;
-  const lvl = parseInt(row.querySelector(".lvl-input")?.value) || 0;
-
-  const statDisplay = row.querySelector(".stat-input-display");
-  const baseDisplay = row.querySelector(".base-input");
-
-  if (statDisplay) statDisplay.value = statValue;
-  if (baseDisplay) baseDisplay.value = statValue + mod + lvl;
-}
-
-// Update specialised skill row
-function updateSpecialisedRow(row) {
-  const statKey = row.querySelector(".ss-stat")?.value.toUpperCase();
-  const statId = stats[statKey];
-  const statValue = statId ? (parseInt(document.getElementById(statId)?.value) || 0) : 0;
-  const mod = parseInt(row.querySelector(".ss-mod")?.value) || 0;
-  const lvl = parseInt(row.querySelector(".ss-lvl")?.value) || 0;
-
-  const statValDisplay = row.querySelector(".ss-stat-val");
-  const baseDisplay = row.querySelector(".ss-base");
-
-  if (statValDisplay) statValDisplay.value = statValue;
-  if (baseDisplay) baseDisplay.value = statValue + mod + lvl;
-}
-
-// Update all skill rows
-function updateAllSkills() {
-  document.querySelectorAll(".skill-table tr").forEach(row => {
-    if (row.dataset.stat) updateRow(row);
-  });
-}
-
-// Update all specialised skill rows
-function updateAllSpecialised() {
-  document.querySelectorAll("#specialised-skills-body tr").forEach(row => {
-    updateSpecialisedRow(row);
-  });
-}
-
-// Event listeners
-document.addEventListener("input", (e) => {
-  const target = e.target;
-
-  // Main skill mod/lvl changes
-  if (target.classList.contains("mod-input") || target.classList.contains("lvl-input")) {
-    updateRow(target.closest("tr"));
-  }
-
-  // Stat changes
-  if (target.classList.contains("stat-input")) {
-    updateAllSkills();
-    updateAllSpecialised();
-  }
-
-  // Specialised skill changes
-  if (target.classList.contains("ss-stat") || target.classList.contains("ss-mod") || target.classList.contains("ss-lvl")) {
-    updateSpecialisedRow(target.closest("tr"));
-  }
-});
-
-// Initialize on load
-window.onload = () => {
-  updateAllSkills();
-  updateAllSpecialised();
-  initDiceRoller();
+// Notes functionality
+document.addEventListener('DOMContentLoaded', () => {
+  initNotes();
   initSaveLoad();
   loadCharacterFromStorage();
-};
+  
+  // Add event listeners for character data saving
+  const impCurrent = document.getElementById('imp-current');
+  const impMax = document.getElementById('imp-max');
+  const repValue = document.getElementById('rep-value');
+  const moneyTotal = document.getElementById('money-total');
+  
+  [impCurrent, impMax, repValue, moneyTotal].forEach(el => {
+    if (el) {
+      el.addEventListener('input', saveCharacterToStorage);
+    }
+  });
+});
+
+let notes = [];
+let selectedNoteId = null;
+
+function initNotes() {
+  const addNoteBtn = document.getElementById('add-note-btn');
+  const noteTypeDropdown = document.getElementById('note-type-dropdown');
+  const notesList = document.getElementById('notes-list');
+  
+  // Load saved notes
+  loadNotes();
+  
+  // Toggle dropdown
+  if (addNoteBtn) {
+    addNoteBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      noteTypeDropdown.classList.toggle('active');
+    });
+  }
+  
+  // Close dropdown on outside click
+  document.addEventListener('click', () => {
+    if (noteTypeDropdown) {
+      noteTypeDropdown.classList.remove('active');
+    }
+  });
+  
+  // Add note by type
+  if (noteTypeDropdown) {
+    const buttons = noteTypeDropdown.querySelectorAll('button');
+    buttons.forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const type = btn.dataset.type;
+        addNote(type);
+        noteTypeDropdown.classList.remove('active');
+      });
+    });
+  }
+  
+  // Initial render
+  renderNotesList();
+}
+
+function addNote(type = 'note') {
+  const note = {
+    id: Date.now(),
+    type: type,
+    title: type === 'table' ? 'New Table' : 'New Note',
+    content: '',
+    tableRows: type === 'table' ? 3 : 0,
+    tableCols: type === 'table' ? 3 : 0,
+    tableData: type === 'table' ? [] : [],
+    createdAt: new Date().toISOString()
+  };
+  
+  if (type === 'table') {
+    // Initialize empty table data
+    for (let i = 0; i < note.tableRows; i++) {
+      const row = [];
+      for (let j = 0; j < note.tableCols; j++) {
+        row.push('');
+      }
+      note.tableData.push(row);
+    }
+  }
+  
+  notes.push(note);
+  selectedNoteId = note.id;
+  renderNotesList();
+  renderNoteEditor();
+  saveNotes();
+}
+
+function deleteNote(id) {
+  notes = notes.filter(n => n.id !== id);
+  if (selectedNoteId === id) {
+    selectedNoteId = null;
+  }
+  renderNotesList();
+  renderNoteEditor();
+  saveNotes();
+}
+
+function selectNote(id) {
+  selectedNoteId = id;
+  renderNotesList();
+  renderNoteEditor();
+}
+
+function updateNote(id, field, value) {
+  const note = notes.find(n => n.id === id);
+  if (note) {
+    note[field] = value;
+    saveNotes();
+  }
+}
+
+function addTableRow(noteId) {
+  const note = notes.find(n => n.id === noteId);
+  if (note && note.type === 'table') {
+    const newRow = [];
+    for (let j = 0; j < note.tableCols; j++) {
+      newRow.push('');
+    }
+    note.tableData.push(newRow);
+    note.tableRows++;
+    renderNoteEditor();
+    saveNotes();
+  }
+}
+
+function addTableCol(noteId) {
+  const note = notes.find(n => n.id === noteId);
+  if (note && note.type === 'table') {
+    note.tableData.forEach(row => {
+      row.push('');
+    });
+    note.tableCols++;
+    renderNoteEditor();
+    saveNotes();
+  }
+}
+
+function deleteTableRow(noteId, rowIndex) {
+  const note = notes.find(n => n.id === noteId);
+  if (note && note.type === 'table' && note.tableRows > 1) {
+    note.tableData.splice(rowIndex, 1);
+    note.tableRows--;
+    renderNoteEditor();
+    saveNotes();
+  }
+}
+
+function deleteTableCol(noteId, colIndex) {
+  const note = notes.find(n => n.id === noteId);
+  if (note && note.type === 'table' && note.tableCols > 1) {
+    note.tableData.forEach(row => {
+      row.splice(colIndex, 1);
+    });
+    note.tableCols--;
+    renderNoteEditor();
+    saveNotes();
+  }
+}
+
+function updateTableCell(noteId, rowIndex, colIndex, value) {
+  const note = notes.find(n => n.id === noteId);
+  if (note && note.type === 'table') {
+    note.tableData[rowIndex][colIndex] = value;
+    saveNotes();
+  }
+}
+
+function renderNotesList() {
+  const container = document.getElementById('notes-list');
+  if (!container) return;
+  
+  container.innerHTML = '';
+  
+  notes.forEach(note => {
+    const noteItem = document.createElement('div');
+    noteItem.className = `note-item ${selectedNoteId === note.id ? 'selected' : ''}`;
+    noteItem.innerHTML = `
+      <div class="note-item-icon">${note.type === 'table' ? '📊' : '📄'}</div>
+      <div class="note-item-title">${note.title || 'Untitled'}</div>
+      <button class="note-item-delete" data-id="${note.id}" title="Delete">×</button>
+    `;
+    
+    container.appendChild(noteItem);
+    
+    const deleteBtn = noteItem.querySelector('.note-item-delete');
+    deleteBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      deleteNote(note.id);
+    });
+    
+    noteItem.addEventListener('click', () => {
+      selectNote(note.id);
+    });
+  });
+}
+
+function renderNoteEditor() {
+  const container = document.getElementById('note-editor');
+  if (!container) return;
+  
+  if (!selectedNoteId) {
+    container.innerHTML = `
+      <div class="editor-placeholder">
+        <p>Select a note or create a new one</p>
+      </div>
+    `;
+    return;
+  }
+  
+  const note = notes.find(n => n.id === selectedNoteId);
+  if (!note) return;
+  
+  if (note.type === 'note') {
+    container.innerHTML = `
+      <div class="note-editor-content">
+        <input type="text" class="note-title-input" value="${note.title}" placeholder="Note title..." data-id="${note.id}">
+        <textarea class="note-content-input" placeholder="Write your note here..." data-id="${note.id}">${note.content}</textarea>
+      </div>
+    `;
+    
+    const titleInput = container.querySelector('.note-title-input');
+    titleInput.addEventListener('input', (e) => {
+      updateNote(note.id, 'title', e.target.value);
+      renderNotesList();
+    });
+    
+    const contentInput = container.querySelector('.note-content-input');
+    contentInput.addEventListener('input', (e) => {
+      updateNote(note.id, 'content', e.target.value);
+    });
+  } else if (note.type === 'table') {
+    let tableHTML = `
+      <div class="table-editor-content">
+        <input type="text" class="note-title-input" value="${note.title}" placeholder="Table title..." data-id="${note.id}">
+        <div class="table-controls">
+          <button class="table-add-row" data-id="${note.id}">+ Row</button>
+          <button class="table-add-col" data-id="${note.id}">+ Column</button>
+        </div>
+        <div class="table-wrapper">
+          <table class="notes-table">
+            <thead>
+              <tr>
+    `;
+    
+    // Header row with delete buttons
+    for (let j = 0; j < note.tableCols; j++) {
+      tableHTML += `
+        <th>
+          <input type="text" class="table-header-input" placeholder="Col ${j + 1}" value="${note.tableData[0][j] || ''}" data-row="0" data-col="${j}" data-id="${note.id}">
+          ${note.tableCols > 1 ? `<button class="table-col-delete" data-col="${j}" data-id="${note.id}">×</button>` : ''}
+        </th>
+      `;
+    }
+    
+    tableHTML += `
+              </tr>
+            </thead>
+            <tbody>
+    `;
+    
+    // Data rows
+    for (let i = 1; i < note.tableRows; i++) {
+      tableHTML += `<tr>`;
+      for (let j = 0; j < note.tableCols; j++) {
+        tableHTML += `
+          <td>
+            <input type="text" class="table-cell-input" value="${note.tableData[i][j] || ''}" data-row="${i}" data-col="${j}" data-id="${note.id}">
+          </td>
+        `;
+      }
+      if (note.tableRows > 1) {
+        tableHTML += `
+          <td class="row-delete-cell">
+            <button class="table-row-delete" data-row="${i}" data-id="${note.id}">×</button>
+          </td>
+        `;
+      }
+      tableHTML += `</tr>`;
+    }
+    
+    tableHTML += `
+            </tbody>
+          </table>
+        </div>
+      </div>
+    `;
+    
+    container.innerHTML = tableHTML;
+    
+    // Title input
+    const titleInput = container.querySelector('.note-title-input');
+    titleInput.addEventListener('input', (e) => {
+      updateNote(note.id, 'title', e.target.value);
+      renderNotesList();
+    });
+    
+    // Add row button
+    const addRowBtn = container.querySelector('.table-add-row');
+    addRowBtn.addEventListener('click', () => {
+      addTableRow(note.id);
+    });
+    
+    // Add column button
+    const addColBtn = container.querySelector('.table-add-col');
+    addColBtn.addEventListener('click', () => {
+      addTableCol(note.id);
+    });
+    
+    // Header inputs
+    const headerInputs = container.querySelectorAll('.table-header-input');
+    headerInputs.forEach(input => {
+      input.addEventListener('input', (e) => {
+        const row = parseInt(e.target.dataset.row);
+        const col = parseInt(e.target.dataset.col);
+        updateTableCell(note.id, row, col, e.target.value);
+      });
+    });
+    
+    // Cell inputs
+    const cellInputs = container.querySelectorAll('.table-cell-input');
+    cellInputs.forEach(input => {
+      input.addEventListener('input', (e) => {
+        const row = parseInt(e.target.dataset.row);
+        const col = parseInt(e.target.dataset.col);
+        updateTableCell(note.id, row, col, e.target.value);
+      });
+    });
+    
+    // Delete row buttons
+    const deleteRowBtns = container.querySelectorAll('.table-row-delete');
+    deleteRowBtns.forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const row = parseInt(btn.dataset.row);
+        deleteTableRow(note.id, row);
+      });
+    });
+    
+    // Delete column buttons
+    const deleteColBtns = container.querySelectorAll('.table-col-delete');
+    deleteColBtns.forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const col = parseInt(btn.dataset.col);
+        deleteTableCol(note.id, col);
+      });
+    });
+  }
+}
+
+function saveNotes() {
+  localStorage.setItem('notesData', JSON.stringify(notes));
+}
+
+function loadNotes() {
+  const saved = localStorage.getItem('notesData');
+  if (!saved) return;
+  
+  notes = JSON.parse(saved);
+}
 
 // Load character data from localStorage on page load
 function loadCharacterFromStorage() {
@@ -407,7 +405,6 @@ function loadCharacterFromStorage() {
         `;
         inventoryBody.appendChild(tr);
       });
-      // Update totals
       if (typeof updateTotalWeight === 'function') updateTotalWeight();
       if (typeof updateTotalMoney === 'function') updateTotalMoney();
     }
@@ -418,18 +415,15 @@ function loadCharacterFromStorage() {
 function saveCharacterToStorage() {
   const lifepathData = JSON.parse(localStorage.getItem('lifepathData') || '{}');
   
-  // Save Improvement Points
   if (document.getElementById('imp-current')) {
     lifepathData.impCurrent = document.getElementById('imp-current').value;
   }
   if (document.getElementById('imp-max')) {
     lifepathData.impMax = document.getElementById('imp-max').value;
   }
-  // Save Reputation
   if (document.getElementById('rep-value')) {
     lifepathData.repValue = document.getElementById('rep-value').value;
   }
-  // Save Money Total
   if (document.getElementById('money-total')) {
     lifepathData.moneyTotal = document.getElementById('money-total').value;
   }
@@ -437,102 +431,10 @@ function saveCharacterToStorage() {
   localStorage.setItem('lifepathData', JSON.stringify(lifepathData));
 }
 
-// Add event listeners for character data saving
-document.addEventListener('DOMContentLoaded', () => {
-  const impCurrent = document.getElementById('imp-current');
-  const impMax = document.getElementById('imp-max');
-  const repValue = document.getElementById('rep-value');
-  const moneyTotal = document.getElementById('money-total');
-  
-  [impCurrent, impMax, repValue, moneyTotal].forEach(el => {
-    if (el) {
-      el.addEventListener('input', saveCharacterToStorage);
-    }
-  });
-});
-
-// Dice Roller Functions
-function initDiceRoller() {
-  const diceBtn = document.getElementById("dice-roll-btn");
-  const dialogOverlay = document.getElementById("dice-dialog-overlay");
-  const dialogClose = document.getElementById("dice-dialog-close");
-  const dialogCancel = document.getElementById("dice-dialog-cancel");
-  const diceRollConfirm = document.getElementById("dice-roll-confirm");
-  const diceTypeBtns = document.querySelectorAll(".dice-type-btn");
-  const diceCountDec = document.getElementById("dice-count-dec");
-  const diceCountInc = document.getElementById("dice-count-inc");
-  const diceCountInput = document.getElementById("dice-count");
-
-  if (!dialogOverlay) return;
-
-  // Open dialog from nav button (with dice selection)
-  if (diceBtn) {
-    diceBtn.addEventListener("click", () => {
-      resetDiceOptions();
-      dialogOverlay.classList.add("active");
-    });
-  }
-
-  // Close dialog
-  function closeDialog() {
-    dialogOverlay.classList.remove("active");
-  }
-
-  if (dialogClose) dialogClose.addEventListener("click", closeDialog);
-  if (dialogCancel) dialogCancel.addEventListener("click", closeDialog);
-
-  // Close on overlay click
-  dialogOverlay.addEventListener("click", (e) => {
-    if (e.target === dialogOverlay) {
-      closeDialog();
-    }
-  });
-
-  // Dice type selection
-  diceTypeBtns.forEach(btn => {
-    btn.addEventListener("click", () => {
-      diceTypeBtns.forEach(b => b.classList.remove("active"));
-      btn.classList.add("active");
-      currentDiceType = parseInt(btn.dataset.dice);
-    });
-  });
-
-  // Dice count controls
-  if (diceCountDec) {
-    diceCountDec.addEventListener("click", () => {
-      let count = parseInt(diceCountInput.value) || 1;
-      if (count > 1) {
-        diceCountInput.value = count - 1;
-        currentDiceCount = count - 1;
-      }
-    });
-  }
-
-  if (diceCountInc) {
-    diceCountInc.addEventListener("click", () => {
-      let count = parseInt(diceCountInput.value) || 1;
-      if (count < 10) {
-        diceCountInput.value = count + 1;
-        currentDiceCount = count + 1;
-      }
-    });
-  }
-
-  if (diceCountInput) {
-    diceCountInput.addEventListener("change", () => {
-      let count = parseInt(diceCountInput.value) || 1;
-      count = Math.max(1, Math.min(10, count));
-      diceCountInput.value = count;
-      currentDiceCount = count;
-    });
-  }
-
-  // Roll confirm button
-  if (diceRollConfirm) {
-    diceRollConfirm.addEventListener("click", () => {
-      performCustomRoll();
-    });
-  }
+// Helper function to safely get element value
+function getElementValue(id) {
+  const el = document.getElementById(id);
+  return el ? (el.value || '') : '';
 }
 
 // ==================== SAVE/LOAD FUNCTIONS ====================
@@ -649,12 +551,6 @@ function saveAllData() {
   a.click();
   document.body.removeChild(a);
   URL.revokeObjectURL(url);
-}
-
-// Helper function to safely get element value
-function getElementValue(id) {
-  const el = document.getElementById(id);
-  return el ? (el.value || '') : '';
 }
 
 function handleFileLoad(event) {
@@ -780,7 +676,6 @@ function loadData(data) {
       if (row) {
         if (skillData.mod) row.querySelector('.mod-input').value = skillData.mod;
         if (skillData.lvl) row.querySelector('.lvl-input').value = skillData.lvl;
-        // Trigger update
         row.dispatchEvent(new Event('input', { bubbles: true }));
       }
     });
@@ -796,7 +691,6 @@ function loadData(data) {
         if (skillData.name) row.querySelector('.ss-name').value = skillData.name;
         if (skillData.mod) row.querySelector('.ss-mod').value = skillData.mod;
         if (skillData.lvl) row.querySelector('.ss-lvl').value = skillData.lvl;
-        // Trigger update
         row.dispatchEvent(new Event('input', { bubbles: true }));
       }
     });
@@ -834,104 +728,9 @@ function loadData(data) {
       document.getElementById('money-total').value = data.moneyTotal;
     }
   }
-}
-
-// Reset dice options to default
-function resetDiceOptions() {
-  currentDiceType = 10;
-  currentDiceCount = 1;
   
-  document.querySelectorAll(".dice-type-btn").forEach(btn => {
-    btn.classList.toggle("active", btn.dataset.dice === "10");
-  });
-  
-  const diceCountInput = document.getElementById("dice-count");
-  if (diceCountInput) diceCountInput.value = 1;
-  
-  document.getElementById("dice-options").style.display = "flex";
-  document.getElementById("dice-result-section").style.display = "none";
-}
-
-// Perform skill roll (1d10 + base) - instant, no dialog options
-function performSkillRoll(baseValue, skillName) {
-  const dialogOverlay = document.getElementById("dice-dialog-overlay");
-  if (!dialogOverlay) return;
-
-  // Show dialog
-  dialogOverlay.classList.add("active");
-
-  // Hide options, show results section
-  document.getElementById("dice-options").style.display = "none";
-  document.getElementById("dice-result-section").style.display = "flex";
-
-  // Roll 1d10
-  const roll = Math.floor(Math.random() * 10) + 1;
-  const total = roll + baseValue;
-
-  // Display result with animation
-  displayDiceResult([roll], `${roll} + ${baseValue} = ${total}`, `1d10 + ${baseValue} (${skillName})`, true, 10);
-}
-
-// Perform custom roll (nav button with selection)
-function performCustomRoll() {
-  const diceOptions = document.getElementById("dice-options");
-  const diceResultSection = document.getElementById("dice-result-section");
-  
-  if (!diceOptions || !diceResultSection) return;
-
-  // Hide options, show results
-  diceOptions.style.display = "none";
-  diceResultSection.style.display = "flex";
-
-  // Roll dice
-  const rolls = [];
-  for (let i = 0; i < currentDiceCount; i++) {
-    rolls.push(Math.floor(Math.random() * currentDiceType) + 1);
-  }
-  
-  const total = rolls.reduce((a, b) => a + b, 0);
-
-  // Display result with animation
-  displayDiceResult(rolls, total.toString(), `${currentDiceCount}d${currentDiceType}`, false, currentDiceType);
-}
-
-// Display dice result with animation
-function displayDiceResult(rolls, totalText, description, isSkillRoll, diceType = 10) {
-  const diceRollsContainer = document.getElementById("dice-rolls");
-  const diceTotalValue = document.getElementById("dice-total-value");
-  const diceDescription = document.getElementById("dice-description");
-
-  if (!diceRollsContainer) return;
-
-  // Clear previous results
-  diceRollsContainer.innerHTML = "";
-  diceTotalValue.textContent = "0";
-
-  // Map dice type to shape class
-  const shapeClass = {
-    4: 'd4',
-    6: 'd6',
-    8: 'd8',
-    10: 'd10',
-    12: 'd12',
-    20: 'd20'
-  }[diceType] || 'd10';
-
-  // Display each die with staggered animation
-  rolls.forEach((roll, index) => {
-    setTimeout(() => {
-      const dieEl = document.createElement("div");
-      dieEl.className = `die-result ${shapeClass}`;
-      dieEl.setAttribute("data-value", roll);
-      diceRollsContainer.appendChild(dieEl);
-
-      // Update total after last die
-      if (index === rolls.length - 1) {
-        setTimeout(() => {
-          diceTotalValue.textContent = totalText;
-          diceDescription.textContent = description;
-        }, 100);
-      }
-    }, index * 150);
-  });
+  // Reload page after a short delay to apply all changes
+  setTimeout(() => {
+    location.reload();
+  }, 100);
 }

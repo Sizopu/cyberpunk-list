@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Cyberpunk RED - Notes</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body class="cyber-page">
+
+<!-- TOP NAVIGATION BAR -->
+<div class="top-nav">
+  <div class="nav-brand">CYBERPUNK RED</div>
+  <div class="nav-links">
+    <a href="index.html" class="nav-link">Character</a>
+    <a href="implants.html" class="nav-link">Implants</a>
+    <a href="notes.html" class="nav-link active">Notes</a>
+    <a href="mobs.html" class="nav-link">Mobs</a>
+    <button class="nav-btn" id="dice-roll-btn">🎲 Roll Dice</button>
+    <button class="nav-btn save-btn" id="save-data-btn">💾 Save</button>
+    <button class="nav-btn load-btn" id="load-data-btn">📂 Load</button>
+  </div>
+</div>
+
+<!-- Hidden file input for loading -->
+<input type="file" id="load-file-input" accept=".json" style="display: none;">
+
+<div class="notes-page">
+  <div class="notes-container">
+    <!-- Left Panel - Notes List -->
+    <div class="notes-sidebar">
+      <div class="notes-header">
+        <span>NOTES</span>
+        <button class="add-note-btn" id="add-note-btn" title="Add Note">+</button>
+      </div>
+      
+      <!-- Add Note Type Dropdown -->
+      <div class="add-note-wrapper">
+        <div class="note-type-dropdown" id="note-type-dropdown">
+          <button data-type="note">📄 Note</button>
+          <button data-type="table">📊 Table</button>
+        </div>
+      </div>
+      
+      <div class="notes-list" id="notes-list">
+        <!-- Notes will be added here -->
+      </div>
+    </div>
+
+    <!-- Right Panel - Note Content -->
+    <div class="notes-content-panel">
+      <div class="note-editor" id="note-editor">
+        <div class="editor-placeholder">
+          <p>Select a note or create a new one</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="script.js"></script>
+<script src="notes.js"></script>
+</body>
+</html>
