@@ -134,43 +134,45 @@ function performMobSkillRoll(baseValue, skillName, seriouslyWounded = false) {
   const dialogOverlay = document.getElementById("dice-dialog-overlay");
   const diceOptions = document.getElementById("dice-options");
   const diceResultSection = document.getElementById("dice-result-section");
-  
+
   if (!dialogOverlay || !diceOptions || !diceResultSection) return;
-  
+
   // Ensure baseValue is a number
   const base = parseInt(baseValue) || 0;
   const swModifier = seriouslyWounded ? -2 : 0;
   const swText = seriouslyWounded ? ' (SW -2)' : '';
-  
+
   dialogOverlay.classList.add("active");
   diceOptions.style.display = "none";
   diceResultSection.style.display = "flex";
-  
+
   const roll = Math.floor(Math.random() * 10) + 1;
-  const total = roll + base + swModifier;
-  
+  const total = parseInt(roll) + parseInt(base) + swModifier;
+
   displayMobDiceResult([roll], total, `${roll} + ${base}${swText} = ${total}`, `1d10 + ${base}${swText} (${skillName})`, true, 10);
 }
 
 // Perform mob initiative roll
-function performMobInitiativeRoll(refValue, mobName) {
+function performMobInitiativeRoll(refValue, mobName, rollResult = null) {
   const dialogOverlay = document.getElementById("dice-dialog-overlay");
   const diceOptions = document.getElementById("dice-options");
   const diceResultSection = document.getElementById("dice-result-section");
-  
+
   if (!dialogOverlay || !diceOptions || !diceResultSection) return;
-  
+
   // Ensure refValue is a number
   const ref = parseInt(refValue) || 0;
-  
+
   dialogOverlay.classList.add("active");
   diceOptions.style.display = "none";
   diceResultSection.style.display = "flex";
-  
-  const roll = Math.floor(Math.random() * 10) + 1;
-  const total = roll + ref;
-  
+
+  const roll = rollResult !== null ? parseInt(rollResult) : (Math.floor(Math.random() * 10) + 1);
+  const total = parseInt(roll) + parseInt(ref);
+
   displayMobDiceResult([roll], total, `${roll} + ${ref} = ${total}`, `1d10 + ${ref} (Initiative - ${mobName})`, true, 10);
+  
+  return total;
 }
 
 // Display dice result with animation

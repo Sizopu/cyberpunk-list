@@ -1,0 +1,400 @@
+/* ========================================
+   COMMON STYLES - Shared across all pages
+   ======================================== */
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: #1a1d24;
+  font-family: 'Courier New', monospace;
+  color: #c9c6b9;
+  padding: 0;
+  font-size: 11px;
+}
+
+/* ========================================
+   TOP NAVIGATION BAR
+   ======================================== */
+.top-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #2d3139;
+  border-bottom: 2px solid #3d4149;
+  padding: 12px 20px;
+  margin: 0;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+.nav-brand {
+  font-size: 16px;
+  font-weight: bold;
+  letter-spacing: 3px;
+  color: #f78166;
+  text-transform: uppercase;
+}
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.nav-link {
+  color: #8b949e;
+  text-decoration: none;
+  padding: 8px 16px;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  border: 1px solid transparent;
+  transition: all 0.2s;
+  background: #232931;
+  border-radius: 3px;
+}
+
+.nav-link:hover {
+  color: #c9c6b9;
+  background: #3d4149;
+}
+
+.nav-link.active {
+  color: #f78166;
+  background: #3d3423;
+  border-color: #f78166;
+}
+
+.nav-btn {
+  background: #232931;
+  border: 1px solid #3d4149;
+  color: #8b949e;
+  padding: 8px 16px;
+  font-size: 10px;
+  cursor: pointer;
+  font-family: 'Courier New', monospace;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  transition: all 0.2s;
+  border-radius: 3px;
+}
+
+.nav-btn:hover {
+  background: #3d4149;
+  color: #c9c6b9;
+  border-color: #8b949e;
+}
+
+.save-btn {
+  background: #233923;
+  border-color: #2ea043;
+  color: #2ea043;
+}
+
+.save-btn:hover {
+  background: #2d4a2d;
+  border-color: #3fb950;
+  color: #3fb950;
+}
+
+.load-btn {
+  background: #392d23;
+  border-color: #58a6ff;
+  color: #58a6ff;
+}
+
+.load-btn:hover {
+  background: #4a3d2d;
+  border-color: #79c0ff;
+  color: #79c0ff;
+}
+
+.lang-switch-btn {
+  background: #232931;
+  border-color: #f78166;
+  color: #f78166;
+  font-weight: bold;
+  min-width: 45px;
+}
+
+.lang-switch-btn:hover {
+  background: #3d3423;
+  border-color: #ff9f89;
+  color: #ff9f89;
+}
+
+/* ========================================
+   DICE DIALOG (Shared)
+   ======================================== */
+.dialog-overlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.8);
+  z-index: 10000;
+  align-items: center;
+  justify-content: center;
+}
+
+.dialog-overlay.active {
+  display: flex;
+}
+
+.dialog {
+  background: #161b22;
+  border: 2px solid #30363d;
+  border-radius: 4px;
+  max-width: 500px;
+  width: 90%;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.dialog-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 16px;
+  border-bottom: 1px solid #30363d;
+}
+
+.dialog-header span {
+  font-size: 11px;
+  font-weight: bold;
+  text-transform: uppercase;
+  color: #8b949e;
+  letter-spacing: 1px;
+}
+
+.dialog-close {
+  background: transparent;
+  border: none;
+  color: #8b949e;
+  font-size: 20px;
+  cursor: pointer;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.dialog-close:hover {
+  color: #f78166;
+}
+
+.dialog-content {
+  padding: 16px;
+}
+
+.dialog-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  padding: 12px 16px;
+  border-top: 1px solid #30363d;
+}
+
+.dialog-btn {
+  background: #2d3139;
+  border: 1px solid #3d4149;
+  color: #c9c6b9;
+  padding: 8px 16px;
+  font-size: 10px;
+  cursor: pointer;
+  border-radius: 3px;
+  font-family: 'Courier New', monospace;
+  text-transform: uppercase;
+  transition: all 0.2s;
+}
+
+.dialog-btn:hover {
+  background: #3d4149;
+  border-color: #8b949e;
+}
+
+.dialog-btn-primary {
+  background: #238636;
+  border-color: #2ea043;
+  color: #0f1115;
+}
+
+.dialog-btn-primary:hover {
+  background: #2ea043;
+  border-color: #3fb950;
+}
+
+/* Dice Options */
+.dice-options {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.dice-option-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.dice-option-group label {
+  font-size: 9px;
+  text-transform: uppercase;
+  color: #8b949e;
+  font-weight: bold;
+}
+
+.dice-type-buttons {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 6px;
+}
+
+.dice-type-btn {
+  background: #2d3139;
+  border: 1px solid #3d4149;
+  color: #8b949e;
+  padding: 8px;
+  font-size: 10px;
+  cursor: pointer;
+  border-radius: 3px;
+  transition: all 0.2s;
+}
+
+.dice-type-btn:hover {
+  background: #3d4149;
+  border-color: #8b949e;
+}
+
+.dice-type-btn.active {
+  background: #f78166;
+  border-color: #f78166;
+  color: #0f1115;
+}
+
+.dice-count-control {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.dice-count-btn {
+  background: #2d3139;
+  border: 1px solid #3d4149;
+  color: #8b949e;
+  width: 32px;
+  height: 32px;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 3px;
+}
+
+.dice-count-btn:hover {
+  background: #3d4149;
+  border-color: #8b949e;
+}
+
+#dice-count {
+  width: 60px;
+  background: #0d1117;
+  border: 1px solid #3d4149;
+  color: #c9c6b9;
+  padding: 8px;
+  font-size: 11px;
+  text-align: center;
+  border-radius: 3px;
+}
+
+/* Dice Result */
+.dice-result-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+
+.dice-rolls {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 15px;
+  min-height: 60px;
+}
+
+.dice-roll-item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 50px;
+  height: 50px;
+  font-size: 24px;
+  font-weight: bold;
+  color: #f78166;
+  background: #232931;
+  border: 2px solid #f78166;
+  border-radius: 8px;
+}
+
+.dice-roll-item.crit-success {
+  background: #2ea043;
+  border-color: #2ea043;
+  color: #0f1115;
+}
+
+.dice-roll-item.crit-fail {
+  background: #da3633;
+  border-color: #da3633;
+  color: #0f1115;
+}
+
+.dice-total-display {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 14px;
+}
+
+.dice-total-label {
+  color: #8b949e;
+  text-transform: uppercase;
+  font-weight: bold;
+}
+
+.dice-total-value {
+  color: #f78166;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.dice-description {
+  color: #8b949e;
+  font-size: 10px;
+  text-align: center;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #0d1117;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #30363d;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #484f58;
+}

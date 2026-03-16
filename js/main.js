@@ -6,6 +6,7 @@ let editingCharacterId = null;
 
 document.addEventListener('DOMContentLoaded', () => {
   initCharacters();
+  initSaveLoadAll();
 });
 
 function initCharacters() {
@@ -303,7 +304,7 @@ window.loadCharacterToSheet = function(charId) {
 window.duplicateCharacter = function(charId) {
   const char = characters.find(c => c.id === charId);
   if (!char) return;
-  
+
   const newChar = {
     id: 'char_' + Date.now(),
     name: char.name + ' (Copy)',
@@ -311,9 +312,9 @@ window.duplicateCharacter = function(charId) {
     createdAt: Date.now(),
     updatedAt: Date.now()
   };
-  
+
   characters.push(newChar);
-  
+
   // Copy character data
   const charData = localStorage.getItem('character_' + charId);
   if (charData) {
@@ -321,8 +322,125 @@ window.duplicateCharacter = function(charId) {
   } else {
     localStorage.setItem('character_' + newChar.id, JSON.stringify({}));
   }
-  
+
   saveCharacters();
   renderCharactersList();
   renderCharacterDetails();
 };
+
+// Save/Load All Characters
+function saveAllCharacters() {
+  // Get all characters
+  const characters = JSON.parse(localStorage.getItem('characters') || '[]');
+  
+  // Collect all characters data
+  const allCharactersData = [];
+  
+  characters.forEach(char => {
+    const charId = char.id;
+    const charDataKey = 'character_' + charId;
+    const charFullData = {
+      profile: char,
+      character: JSON.parse(localStorage.getItem(charDataKey + '_characterData') || '{}'),
+      roleAbilities: JSON.parse(localStorage.getItem(charDataKey + '_roleAbilitiesData') || '[]'),
+      weapons: JSON.parse(localStorage.getItem(charDataKey + '_weaponsData') || '[]'),
+      skills: JSON.parse(localStorage.getItem(charDataKey + '_skillsData') || '[]'),
+      specialisedSkills: JSON.parse(localStorage.getItem(charDataKey + '_specialisedSkillsData') || '[]'),
+      lifepath: JSON.parse(localStorage.getItem(charDataKey + '_lifepathData') || '{}'),
+      inventory: JSON.parse(localStorage.getItem(charDataKey + '_inventoryData') || '[]'),
+      cyberware: JSON.parse(localStorage.getItem(charDataKey + '_cyberwareImplants') || '[]'),
+      notes: JSON.parse(localStorage.getItem(charDataKey + '_notesData') || '[]'),
+      mobs: JSON.parse(localStorage.getItem(charDataKey + '_mobsData') || '[]'),
+      moneyTotal: localStorage.getItem(charDataKey + '_moneyTotal') || ''
+    };
+    allCharactersData.push(charFullData);
+  });
+  
+  // Create export data
+  const allData = {
+    version: '2.0',
+    exportDate: new Date().toISOString(),
+    characters: allCharactersData
+  };
+
+  // Create and download file
+  const dataStr = JSON.stringify(allData, null, 2);
+  const blob = new Blob([dataStr], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `cyberpunk-all-characters-${new Date().toISOString().split('T')[0]}.json`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+
+function handleLoadAll(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    try {
+      const data = JSON.parse(e.target.result);
+      loadAllCharacters(data);
+      alert('All characters loaded successfully!');
+      location.reload();
+    } catch (error) {
+      alert('Error loading file: ' + error.message);
+    }
+  };
+  reader.readAsText(file);
+  event.target.value = '';
+}
+
+function loadAllCharacters(data) {
+  if (data.characters && Array.isArray(data.characters)) {
+    data.characters.forEach(charData => {
+      const profile = charData.profile;
+      const charId = profile.id;
+      const charDataKey = 'character_' + charId;
+      
+      // Save profile
+      const characters = JSON.parse(localStorage.getItem('characters') || '[]');
+      if (!characters.find(c => c.id === charId)) {
+        characters.push(profile);
+        localStorage.setItem('characters', JSON.stringify(characters));
+      }
+      
+      // Save character-specific data
+      if (charData.character) localStorage.setItem(charDataKey + '_characterData', JSON.stringify(charData.character));
+      if (charData.roleAbilities) localStorage.setItem(charDataKey + '_roleAbilitiesData', JSON.stringify(charData.roleAbilities));
+      if (charData.weapons) localStorage.setItem(charDataKey + '_weaponsData', JSON.stringify(charData.weapons));
+      if (charData.skills) localStorage.setItem(charDataKey + '_skillsData', JSON.stringify(charData.skills));
+      if (charData.specialisedSkills) localStorage.setItem(charDataKey + '_specialisedSkillsData', JSON.stringify(charData.specialisedSkills));
+      if (charData.lifepath) localStorage.setItem(charDataKey + '_lifepathData', JSON.stringify(charData.lifepath));
+      if (charData.inventory) localStorage.setItem(charDataKey + '_inventoryData', JSON.stringify(charData.inventory));
+      if (charData.cyberware) localStorage.setItem(charDataKey + '_cyberwareImplants', JSON.stringify(charData.cyberware));
+      if (charData.notes) localStorage.setItem(charDataKey + '_notesData', JSON.stringify(charData.notes));
+      if (charData.mobs) localStorage.setItem(charDataKey + '_mobsData', JSON.stringify(charData.mobs));
+      if (charData.moneyTotal) localStorage.setItem(charDataKey + '_moneyTotal', charData.moneyTotal);
+    });
+  }
+}
+
+function initSaveLoadAll() {
+  const saveAllBtn = document.getElementById('save-all-btn');
+  const loadAllBtn = document.getElementById('load-all-btn');
+  const fileInput = document.getElementById('load-file-input');
+  
+  if (saveAllBtn) {
+    saveAllBtn.addEventListener('click', saveAllCharacters);
+  }
+  
+  if (loadAllBtn) {
+    loadAllBtn.addEventListener('click', () => {
+      fileInput.click();
+    });
+  }
+  
+  if (fileInput) {
+    fileInput.addEventListener('change', handleLoadAll);
+  }
+}

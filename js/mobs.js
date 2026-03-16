@@ -20,15 +20,6 @@ document.addEventListener('DOMContentLoaded', () => {
 let mobs = [];
 let selectedMobId = null;
 
-// Get character-specific storage key
-function getCharStorageKey(key) {
-  const charId = localStorage.getItem('currentCharacterId');
-  if (charId) {
-    return 'character_' + charId + '_' + key;
-  }
-  return key;
-}
-
 // Skill presets hardcoded in code
 const skillPresets = [
   { name: "Athletics", stat: "DEX" },
@@ -153,7 +144,7 @@ function updateMob(id, field, value) {
 function updateMobStat(id, stat, value) {
   const mob = mobs.find(m => m.id === id);
   if (mob) {
-    mob.stats[stat] = value;
+    mob.stats[stat] = parseInt(value) || 0;
     saveMobs();
   }
 }
@@ -235,12 +226,13 @@ function renderMobsList() {
 
     // Initiative input
     const initInput = mobItem.querySelector('.mob-init-input');
+    const currentMobId = mob.id;
     initInput.addEventListener('click', (e) => e.stopPropagation());
     initInput.addEventListener('change', (e) => {
       e.stopPropagation();
-      const mob = mobs.find(m => m.id === mob.id);
-      if (mob) {
-        mob.initiative = parseInt(e.target.value) || 0;
+      const mobToUpdate = mobs.find(m => m.id === currentMobId);
+      if (mobToUpdate) {
+        mobToUpdate.initiative = parseInt(e.target.value) || 0;
         saveMobs();
       }
     });
@@ -249,16 +241,19 @@ function renderMobsList() {
     const rollInitBtn = mobItem.querySelector('.mob-roll-init-btn');
     rollInitBtn.addEventListener('click', (e) => {
       e.stopPropagation();
-      const currentMob = mobs.find(m => m.id === mob.id);
+      const currentMob = mobs.find(m => m.id === currentMobId);
       if (currentMob) {
-        const refValue = currentMob.stats.ref || 0;
+        const refValue = parseInt(currentMob.stats.ref) || 0;
         const roll = Math.floor(Math.random() * 10) + 1;
-        currentMob.initiative = roll + refValue;
+        const total = roll + refValue;
+        // Save the rolled initiative
+        currentMob.initiative = total;
         saveMobs();
-        renderMobsList();
-        // Use mob dice roller
+        // Update the input value in the UI
+        initInput.value = String(total);
+        // Use mob dice roller (show the roll with the same value)
         if (typeof window.performMobInitiativeRoll === 'function') {
-          window.performMobInitiativeRoll(refValue, currentMob.name || 'Mob');
+          window.performMobInitiativeRoll(refValue, currentMob.name || 'Mob', roll);
         }
       }
     });
@@ -518,7 +513,27 @@ function renderMobEditor() {
   const weaponInputs = container.querySelectorAll('[data-type="weapon"], [data-type="hand"]');
   weaponInputs.forEach(input => {
     input.addEventListener('input', (e) => {
-      updateWeapon(mob.id, e.target.dataset.type, parseInt(e.target.dataset.index), e.target.placeholder.toLowerCase(), e.target.value);
+      const className = e.target.className;
+      let field = '';
+      
+      // Map class name to field name
+      if (className.includes('weapon-name')) field = 'name';
+      else if (className.includes('weapon-dmg')) field = 'dmg';
+      else if (className.includes('weapon-mag')) field = 'mag';
+      else if (className.includes('weapon-rof')) field = 'rof';
+      else if (className.includes('weapon-notes')) field = 'notes';
+      
+      if (field) {
+        const mob = mobs.find(m => m.id === selectedMobId);
+        if (mob) {
+          const weapons = e.target.dataset.type === 'weapon' ? mob.weapons : mob.handWeapons;
+          const index = parseInt(e.target.dataset.index);
+          if (weapons[index]) {
+            weapons[index][field] = e.target.value;
+            saveMobs();
+          }
+        }
+      }
     });
   });
   
@@ -539,13 +554,15 @@ function renderMobEditor() {
       const formulaInput = weaponRow.querySelector('.mob-weapon-dice-formula');
       const resultContainer = weaponRow.querySelector('.mob-weapon-dice-result');
       const formula = formulaInput.value.trim();
-      
+
       if (formula) {
         rollMobWeaponDice(formula, resultContainer);
         // Save dice formula
-        const weaponType = formulaInput.closest('.weapon-notes-row').previousElementSibling.dataset.weaponType;
-        const weaponIndex = formulaInput.closest('.weapon-notes-row').previousElementSibling.dataset.weaponIndex;
-        const mob = mobs.find(m => m.id === mob.id);
+        const weaponNotesRow = formulaInput.closest('.weapon-notes-row');
+        const weaponRow2 = weaponNotesRow.previousElementSibling;
+        const weaponType = weaponRow2.dataset.weaponType;
+        const weaponIndex = weaponRow2.dataset.weaponIndex;
+        const mob = mobs.find(m => m.id === selectedMobId);
         if (mob) {
           const weapons = weaponType === 'weapon' ? mob.weapons : mob.handWeapons;
           if (weapons[weaponIndex]) {
@@ -563,10 +580,11 @@ function renderMobEditor() {
   const diceFormulaInputs = container.querySelectorAll('.mob-weapon-dice-formula');
   diceFormulaInputs.forEach(input => {
     input.addEventListener('input', (e) => {
-      const weaponRow = input.closest('.weapon-notes-row').previousElementSibling;
+      const weaponNotesRow = input.closest('.weapon-notes-row');
+      const weaponRow = weaponNotesRow.previousElementSibling;
       const weaponType = weaponRow.dataset.weaponType;
       const weaponIndex = weaponRow.dataset.weaponIndex;
-      const mob = mobs.find(m => m.id === mob.id);
+      const mob = mobs.find(m => m.id === selectedMobId);
       if (mob) {
         const weapons = weaponType === 'weapon' ? mob.weapons : mob.handWeapons;
         if (weapons[weaponIndex]) {

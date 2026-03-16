@@ -11,37 +11,8 @@ const stats = {
   EMP: "stat_emp_current"
 };
 
-// Character Profiles System
-function getCurrentCharacterId() {
-  return localStorage.getItem('currentCharacterId');
-}
-
-function getStorageKey(baseKey) {
-  const charId = getCurrentCharacterId();
-  if (charId) {
-    return 'character_' + charId + '_' + baseKey;
-  }
-  return baseKey;
-}
-
-// Override localStorage for character-specific data
-const charLocalStorage = {
-  getItem: function(key) {
-    const charId = getCurrentCharacterId();
-    if (charId && !key.startsWith('character_')) {
-      return localStorage.getItem('character_' + charId + '_' + key);
-    }
-    return localStorage.getItem(key);
-  },
-  setItem: function(key, value) {
-    const charId = getCurrentCharacterId();
-    if (charId && !key.startsWith('character_')) {
-      localStorage.setItem('character_' + charId + '_' + key, value);
-    } else {
-      localStorage.setItem(key, value);
-    }
-  }
-};
+// Use utils.js functions (loaded before this script)
+// getCurrentCharacterId(), getCharStorageKey(), charStorage, getElementValue()
 
 // Skills that can have multiple entries (with add/remove buttons)
 const expandableSkills = {
@@ -771,14 +742,14 @@ function saveAllCharacterData() {
   });
   
   localStorage.setItem('characterData', JSON.stringify(charData));
-  charLocalStorage.setItem('characterData', JSON.stringify(charData));
+  charStorage.setItem('characterData', JSON.stringify(charData));
   
   // Also save role abilities
   const roleAbilities = Array.from(document.querySelectorAll('.role-ability-entry')).map(entry => ({
     name: entry.querySelector('.role-ability-name')?.value || '',
     lvl: entry.querySelector('.role-ability-lvl')?.value || ''
   }));
-  charLocalStorage.setItem('roleAbilitiesData', JSON.stringify(roleAbilities));
+  charStorage.setItem('roleAbilitiesData', JSON.stringify(roleAbilities));
   
   // Save weapons
   const weapons = Array.from(document.querySelectorAll('.weapon-row')).map(row => ({
@@ -790,7 +761,7 @@ function saveAllCharacterData() {
     diceFormulas: Array.from(row.querySelectorAll('.weapon-dice-formula')).map(input => input.value || ''),
     attackNotes: Array.from(row.querySelectorAll('.weapon-attack-notes')).map(input => input.value || '')
   }));
-  charLocalStorage.setItem('weaponsData', JSON.stringify(weapons));
+  charStorage.setItem('weaponsData', JSON.stringify(weapons));
   
   // Save skills
   const skills = Array.from(document.querySelectorAll('.skill-table tr[data-stat]')).map(row => ({
@@ -799,7 +770,7 @@ function saveAllCharacterData() {
     lvl: row.querySelector('.lvl-input')?.value || '0',
     stat: row.dataset.stat
   }));
-  charLocalStorage.setItem('skillsData', JSON.stringify(skills));
+  charStorage.setItem('skillsData', JSON.stringify(skills));
   
   // Save specialised skills
   const specialisedSkills = Array.from(document.querySelectorAll('#specialised-skills-body tr')).map(row => ({
@@ -808,14 +779,14 @@ function saveAllCharacterData() {
     mod: row.querySelector('.ss-mod')?.value || '0',
     lvl: row.querySelector('.ss-lvl')?.value || '0'
   }));
-  charLocalStorage.setItem('specialisedSkillsData', JSON.stringify(specialisedSkills));
+  charStorage.setItem('specialisedSkillsData', JSON.stringify(specialisedSkills));
   
   saveCharacterToStorage();
 }
 
 // Load all character data from localStorage
 function loadAllCharacterData() {
-  const charData = JSON.parse(charLocalStorage.getItem('characterData') || '{}');
+  const charData = JSON.parse(charStorage.getItem('characterData') || '{}');
   
   // Stats
   const statIds = ['stat_int', 'stat_ref', 'stat_dex', 'stat_tech', 'stat_cool', 'stat_will', 
@@ -861,7 +832,7 @@ function loadAllCharacterData() {
   });
   
   // Load role abilities
-  const roleAbilities = JSON.parse(charLocalStorage.getItem('roleAbilitiesData') || '[]');
+  const roleAbilities = JSON.parse(charStorage.getItem('roleAbilitiesData') || '[]');
   if (roleAbilities.length > 0) {
     const roleAbilityContainer = document.getElementById('role-ability-container');
     if (roleAbilityContainer) {
@@ -879,7 +850,7 @@ function loadAllCharacterData() {
   }
   
   // Load weapons
-  const weapons = JSON.parse(charLocalStorage.getItem('weaponsData') || '[]');
+  const weapons = JSON.parse(charStorage.getItem('weaponsData') || '[]');
   if (weapons.length > 0) {
     const weaponsContainer = document.getElementById('weapons-container');
     if (weaponsContainer) {
@@ -956,7 +927,7 @@ function loadAllCharacterData() {
   }
   
   // Load skills
-  const skills = JSON.parse(charLocalStorage.getItem('skillsData') || '[]');
+  const skills = JSON.parse(charStorage.getItem('skillsData') || '[]');
   if (skills.length > 0) {
     skills.forEach(skill => {
       const row = document.querySelector(`.skill-table tr[data-stat="${skill.stat}"][data-skill-name="${skill.skillName}"]`);
@@ -971,7 +942,7 @@ function loadAllCharacterData() {
   }
   
   // Load specialised skills
-  const specialisedSkills = JSON.parse(charLocalStorage.getItem('specialisedSkillsData') || '[]');
+  const specialisedSkills = JSON.parse(charStorage.getItem('specialisedSkillsData') || '[]');
   if (specialisedSkills.length > 0) {
     const specRows = document.querySelectorAll('#specialised-skills-body tr');
     

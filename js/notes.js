@@ -21,14 +21,7 @@ document.addEventListener('DOMContentLoaded', () => {
 let notes = [];
 let selectedNoteId = null;
 
-// Get character-specific storage key
-function getCharStorageKey(key) {
-  const charId = localStorage.getItem('currentCharacterId');
-  if (charId) {
-    return 'character_' + charId + '_' + key;
-  }
-  return key;
-}
+// Use getCharStorageKey from utils.js
 
 function initNotes() {
   const addNoteBtn = document.getElementById('add-note-btn');
