@@ -11,6 +11,38 @@ const stats = {
   EMP: "stat_emp_current"
 };
 
+// Character Profiles System
+function getCurrentCharacterId() {
+  return localStorage.getItem('currentCharacterId');
+}
+
+function getStorageKey(baseKey) {
+  const charId = getCurrentCharacterId();
+  if (charId) {
+    return 'character_' + charId + '_' + baseKey;
+  }
+  return baseKey;
+}
+
+// Override localStorage for character-specific data
+const charLocalStorage = {
+  getItem: function(key) {
+    const charId = getCurrentCharacterId();
+    if (charId && !key.startsWith('character_')) {
+      return localStorage.getItem('character_' + charId + '_' + key);
+    }
+    return localStorage.getItem(key);
+  },
+  setItem: function(key, value) {
+    const charId = getCurrentCharacterId();
+    if (charId && !key.startsWith('character_')) {
+      localStorage.setItem('character_' + charId + '_' + key, value);
+    } else {
+      localStorage.setItem(key, value);
+    }
+  }
+};
+
 // Skills that can have multiple entries (with add/remove buttons)
 const expandableSkills = {
   "EDUCATION_SKILLS": ["language", "local expert", "science"],
@@ -739,13 +771,14 @@ function saveAllCharacterData() {
   });
   
   localStorage.setItem('characterData', JSON.stringify(charData));
+  charLocalStorage.setItem('characterData', JSON.stringify(charData));
   
   // Also save role abilities
   const roleAbilities = Array.from(document.querySelectorAll('.role-ability-entry')).map(entry => ({
     name: entry.querySelector('.role-ability-name')?.value || '',
     lvl: entry.querySelector('.role-ability-lvl')?.value || ''
   }));
-  localStorage.setItem('roleAbilitiesData', JSON.stringify(roleAbilities));
+  charLocalStorage.setItem('roleAbilitiesData', JSON.stringify(roleAbilities));
   
   // Save weapons
   const weapons = Array.from(document.querySelectorAll('.weapon-row')).map(row => ({
@@ -757,7 +790,7 @@ function saveAllCharacterData() {
     diceFormulas: Array.from(row.querySelectorAll('.weapon-dice-formula')).map(input => input.value || ''),
     attackNotes: Array.from(row.querySelectorAll('.weapon-attack-notes')).map(input => input.value || '')
   }));
-  localStorage.setItem('weaponsData', JSON.stringify(weapons));
+  charLocalStorage.setItem('weaponsData', JSON.stringify(weapons));
   
   // Save skills
   const skills = Array.from(document.querySelectorAll('.skill-table tr[data-stat]')).map(row => ({
@@ -766,7 +799,7 @@ function saveAllCharacterData() {
     lvl: row.querySelector('.lvl-input')?.value || '0',
     stat: row.dataset.stat
   }));
-  localStorage.setItem('skillsData', JSON.stringify(skills));
+  charLocalStorage.setItem('skillsData', JSON.stringify(skills));
   
   // Save specialised skills
   const specialisedSkills = Array.from(document.querySelectorAll('#specialised-skills-body tr')).map(row => ({
@@ -775,14 +808,14 @@ function saveAllCharacterData() {
     mod: row.querySelector('.ss-mod')?.value || '0',
     lvl: row.querySelector('.ss-lvl')?.value || '0'
   }));
-  localStorage.setItem('specialisedSkillsData', JSON.stringify(specialisedSkills));
+  charLocalStorage.setItem('specialisedSkillsData', JSON.stringify(specialisedSkills));
   
   saveCharacterToStorage();
 }
 
 // Load all character data from localStorage
 function loadAllCharacterData() {
-  const charData = JSON.parse(localStorage.getItem('characterData') || '{}');
+  const charData = JSON.parse(charLocalStorage.getItem('characterData') || '{}');
   
   // Stats
   const statIds = ['stat_int', 'stat_ref', 'stat_dex', 'stat_tech', 'stat_cool', 'stat_will', 
@@ -828,7 +861,7 @@ function loadAllCharacterData() {
   });
   
   // Load role abilities
-  const roleAbilities = JSON.parse(localStorage.getItem('roleAbilitiesData') || '[]');
+  const roleAbilities = JSON.parse(charLocalStorage.getItem('roleAbilitiesData') || '[]');
   if (roleAbilities.length > 0) {
     const roleAbilityContainer = document.getElementById('role-ability-container');
     if (roleAbilityContainer) {
@@ -846,7 +879,7 @@ function loadAllCharacterData() {
   }
   
   // Load weapons
-  const weapons = JSON.parse(localStorage.getItem('weaponsData') || '[]');
+  const weapons = JSON.parse(charLocalStorage.getItem('weaponsData') || '[]');
   if (weapons.length > 0) {
     const weaponsContainer = document.getElementById('weapons-container');
     if (weaponsContainer) {
@@ -923,7 +956,7 @@ function loadAllCharacterData() {
   }
   
   // Load skills
-  const skills = JSON.parse(localStorage.getItem('skillsData') || '[]');
+  const skills = JSON.parse(charLocalStorage.getItem('skillsData') || '[]');
   if (skills.length > 0) {
     skills.forEach(skill => {
       const row = document.querySelector(`.skill-table tr[data-stat="${skill.stat}"][data-skill-name="${skill.skillName}"]`);
@@ -938,7 +971,7 @@ function loadAllCharacterData() {
   }
   
   // Load specialised skills
-  const specialisedSkills = JSON.parse(localStorage.getItem('specialisedSkillsData') || '[]');
+  const specialisedSkills = JSON.parse(charLocalStorage.getItem('specialisedSkillsData') || '[]');
   if (specialisedSkills.length > 0) {
     const specRows = document.querySelectorAll('#specialised-skills-body tr');
     
@@ -1143,94 +1176,61 @@ function initSaveLoad() {
 }
 
 function saveAllData() {
-  // Collect all data from localStorage and DOM (only if elements exist)
-  const allData = {
-    version: '1.0',
-    exportDate: new Date().toISOString(),
-    character: {
-      // Stats
-      stat_int: getElementValue('stat_int'),
-      stat_ref: getElementValue('stat_ref'),
-      stat_dex: getElementValue('stat_dex'),
-      stat_tech: getElementValue('stat_tech'),
-      stat_cool: getElementValue('stat_cool'),
-      stat_will: getElementValue('stat_will'),
-      stat_luck_current: getElementValue('stat_luck_current'),
-      stat_luck_max: getElementValue('stat_luck_max'),
-      stat_move: getElementValue('stat_move'),
-      stat_body: getElementValue('stat_body'),
-      stat_emp_current: getElementValue('stat_emp_current'),
-      stat_emp_max: getElementValue('stat_emp_max'),
-      // ID Block
-      age: getElementValue('age'),
-      role: getElementValue('role'),
-      role_rank: getElementValue('role_rank'),
-      humanity_current: getElementValue('humanity_current'),
-      humanity_max: getElementValue('humanity_max'),
-      initiative: getElementValue('initiative'),
-      // Health
-      hp_current: getElementValue('hp_current'),
-      hp_max: getElementValue('hp_max'),
-      seriously_wounded: document.getElementById('seriously_wounded')?.checked || false,
-      death_save: getElementValue('death_save'),
-      // Armor
-      armor_head_sp: getElementValue('armor_head_sp'),
-      armor_head_notes: getElementValue('armor_head_notes'),
-      armor_head_penalty: getElementValue('armor_head_penalty'),
-      armor_body_sp: getElementValue('armor_body_sp'),
-      armor_body_notes: getElementValue('armor_body_notes'),
-      armor_body_penalty: getElementValue('armor_body_penalty'),
-      armor_shield_sp: getElementValue('armor_shield_sp'),
-      armor_shield_notes: getElementValue('armor_shield_notes'),
-      armor_shield_penalty: getElementValue('armor_shield_penalty'),
-      // Notes
-      critical_injuries: getElementValue('critical_injuries'),
-      addictions: getElementValue('addictions'),
-      notes: getElementValue('notes')
-    },
-    // Role abilities
-    roleAbilities: Array.from(document.querySelectorAll('.role-ability-entry')).map(entry => ({
-      name: entry.querySelector('.role-ability-name')?.value || '',
-      lvl: entry.querySelector('.role-ability-lvl')?.value || ''
-    })),
-    // Weapons
-    weapons: Array.from(document.querySelectorAll('.weapon-row')).map(row => ({
-      name: row.querySelector('.weapon-name-input')?.value || '',
-      dmg: row.querySelector('.weapon-dmg-input')?.value || '',
-      mag: row.querySelector('.weapon-mag-input')?.value || '',
-      rof: row.querySelector('.weapon-rof-input')?.value || '',
-      notes: row.querySelector('.weapon-notes-input')?.value || ''
-    })),
-    // Skills - main table
-    skills: Array.from(document.querySelectorAll('.skill-table tr[data-stat]')).map(row => ({
-      skillName: row.querySelector('.skill-name-input')?.value || '',
-      mod: row.querySelector('.mod-input')?.value || '0',
-      lvl: row.querySelector('.lvl-input')?.value || '0',
-      stat: row.dataset.stat
-    })),
-    // Specialised skills
-    specialisedSkills: Array.from(document.querySelectorAll('#specialised-skills-body tr')).map(row => ({
-      stat: row.querySelector('.ss-stat')?.value || '',
-      name: row.querySelector('.ss-name')?.value || '',
-      mod: row.querySelector('.ss-mod')?.value || '0',
-      lvl: row.querySelector('.ss-lvl')?.value || '0'
-    })),
-    // LocalStorage data
-    lifepath: JSON.parse(localStorage.getItem('lifepathData') || '{}'),
-    inventory: JSON.parse(localStorage.getItem('inventoryData') || '{}'),
-    cyberware: JSON.parse(localStorage.getItem('cyberwareImplants') || '[]'),
-    notes: JSON.parse(localStorage.getItem('notesData') || '[]'),
-    mobs: JSON.parse(localStorage.getItem('mobsData') || '[]'),
-    moneyTotal: localStorage.getItem('moneyTotal') || ''
-  };
+  // Get all characters
+  const characters = JSON.parse(localStorage.getItem('characters') || '[]');
   
+  // Collect all characters data
+  const allCharactersData = [];
+  
+  characters.forEach(char => {
+    const charDataKey = 'character_' + char.id;
+    const charFullData = {
+      profile: char,
+      character: {},
+      roleAbilities: [],
+      weapons: [],
+      skills: [],
+      specialisedSkills: [],
+      lifepath: {},
+      inventory: [],
+      cyberware: [],
+      notes: [],
+      mobs: [],
+      moneyTotal: ''
+    };
+    
+    // Load character-specific data
+    const charSpecificData = JSON.parse(localStorage.getItem(charDataKey + '_characterData') || '{}');
+    charFullData.character = charSpecificData;
+    
+    charFullData.roleAbilities = JSON.parse(localStorage.getItem(charDataKey + '_roleAbilitiesData') || '[]');
+    charFullData.weapons = JSON.parse(localStorage.getItem(charDataKey + '_weaponsData') || '[]');
+    charFullData.skills = JSON.parse(localStorage.getItem(charDataKey + '_skillsData') || '[]');
+    charFullData.specialisedSkills = JSON.parse(localStorage.getItem(charDataKey + '_specialisedSkillsData') || '[]');
+    charFullData.lifepath = JSON.parse(localStorage.getItem(charDataKey + '_lifepathData') || '{}');
+    charFullData.inventory = JSON.parse(localStorage.getItem(charDataKey + '_inventoryData') || '[]');
+    charFullData.cyberware = JSON.parse(localStorage.getItem(charDataKey + '_cyberwareImplants') || '[]');
+    charFullData.notes = JSON.parse(localStorage.getItem(charDataKey + '_notesData') || '[]');
+    charFullData.mobs = JSON.parse(localStorage.getItem(charDataKey + '_mobsData') || '[]');
+    charFullData.moneyTotal = localStorage.getItem(charDataKey + '_moneyTotal') || '';
+    
+    allCharactersData.push(charFullData);
+  });
+  
+  // Create export data
+  const allData = {
+    version: '2.0',
+    exportDate: new Date().toISOString(),
+    characters: allCharactersData
+  };
+
   // Create and download file
   const dataStr = JSON.stringify(allData, null, 2);
   const blob = new Blob([dataStr], { type: 'application/json' });
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
   a.href = url;
-  a.download = `cyberpunk-character-${new Date().toISOString().split('T')[0]}.json`;
+  a.download = `cyberpunk-all-characters-${new Date().toISOString().split('T')[0]}.json`;
   document.body.appendChild(a);
   a.click();
   document.body.removeChild(a);
@@ -1262,9 +1262,42 @@ function handleFileLoad(event) {
 }
 
 function loadData(data) {
-  // Load character data
-  const char = data.character || {};
+  // Check if this is a multi-character export (version 2.0)
+  if (data.characters && Array.isArray(data.characters)) {
+    // Load all characters
+    data.characters.forEach(charData => {
+      const profile = charData.profile;
+      const charId = profile.id;
+      const charDataKey = 'character_' + charId;
+      
+      // Save profile
+      const characters = JSON.parse(localStorage.getItem('characters') || '[]');
+      if (!characters.find(c => c.id === charId)) {
+        characters.push(profile);
+        localStorage.setItem('characters', JSON.stringify(characters));
+      }
+      
+      // Save character-specific data
+      if (charData.character) localStorage.setItem(charDataKey + '_characterData', JSON.stringify(charData.character));
+      if (charData.roleAbilities) localStorage.setItem(charDataKey + '_roleAbilitiesData', JSON.stringify(charData.roleAbilities));
+      if (charData.weapons) localStorage.setItem(charDataKey + '_weaponsData', JSON.stringify(charData.weapons));
+      if (charData.skills) localStorage.setItem(charDataKey + '_skillsData', JSON.stringify(charData.skills));
+      if (charData.specialisedSkills) localStorage.setItem(charDataKey + '_specialisedSkillsData', JSON.stringify(charData.specialisedSkills));
+      if (charData.lifepath) localStorage.setItem(charDataKey + '_lifepathData', JSON.stringify(charData.lifepath));
+      if (charData.inventory) localStorage.setItem(charDataKey + '_inventoryData', JSON.stringify(charData.inventory));
+      if (charData.cyberware) localStorage.setItem(charDataKey + '_cyberwareImplants', JSON.stringify(charData.cyberware));
+      if (charData.notes) localStorage.setItem(charDataKey + '_notesData', JSON.stringify(charData.notes));
+      if (charData.mobs) localStorage.setItem(charDataKey + '_mobsData', JSON.stringify(charData.mobs));
+      if (charData.moneyTotal) localStorage.setItem(charDataKey + '_moneyTotal', charData.moneyTotal);
+    });
+    
+    alert('All characters loaded successfully! Go to Characters page to select one.');
+    return;
+  }
   
+  // Legacy single character load (version 1.0)
+  const char = data.character || {};
+
   // Stats - check if element exists AND property exists
   if ('stat_int' in char && document.getElementById('stat_int')) document.getElementById('stat_int').value = char.stat_int;
   if ('stat_ref' in char && document.getElementById('stat_ref')) document.getElementById('stat_ref').value = char.stat_ref;

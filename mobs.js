@@ -20,6 +20,15 @@ document.addEventListener('DOMContentLoaded', () => {
 let mobs = [];
 let selectedMobId = null;
 
+// Get character-specific storage key
+function getCharStorageKey(key) {
+  const charId = localStorage.getItem('currentCharacterId');
+  if (charId) {
+    return 'character_' + charId + '_' + key;
+  }
+  return key;
+}
+
 // Skill presets hardcoded in code
 const skillPresets = [
   { name: "Athletics", stat: "DEX" },
@@ -698,13 +707,13 @@ function addMobSkill(mobId) {
 }
 
 function saveMobs() {
-  localStorage.setItem('mobsData', JSON.stringify(mobs));
+  localStorage.setItem(getCharStorageKey('mobsData'), JSON.stringify(mobs));
 }
 
 function loadMobs() {
-  const saved = localStorage.getItem('mobsData');
+  const saved = localStorage.getItem(getCharStorageKey('mobsData'));
   if (!saved) return;
-  
+
   mobs = JSON.parse(saved);
 }
 

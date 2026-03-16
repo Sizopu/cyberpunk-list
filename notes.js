@@ -4,13 +4,13 @@ document.addEventListener('DOMContentLoaded', () => {
   initSaveLoad();
   initDiceRoller();
   loadCharacterFromStorage();
-  
+
   // Add event listeners for character data saving
   const impCurrent = document.getElementById('imp-current');
   const impMax = document.getElementById('imp-max');
   const repValue = document.getElementById('rep-value');
   const moneyTotal = document.getElementById('money-total');
-  
+
   [impCurrent, impMax, repValue, moneyTotal].forEach(el => {
     if (el) {
       el.addEventListener('input', saveCharacterToStorage);
@@ -20,6 +20,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
 let notes = [];
 let selectedNoteId = null;
+
+// Get character-specific storage key
+function getCharStorageKey(key) {
+  const charId = localStorage.getItem('currentCharacterId');
+  if (charId) {
+    return 'character_' + charId + '_' + key;
+  }
+  return key;
+}
 
 function initNotes() {
   const addNoteBtn = document.getElementById('add-note-btn');
@@ -355,13 +364,13 @@ function renderNoteEditor() {
 }
 
 function saveNotes() {
-  localStorage.setItem('notesData', JSON.stringify(notes));
+  localStorage.setItem(getCharStorageKey('notesData'), JSON.stringify(notes));
 }
 
 function loadNotes() {
-  const saved = localStorage.getItem('notesData');
+  const saved = localStorage.getItem(getCharStorageKey('notesData'));
   if (!saved) return;
-  
+
   notes = JSON.parse(saved);
 }
 

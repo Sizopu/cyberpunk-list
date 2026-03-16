@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Cyberpunk RED - Characters</title>
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="main.css">
+</head>
+<body>
+
+<!-- TOP NAVIGATION BAR -->
+<div class="top-nav">
+  <div class="nav-brand">CYBERPUNK RED</div>
+  <div class="nav-links">
+    <a href="main.html" class="nav-link active">Characters</a>
+    <a href="index.html" class="nav-link">Character Sheet</a>
+    <a href="implants.html" class="nav-link">Implants</a>
+    <a href="notes.html" class="nav-link">Notes</a>
+    <a href="mobs.html" class="nav-link">Mobs</a>
+  </div>
+</div>
+
+<div class="characters-page">
+  <div class="characters-container">
+    <!-- Left Panel - Character List -->
+    <div class="characters-sidebar">
+      <div class="characters-header">
+        <span>CHARACTERS</span>
+        <button class="add-character-btn" id="add-character-btn" title="Add Character">+</button>
+      </div>
+      <div class="characters-list" id="characters-list">
+        <!-- Characters will be added here -->
+      </div>
+    </div>
+
+    <!-- Right Panel - Character Details -->
+    <div class="character-details-panel">
+      <div class="character-details" id="character-details">
+        <div class="details-placeholder">
+          <p>Select a character or create a new one</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Add/Edit Character Dialog -->
+<div class="dialog-overlay" id="character-dialog-overlay" style="display: none;">
+  <div class="dialog character-dialog">
+    <div class="dialog-header">
+      <span id="dialog-title">New Character</span>
+      <button class="dialog-close" id="dialog-close">×</button>
+    </div>
+    <div class="dialog-content">
+      <div class="form-group">
+        <label>Character Name</label>
+        <input type="text" id="char-name-input" placeholder="Enter character name" class="form-input">
+      </div>
+      <div class="form-group">
+        <label>Description (optional)</label>
+        <textarea id="char-desc-input" placeholder="Character description..." class="form-textarea"></textarea>
+      </div>
+    </div>
+    <div class="dialog-footer">
+      <button class="dialog-btn dialog-btn-cancel" id="dialog-cancel">Cancel</button>
+      <button class="dialog-btn dialog-btn-primary" id="dialog-save">Save</button>
+    </div>
+  </div>
+</div>
+
+<script src="script.js"></script>
+<script src="main.js"></script>
+</body>
+</html>
