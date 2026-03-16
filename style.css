@@ -126,6 +126,20 @@ body {
   color: #ffb74d;
 }
 
+.lang-switch-btn {
+  background: #232931;
+  border-color: #f78166;
+  color: #f78166;
+  font-weight: bold;
+  min-width: 45px;
+}
+
+.lang-switch-btn:hover {
+  background: #3d3423;
+  border-color: #ff9f89;
+  color: #ff9f89;
+}
+
 /* DICE DIALOG */
 .dialog-overlay {
   display: none;

@@ -19,31 +19,53 @@ document.addEventListener('DOMContentLoaded', () => {
 
 let mobs = [];
 let selectedMobId = null;
-let skillPresets = [];
 
-// Load skill presets
-fetch('skill-presets.json')
-  .then(response => response.json())
-  .then(data => {
-    skillPresets = data.skills || [];
-  })
-  .catch(err => {
-    console.log('Could not load skill presets, using defaults');
-    skillPresets = [];
-  });
+// Skill presets hardcoded in code
+const skillPresets = [
+  { name: "Athletics", stat: "DEX" },
+  { name: "Brawling", stat: "DEX" },
+  { name: "Evasion", stat: "DEX" },
+  { name: "Stealth", stat: "DEX" },
+  { name: "Handgun", stat: "REF" },
+  { name: "Rifle", stat: "REF" },
+  { name: "Shotgun", stat: "REF" },
+  { name: "SMG", stat: "REF" },
+  { name: "Melee Weapon", stat: "DEX" },
+  { name: "Martial Arts", stat: "DEX" },
+  { name: "Driving", stat: "REF" },
+  { name: "Pilot", stat: "REF" },
+  { name: "Perception", stat: "INT" },
+  { name: "Concentration", stat: "WILL" },
+  { name: "Persuasion", stat: "COOL" },
+  { name: "Intimidation", stat: "COOL" },
+  { name: "Streetwise", stat: "COOL" },
+  { name: "First Aid", stat: "TECH" },
+  { name: "Electronics", stat: "TECH" },
+  { name: "Demolitions", stat: "TECH" },
+  { name: "Endurance", stat: "WILL" },
+  { name: "Resist Torture", stat: "WILL" },
+  { name: "Trading", stat: "COOL" },
+  { name: "Gambling", stat: "INT" },
+  { name: "Leadership", stat: "COOL" },
+  { name: "Tactics", stat: "INT" },
+  { name: "Cyberdeck Operation", stat: "INT" },
+  { name: "Programming", stat: "INT" },
+  { name: "Hacking", stat: "INT" }
+];
 
 // Get skill presets options HTML
 function getSkillPresetsOptions(selectedName) {
-  if (!skillPresets || skillPresets.length === 0) return '';
-  return skillPresets.map(skill => 
+  let options = '<option value="">-- Custom (enter your own) --</option>';
+  options += skillPresets.map(skill =>
     `<option value="${skill.name}" ${skill.name === selectedName ? 'selected' : ''}>${skill.name} (${skill.stat})</option>`
   ).join('');
+  return options;
 }
 
 function initMobs() {
   const addMobBtn = document.getElementById('add-mob-btn');
   const mobsList = document.getElementById('mobs-list');
-  
+
   // Load saved mobs
   loadMobs();
   
