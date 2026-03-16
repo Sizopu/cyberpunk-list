@@ -56,8 +56,8 @@ function addMob() {
     hitPoints: { current: 0, max: 0 },
     seriouslyWounded: false,
     deathSave: 0,
-    weapons: [{ name: '', dmg: '', mag: '', rof: '', notes: '' }],
-    handWeapons: [{ name: '', dmg: '', rof: '', notes: '' }],
+    weapons: [{ name: '', dmg: '', mag: '', rof: '', notes: '', diceFormula: '' }],
+    handWeapons: [{ name: '', dmg: '', rof: '', notes: '', diceFormula: '' }],
     armor: {
       head: { sp: '', notes: '', penalty: '' },
       body: { sp: '', notes: '', penalty: '' }
@@ -109,9 +109,9 @@ function addWeapon(id, type = 'weapon') {
   const mob = mobs.find(m => m.id === id);
   if (mob) {
     if (type === 'weapon') {
-      mob.weapons.push({ name: '', dmg: '', mag: '', rof: '', notes: '' });
+      mob.weapons.push({ name: '', dmg: '', mag: '', rof: '', notes: '', diceFormula: '' });
     } else if (type === 'hand') {
-      mob.handWeapons.push({ name: '', dmg: '', rof: '', notes: '' });
+      mob.handWeapons.push({ name: '', dmg: '', rof: '', notes: '', diceFormula: '' });
     }
     renderMobEditor();
     saveMobs();
@@ -269,7 +269,7 @@ function renderMobEditor() {
             <button class="add-weapon-btn" data-id="${mob.id}" data-type="weapon">+</button>
           </div>
           ${mob.weapons.map((weapon, i) => `
-            <div class="weapon-row">
+            <div class="weapon-row" data-mob-id="${mob.id}" data-weapon-type="weapon" data-weapon-index="${i}">
               <input type="text" class="weapon-name" placeholder="Weapon" value="${weapon.name}" data-id="${mob.id}" data-type="weapon" data-index="${i}">
               <input type="text" class="weapon-dmg" placeholder="DMG" value="${weapon.dmg}" data-id="${mob.id}" data-type="weapon" data-index="${i}">
               <input type="text" class="weapon-mag" placeholder="MAG" value="${weapon.mag}" data-id="${mob.id}" data-type="weapon" data-index="${i}">
@@ -278,6 +278,11 @@ function renderMobEditor() {
             </div>
             <div class="weapon-notes-row">
               <input type="text" class="weapon-notes" placeholder="NOTES" value="${weapon.notes}" data-id="${mob.id}" data-type="weapon" data-index="${i}">
+              <div class="mob-weapon-dice-container">
+                <input type="text" class="mob-weapon-dice-formula" placeholder="3d6 + 2d10 + 5" value="${weapon.diceFormula || ''}">
+                <button class="mob-weapon-roll-btn" type="button" title="Roll Damage">🎲</button>
+              </div>
+              <div class="mob-weapon-dice-result"></div>
             </div>
           `).join('')}
         </div>
@@ -288,7 +293,7 @@ function renderMobEditor() {
             <button class="add-weapon-btn" data-id="${mob.id}" data-type="hand">+</button>
           </div>
           ${mob.handWeapons.map((weapon, i) => `
-            <div class="weapon-row">
+            <div class="weapon-row" data-mob-id="${mob.id}" data-weapon-type="hand" data-weapon-index="${i}">
               <input type="text" class="weapon-name" placeholder="H.Weapon" value="${weapon.name}" data-id="${mob.id}" data-type="hand" data-index="${i}">
               <input type="text" class="weapon-dmg" placeholder="DMG" value="${weapon.dmg}" data-id="${mob.id}" data-type="hand" data-index="${i}">
               <input type="text" class="weapon-rof" placeholder="ROF" value="${weapon.rof}" data-id="${mob.id}" data-type="hand" data-index="${i}">
@@ -296,6 +301,11 @@ function renderMobEditor() {
             </div>
             <div class="weapon-notes-row">
               <input type="text" class="weapon-notes" placeholder="NOTES" value="${weapon.notes}" data-id="${mob.id}" data-type="hand" data-index="${i}">
+              <div class="mob-weapon-dice-container">
+                <input type="text" class="mob-weapon-dice-formula" placeholder="3d6 + 2d10 + 5" value="${weapon.diceFormula || ''}">
+                <button class="mob-weapon-roll-btn" type="button" title="Roll Damage">🎲</button>
+              </div>
+              <div class="mob-weapon-dice-result"></div>
             </div>
           `).join('')}
         </div>
@@ -390,6 +400,53 @@ function renderMobEditor() {
     btn.addEventListener('click', (e) => {
       e.stopPropagation();
       deleteWeapon(mob.id, btn.dataset.type, parseInt(btn.dataset.index));
+    });
+  });
+
+  // Mob weapon dice roller
+  const diceRollBtns = container.querySelectorAll('.mob-weapon-roll-btn');
+  diceRollBtns.forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const weaponRow = btn.closest('.weapon-notes-row');
+      const formulaInput = weaponRow.querySelector('.mob-weapon-dice-formula');
+      const resultContainer = weaponRow.querySelector('.mob-weapon-dice-result');
+      const formula = formulaInput.value.trim();
+      
+      if (formula) {
+        rollMobWeaponDice(formula, resultContainer);
+        // Save dice formula
+        const weaponType = formulaInput.closest('.weapon-notes-row').previousElementSibling.dataset.weaponType;
+        const weaponIndex = formulaInput.closest('.weapon-notes-row').previousElementSibling.dataset.weaponIndex;
+        const mob = mobs.find(m => m.id === mob.id);
+        if (mob) {
+          const weapons = weaponType === 'weapon' ? mob.weapons : mob.handWeapons;
+          if (weapons[weaponIndex]) {
+            weapons[weaponIndex].diceFormula = formula;
+            saveMobs();
+          }
+        }
+      } else {
+        showDiceNotification('Введите формулу (например: 3d6 + 5)', 'warning');
+      }
+    });
+  });
+
+  // Save dice formula on input
+  const diceFormulaInputs = container.querySelectorAll('.mob-weapon-dice-formula');
+  diceFormulaInputs.forEach(input => {
+    input.addEventListener('input', (e) => {
+      const weaponRow = input.closest('.weapon-notes-row').previousElementSibling;
+      const weaponType = weaponRow.dataset.weaponType;
+      const weaponIndex = weaponRow.dataset.weaponIndex;
+      const mob = mobs.find(m => m.id === mob.id);
+      if (mob) {
+        const weapons = weaponType === 'weapon' ? mob.weapons : mob.handWeapons;
+        if (weapons[weaponIndex]) {
+          weapons[weaponIndex].diceFormula = input.value;
+          saveMobs();
+        }
+      }
     });
   });
   

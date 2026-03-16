@@ -232,8 +232,93 @@ for (let i = 0; i < 6; i++) {
     <td><input type="number" class="ss-lvl" value="0"></td>
     <td><input type="text" class="ss-stat-val" readonly></td>
     <td><input type="text" class="ss-base" readonly></td>
+    <td class="ss-action-cell">
+      <button class="roll-ss-btn" type="button" title="Roll">🎲</button>
+      <button class="delete-ss-btn" type="button" title="Delete">×</button>
+    </td>
   `;
   specialisedSkillsBody.appendChild(tr);
+  
+  // Add event listeners for initial rows
+  const row = specialisedSkillsBody.querySelectorAll("tr")[i];
+  const statInput = row.querySelector(".ss-stat");
+  statInput.addEventListener("input", () => updateSpecialisedRow(row));
+  
+  const modInput = row.querySelector(".ss-mod");
+  modInput.addEventListener("input", () => updateSpecialisedRow(row));
+  
+  const lvlInput = row.querySelector(".ss-lvl");
+  lvlInput.addEventListener("input", () => updateSpecialisedRow(row));
+  
+  const rollBtn = row.querySelector(".roll-ss-btn");
+  rollBtn.addEventListener("click", () => {
+    const baseValue = parseInt(row.querySelector(".ss-base")?.value) || 0;
+    const skillName = row.querySelector(".ss-name")?.value || "Specialised Skill";
+    performSkillRoll(baseValue, skillName);
+  });
+  
+  const deleteBtn = row.querySelector(".delete-ss-btn");
+  deleteBtn.addEventListener("click", () => {
+    const rows = specialisedSkillsBody.querySelectorAll("tr");
+    if (rows.length > 1) {
+      row.remove();
+      saveAllCharacterData();
+    }
+  });
+}
+
+// Add specialised skill row button
+const addSsBtn = document.getElementById("add-ss-btn");
+if (addSsBtn) {
+  addSsBtn.addEventListener("click", () => {
+    addSpecialisedSkillRow();
+  });
+}
+
+// Function to add specialised skill row
+function addSpecialisedSkillRow() {
+  const tr = document.createElement("tr");
+  tr.innerHTML = `
+    <td><input type="text" class="ss-stat"></td>
+    <td><input type="text" class="ss-name"></td>
+    <td><input type="number" class="ss-mod" value="0"></td>
+    <td><input type="number" class="ss-lvl" value="0"></td>
+    <td><input type="text" class="ss-stat-val" readonly></td>
+    <td><input type="text" class="ss-base" readonly></td>
+    <td class="ss-action-cell">
+      <button class="roll-ss-btn" type="button" title="Roll">🎲</button>
+      <button class="delete-ss-btn" type="button" title="Delete">×</button>
+    </td>
+  `;
+  specialisedSkillsBody.appendChild(tr);
+  updateSpecialisedRow(tr);
+  
+  // Add event listeners
+  const statInput = tr.querySelector(".ss-stat");
+  statInput.addEventListener("input", () => updateSpecialisedRow(tr));
+  
+  const modInput = tr.querySelector(".ss-mod");
+  modInput.addEventListener("input", () => updateSpecialisedRow(tr));
+  
+  const lvlInput = tr.querySelector(".ss-lvl");
+  lvlInput.addEventListener("input", () => updateSpecialisedRow(tr));
+  
+  const rollBtn = tr.querySelector(".roll-ss-btn");
+  rollBtn.addEventListener("click", () => {
+    const baseValue = parseInt(tr.querySelector(".ss-base")?.value) || 0;
+    const skillName = tr.querySelector(".ss-name")?.value || "Specialised Skill";
+    performSkillRoll(baseValue, skillName);
+  });
+  
+  const deleteBtn = tr.querySelector(".delete-ss-btn");
+  deleteBtn.addEventListener("click", () => {
+    // Don't delete if it's the last row
+    const rows = specialisedSkillsBody.querySelectorAll("tr");
+    if (rows.length > 1) {
+      tr.remove();
+      saveAllCharacterData();
+    }
+  });
 }
 
 // Generate initial weapon rows (6 weapons)
@@ -272,6 +357,17 @@ function addWeaponRow() {
     <input type="text" class="weapon-mag-input" placeholder="MAG">
     <input type="text" class="weapon-rof-input" placeholder="ROF">
     <button class="delete-btn" type="button" title="Delete">×</button>
+    <div class="weapon-dice-container">
+      <div class="attack-slots">
+        <div class="attack-slot">
+          <input type="text" class="weapon-dice-formula" placeholder="3d6 + 2d10 + 5">
+          <button class="weapon-roll-btn" type="button" title="Roll Damage">🎲</button>
+          <button class="remove-attack-btn" type="button" title="Remove attack" style="display:none;">−</button>
+          <input type="text" class="weapon-attack-notes" placeholder="Attack notes (e.g., headshot, burst)">
+        </div>
+      </div>
+      <button class="add-attack-btn" type="button" title="Add attack">+ Attack</button>
+    </div>
     <div class="weapon-notes">
       <span class="weapon-notes-label">NOTES</span>
       <input type="text" class="weapon-notes-input" placeholder="Notes">
@@ -284,7 +380,167 @@ function addWeaponRow() {
     weaponRow.remove();
   });
 
+  // Add dice roll functionality
+  setupWeaponDiceListeners(weaponRow);
+  
+  // Add attack button functionality
+  const addAttackBtn = weaponRow.querySelector('.add-attack-btn');
+  addAttackBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    addAttackSlot(weaponRow);
+  });
+
   weaponsContainer.appendChild(weaponRow);
+}
+
+// Настройка слушателей для кубиков оружия
+function setupWeaponDiceListeners(weaponRow) {
+  const attackSlots = weaponRow.querySelector('.attack-slots');
+  
+  const rollBtns = weaponRow.querySelectorAll('.weapon-roll-btn');
+  rollBtns.forEach(btn => {
+    const newBtn = btn.cloneNode(true);
+    btn.parentNode.replaceChild(newBtn, btn);
+    
+    newBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const attackSlot = newBtn.closest('.attack-slot');
+      const formulaInput = attackSlot.querySelector('.weapon-dice-formula');
+      const formula = formulaInput.value.trim();
+      if (formula && typeof window.rollWeaponDice === 'function') {
+        window.rollWeaponDice(formula, weaponRow, attackSlot);
+      } else if (formula) {
+        rollWeaponDiceFallback(formula, weaponRow, attackSlot);
+      }
+    });
+  });
+  
+  const formulaInputs = weaponRow.querySelectorAll('.weapon-dice-formula');
+  formulaInputs.forEach(input => {
+    const newInput = input.cloneNode(true);
+    input.parentNode.replaceChild(newInput, input);
+    
+    newInput.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        const attackSlot = newInput.closest('.attack-slot');
+        const formula = newInput.value.trim();
+        if (formula && typeof window.rollWeaponDice === 'function') {
+          window.rollWeaponDice(formula, weaponRow, attackSlot);
+        } else if (formula) {
+          rollWeaponDiceFallback(formula, weaponRow, attackSlot);
+        }
+      }
+    });
+  });
+  
+  // Настройка кнопок удаления
+  const removeBtns = weaponRow.querySelectorAll('.remove-attack-btn');
+  removeBtns.forEach(btn => {
+    if (btn.style.display !== 'none') {
+      const newBtn = btn.cloneNode(true);
+      btn.parentNode.replaceChild(newBtn, btn);
+      
+      newBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const attackSlot = newBtn.closest('.attack-slot');
+        attackSlot.remove();
+      });
+    }
+  });
+}
+
+// Добавление слота атаки
+function addAttackSlot(weaponRow) {
+  const attackSlots = weaponRow.querySelector('.attack-slots');
+  
+  const attackSlot = document.createElement('div');
+  attackSlot.className = 'attack-slot';
+  attackSlot.innerHTML = `
+    <input type="text" class="weapon-dice-formula" placeholder="3d6 + 2d10 + 5">
+    <button class="weapon-roll-btn" type="button" title="Roll Damage">🎲</button>
+    <button class="remove-attack-btn" type="button" title="Remove attack">−</button>
+    <input type="text" class="weapon-attack-notes" placeholder="Attack notes (e.g., headshot, burst)">
+  `;
+  
+  attackSlots.appendChild(attackSlot);
+  setupWeaponDiceListeners(weaponRow);
+  
+  // Настройка кнопки удаления
+  const removeBtn = attackSlot.querySelector('.remove-attack-btn');
+  removeBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    attackSlot.remove();
+  });
+  
+  // Фокус на новом поле
+  const newInput = attackSlot.querySelector('.weapon-dice-formula');
+  newInput.focus();
+}
+
+// Fallback dice roll function (если weapon-dice.js ещё не загружен)
+function rollWeaponDiceFallback(formula, weaponRow, attackSlot = null) {
+  // Простой парсинг: NdM + K
+  const diceMatch = formula.match(/(\d+)[dD](\d+)\s*(?:\+\s*(\d+))?/);
+  if (diceMatch) {
+    const count = parseInt(diceMatch[1]);
+    const sides = parseInt(diceMatch[2]);
+    const bonus = parseInt(diceMatch[3] || '0');
+    
+    let rolls = [];
+    let sum = 0;
+    for (let i = 0; i < count; i++) {
+      const roll = Math.floor(Math.random() * sides) + 1;
+      rolls.push(roll);
+      sum += roll;
+    }
+    sum += bonus;
+    
+    const rollsHtml = rolls.map(r => {
+      const isCrit = r === sides;
+      const isFail = r === 1;
+      const className = isCrit ? 'crit-success' : (isFail ? 'crit-fail' : '');
+      return `<span class="dice-roll ${className}">${r}</span>`;
+    }).join(' ');
+    
+    // Определяем куда добавлять результат
+    let resultContainer;
+    if (attackSlot) {
+      resultContainer = attackSlot.querySelector('.attack-dice-result');
+      if (!resultContainer) {
+        resultContainer = document.createElement('div');
+        resultContainer.className = 'attack-dice-result';
+        attackSlot.appendChild(resultContainer);
+      }
+    } else {
+      resultContainer = weaponRow.querySelector('.weapon-dice-result');
+      if (!resultContainer) {
+        resultContainer = document.createElement('div');
+        resultContainer.className = 'weapon-dice-result';
+        weaponRow.appendChild(resultContainer);
+      }
+    }
+    
+    resultContainer.innerHTML = `
+      <div class="weapon-dice-detail">
+        <div class="weapon-dice-group">
+          <span class="dice-type">${count}d${sides}:</span>
+          <span class="dice-values">${rollsHtml}</span>
+          <span class="dice-sum">= ${sum - bonus}</span>
+        </div>
+      </div>
+      <div class="weapon-dice-total">
+        <span class="total-label">Итого:</span>
+        <span class="total-value">${sum}</span>
+        <span class="total-formula">(${rolls.join('+')} ${bonus > 0 ? '+ ' + bonus : ''}= ${sum})</span>
+      </div>
+      <button class="weapon-dice-clear" type="button">×</button>
+    `;
+    
+    resultContainer.querySelector('.weapon-dice-clear').addEventListener('click', () => {
+      resultContainer.remove();
+    });
+  }
 }
 
 // Add weapon button event listener
@@ -497,7 +753,9 @@ function saveAllCharacterData() {
     dmg: row.querySelector('.weapon-dmg-input')?.value || '',
     mag: row.querySelector('.weapon-mag-input')?.value || '',
     rof: row.querySelector('.weapon-rof-input')?.value || '',
-    notes: row.querySelector('.weapon-notes-input')?.value || ''
+    notes: row.querySelector('.weapon-notes-input')?.value || '',
+    diceFormulas: Array.from(row.querySelectorAll('.weapon-dice-formula')).map(input => input.value || ''),
+    attackNotes: Array.from(row.querySelectorAll('.weapon-attack-notes')).map(input => input.value || '')
   }));
   localStorage.setItem('weaponsData', JSON.stringify(weapons));
   
@@ -596,6 +854,23 @@ function loadAllCharacterData() {
       weapons.forEach(weapon => {
         const weaponRow = document.createElement('div');
         weaponRow.className = 'weapon-row';
+        
+        // Поддержка нескольких атак (diceFormulas - массив) или одной (diceFormula - строка)
+        const diceFormulas = weapon.diceFormulas || (weapon.diceFormula ? [weapon.diceFormula] : ['']);
+        const attackNotes = weapon.attackNotes || [];
+
+        let attackSlotsHtml = '';
+        diceFormulas.forEach((formula, index) => {
+          attackSlotsHtml += `
+            <div class="attack-slot">
+              <input type="text" class="weapon-dice-formula" placeholder="3d6 + 2d10 + 5" value="${formula || ''}">
+              <button class="weapon-roll-btn" type="button" title="Roll Damage">🎲</button>
+              <button class="remove-attack-btn" type="button" title="Remove attack" style="${index === 0 ? 'display:none;' : ''}">−</button>
+              <input type="text" class="weapon-attack-notes" placeholder="Attack notes" value="${attackNotes[index] || ''}">
+            </div>
+          `;
+        });
+        
         weaponRow.innerHTML = `
           <div class="weapon-label">Weapon</div>
           <div class="weapon-label">DMG</div>
@@ -607,13 +882,41 @@ function loadAllCharacterData() {
           <input type="text" class="weapon-mag-input" placeholder="MAG" value="${weapon.mag || ''}">
           <input type="text" class="weapon-rof-input" placeholder="ROF" value="${weapon.rof || ''}">
           <button class="delete-btn" type="button" title="Delete">×</button>
+          <div class="weapon-dice-container">
+            <div class="attack-slots">
+              ${attackSlotsHtml}
+            </div>
+            <button class="add-attack-btn" type="button" title="Add attack">+ Attack</button>
+          </div>
           <div class="weapon-notes">
             <span class="weapon-notes-label">NOTES</span>
             <input type="text" class="weapon-notes-input" placeholder="Notes" value="${weapon.notes || ''}">
           </div>
         `;
+
         const deleteBtn = weaponRow.querySelector('.delete-btn');
         deleteBtn.addEventListener('click', () => weaponRow.remove());
+
+        // Add dice roll functionality
+        setupWeaponDiceListeners(weaponRow);
+        
+        // Add attack button functionality
+        const addAttackBtn = weaponRow.querySelector('.add-attack-btn');
+        addAttackBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          addAttackSlot(weaponRow);
+        });
+        
+        // Setup remove buttons
+        const removeBtns = weaponRow.querySelectorAll('.remove-attack-btn');
+        removeBtns.forEach(btn => {
+          btn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const attackSlot = btn.closest('.attack-slot');
+            attackSlot.remove();
+          });
+        });
+
         weaponsContainer.appendChild(weaponRow);
       });
     }
@@ -638,9 +941,18 @@ function loadAllCharacterData() {
   const specialisedSkills = JSON.parse(localStorage.getItem('specialisedSkillsData') || '[]');
   if (specialisedSkills.length > 0) {
     const specRows = document.querySelectorAll('#specialised-skills-body tr');
+    
+    // Если данных больше чем строк, добавляем новые
+    if (specialisedSkills.length > specRows.length) {
+      for (let i = specRows.length; i < specialisedSkills.length; i++) {
+        addSpecialisedSkillRow();
+      }
+    }
+    
+    const updatedRows = document.querySelectorAll('#specialised-skills-body tr');
     specialisedSkills.forEach((skill, index) => {
-      if (index < specRows.length) {
-        const row = specRows[index];
+      if (index < updatedRows.length) {
+        const row = updatedRows[index];
         const statInput = row.querySelector('.ss-stat');
         const nameInput = row.querySelector('.ss-name');
         const modInput = row.querySelector('.ss-mod');
