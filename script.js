@@ -363,7 +363,7 @@ window.onload = () => {
   updateAllSpecialised();
   initDiceRoller();
   initSaveLoad();
-  loadCharacterFromStorage();
+  loadAllCharacterData();
 };
 
 // Load character data from localStorage on page load
@@ -417,7 +417,7 @@ function loadCharacterFromStorage() {
 // Save character data to localStorage
 function saveCharacterToStorage() {
   const lifepathData = JSON.parse(localStorage.getItem('lifepathData') || '{}');
-  
+
   // Save Improvement Points
   if (document.getElementById('imp-current')) {
     lifepathData.impCurrent = document.getElementById('imp-current').value;
@@ -433,8 +433,228 @@ function saveCharacterToStorage() {
   if (document.getElementById('money-total')) {
     lifepathData.moneyTotal = document.getElementById('money-total').value;
   }
-  
+
   localStorage.setItem('lifepathData', JSON.stringify(lifepathData));
+}
+
+// Save all character stats and data to localStorage
+function saveAllCharacterData() {
+  const charData = {};
+  
+  // Stats
+  const statIds = ['stat_int', 'stat_ref', 'stat_dex', 'stat_tech', 'stat_cool', 'stat_will', 
+                   'stat_luck_current', 'stat_luck_max', 'stat_move', 'stat_body', 
+                   'stat_emp_current', 'stat_emp_max'];
+  statIds.forEach(id => {
+    const el = document.getElementById(id);
+    if (el) charData[id] = el.value;
+  });
+  
+  // ID Block
+  const idFields = ['age', 'role', 'role_rank', 'humanity_current', 'humanity_max', 'initiative'];
+  idFields.forEach(id => {
+    const el = document.getElementById(id);
+    if (el) charData[id] = el.value;
+  });
+  
+  // Health
+  const healthFields = ['hp_current', 'hp_max', 'death_save'];
+  healthFields.forEach(id => {
+    const el = document.getElementById(id);
+    if (el) charData[id] = el.value;
+  });
+  const seriouslyWounded = document.getElementById('seriously_wounded');
+  if (seriouslyWounded) charData['seriously_wounded'] = seriouslyWounded.checked;
+  
+  // Armor
+  const armorFields = ['armor_head_sp', 'armor_head_notes', 'armor_head_penalty',
+                       'armor_body_sp', 'armor_body_notes', 'armor_body_penalty',
+                       'armor_shield_sp', 'armor_shield_notes', 'armor_shield_penalty'];
+  armorFields.forEach(id => {
+    const el = document.getElementById(id);
+    if (el) charData[id] = el.value;
+  });
+  
+  // Notes
+  const notesFields = ['critical_injuries', 'addictions', 'notes'];
+  notesFields.forEach(id => {
+    const el = document.getElementById(id);
+    if (el) charData[id] = el.value;
+  });
+  
+  localStorage.setItem('characterData', JSON.stringify(charData));
+  
+  // Also save role abilities
+  const roleAbilities = Array.from(document.querySelectorAll('.role-ability-entry')).map(entry => ({
+    name: entry.querySelector('.role-ability-name')?.value || '',
+    lvl: entry.querySelector('.role-ability-lvl')?.value || ''
+  }));
+  localStorage.setItem('roleAbilitiesData', JSON.stringify(roleAbilities));
+  
+  // Save weapons
+  const weapons = Array.from(document.querySelectorAll('.weapon-row')).map(row => ({
+    name: row.querySelector('.weapon-name-input')?.value || '',
+    dmg: row.querySelector('.weapon-dmg-input')?.value || '',
+    mag: row.querySelector('.weapon-mag-input')?.value || '',
+    rof: row.querySelector('.weapon-rof-input')?.value || '',
+    notes: row.querySelector('.weapon-notes-input')?.value || ''
+  }));
+  localStorage.setItem('weaponsData', JSON.stringify(weapons));
+  
+  // Save skills
+  const skills = Array.from(document.querySelectorAll('.skill-table tr[data-stat]')).map(row => ({
+    skillName: row.querySelector('.skill-name-input')?.value || '',
+    mod: row.querySelector('.mod-input')?.value || '0',
+    lvl: row.querySelector('.lvl-input')?.value || '0',
+    stat: row.dataset.stat
+  }));
+  localStorage.setItem('skillsData', JSON.stringify(skills));
+  
+  // Save specialised skills
+  const specialisedSkills = Array.from(document.querySelectorAll('#specialised-skills-body tr')).map(row => ({
+    stat: row.querySelector('.ss-stat')?.value || '',
+    name: row.querySelector('.ss-name')?.value || '',
+    mod: row.querySelector('.ss-mod')?.value || '0',
+    lvl: row.querySelector('.ss-lvl')?.value || '0'
+  }));
+  localStorage.setItem('specialisedSkillsData', JSON.stringify(specialisedSkills));
+  
+  saveCharacterToStorage();
+}
+
+// Load all character data from localStorage
+function loadAllCharacterData() {
+  const charData = JSON.parse(localStorage.getItem('characterData') || '{}');
+  
+  // Stats
+  const statIds = ['stat_int', 'stat_ref', 'stat_dex', 'stat_tech', 'stat_cool', 'stat_will', 
+                   'stat_luck_current', 'stat_luck_max', 'stat_move', 'stat_body', 
+                   'stat_emp_current', 'stat_emp_max'];
+  statIds.forEach(id => {
+    const el = document.getElementById(id);
+    if (el && charData[id]) el.value = charData[id];
+  });
+  
+  // ID Block
+  const idFields = ['age', 'role', 'role_rank', 'humanity_current', 'humanity_max', 'initiative'];
+  idFields.forEach(id => {
+    const el = document.getElementById(id);
+    if (el && charData[id]) el.value = charData[id];
+  });
+  
+  // Health
+  const healthFields = ['hp_current', 'hp_max', 'death_save'];
+  healthFields.forEach(id => {
+    const el = document.getElementById(id);
+    if (el && charData[id]) el.value = charData[id];
+  });
+  const seriouslyWounded = document.getElementById('seriously_wounded');
+  if (seriouslyWounded && charData['seriously_wounded'] !== undefined) {
+    seriouslyWounded.checked = charData['seriously_wounded'];
+  }
+  
+  // Armor
+  const armorFields = ['armor_head_sp', 'armor_head_notes', 'armor_head_penalty',
+                       'armor_body_sp', 'armor_body_notes', 'armor_body_penalty',
+                       'armor_shield_sp', 'armor_shield_notes', 'armor_shield_penalty'];
+  armorFields.forEach(id => {
+    const el = document.getElementById(id);
+    if (el && charData[id]) el.value = charData[id];
+  });
+  
+  // Notes
+  const notesFields = ['critical_injuries', 'addictions', 'notes'];
+  notesFields.forEach(id => {
+    const el = document.getElementById(id);
+    if (el && charData[id]) el.value = charData[id];
+  });
+  
+  // Load role abilities
+  const roleAbilities = JSON.parse(localStorage.getItem('roleAbilitiesData') || '[]');
+  if (roleAbilities.length > 0) {
+    const roleAbilityContainer = document.getElementById('role-ability-container');
+    if (roleAbilityContainer) {
+      roleAbilityContainer.innerHTML = '';
+      roleAbilities.forEach(ability => {
+        const entry = document.createElement('div');
+        entry.className = 'role-ability-entry';
+        entry.innerHTML = `
+          <input type="text" class="role-ability-name" placeholder="Ability name" value="${ability.name || ''}">
+          <input type="number" class="role-ability-lvl" placeholder="LVL" value="${ability.lvl || ''}">
+        `;
+        roleAbilityContainer.appendChild(entry);
+      });
+    }
+  }
+  
+  // Load weapons
+  const weapons = JSON.parse(localStorage.getItem('weaponsData') || '[]');
+  if (weapons.length > 0) {
+    const weaponsContainer = document.getElementById('weapons-container');
+    if (weaponsContainer) {
+      weaponsContainer.innerHTML = '';
+      weapons.forEach(weapon => {
+        const weaponRow = document.createElement('div');
+        weaponRow.className = 'weapon-row';
+        weaponRow.innerHTML = `
+          <div class="weapon-label">Weapon</div>
+          <div class="weapon-label">DMG</div>
+          <div class="weapon-label">MAG</div>
+          <div class="weapon-label">ROF</div>
+          <div></div>
+          <input type="text" class="weapon-name-input" placeholder="Weapon name" value="${weapon.name || ''}">
+          <input type="text" class="weapon-dmg-input" placeholder="DMG" value="${weapon.dmg || ''}">
+          <input type="text" class="weapon-mag-input" placeholder="MAG" value="${weapon.mag || ''}">
+          <input type="text" class="weapon-rof-input" placeholder="ROF" value="${weapon.rof || ''}">
+          <button class="delete-btn" type="button" title="Delete">×</button>
+          <div class="weapon-notes">
+            <span class="weapon-notes-label">NOTES</span>
+            <input type="text" class="weapon-notes-input" placeholder="Notes" value="${weapon.notes || ''}">
+          </div>
+        `;
+        const deleteBtn = weaponRow.querySelector('.delete-btn');
+        deleteBtn.addEventListener('click', () => weaponRow.remove());
+        weaponsContainer.appendChild(weaponRow);
+      });
+    }
+  }
+  
+  // Load skills
+  const skills = JSON.parse(localStorage.getItem('skillsData') || '[]');
+  if (skills.length > 0) {
+    skills.forEach(skill => {
+      const row = document.querySelector(`.skill-table tr[data-stat="${skill.stat}"][data-skill-name="${skill.skillName}"]`);
+      if (row) {
+        const modInput = row.querySelector('.mod-input');
+        const lvlInput = row.querySelector('.lvl-input');
+        if (modInput && skill.mod) modInput.value = skill.mod;
+        if (lvlInput && skill.lvl) lvlInput.value = skill.lvl;
+        updateRow(row);
+      }
+    });
+  }
+  
+  // Load specialised skills
+  const specialisedSkills = JSON.parse(localStorage.getItem('specialisedSkillsData') || '[]');
+  if (specialisedSkills.length > 0) {
+    const specRows = document.querySelectorAll('#specialised-skills-body tr');
+    specialisedSkills.forEach((skill, index) => {
+      if (index < specRows.length) {
+        const row = specRows[index];
+        const statInput = row.querySelector('.ss-stat');
+        const nameInput = row.querySelector('.ss-name');
+        const modInput = row.querySelector('.ss-mod');
+        const lvlInput = row.querySelector('.ss-lvl');
+        if (statInput && skill.stat) statInput.value = skill.stat;
+        if (nameInput && skill.name) nameInput.value = skill.name;
+        if (modInput && skill.mod) modInput.value = skill.mod;
+        if (lvlInput && skill.lvl) lvlInput.value = skill.lvl;
+        updateSpecialisedRow(row);
+      }
+    });
+  }
+  
+  loadCharacterFromStorage();
 }
 
 // Add event listeners for character data saving
@@ -443,11 +663,27 @@ document.addEventListener('DOMContentLoaded', () => {
   const impMax = document.getElementById('imp-max');
   const repValue = document.getElementById('rep-value');
   const moneyTotal = document.getElementById('money-total');
-  
+
   [impCurrent, impMax, repValue, moneyTotal].forEach(el => {
     if (el) {
       el.addEventListener('input', saveCharacterToStorage);
     }
+  });
+  
+  // Global auto-save for all inputs on the page
+  document.addEventListener('input', (e) => {
+    // Save on any input change with debounce
+    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.tagName === 'SELECT') {
+      clearTimeout(window.autoSaveTimeout);
+      window.autoSaveTimeout = setTimeout(() => {
+        saveAllCharacterData();
+      }, 500);
+    }
+  });
+  
+  // Save before page unload
+  window.addEventListener('beforeunload', () => {
+    saveAllCharacterData();
   });
 });
 
@@ -834,6 +1070,9 @@ function loadData(data) {
       document.getElementById('money-total').value = data.moneyTotal;
     }
   }
+  
+  // Save loaded data to localStorage for persistence
+  saveAllCharacterData();
 }
 
 // Reset dice options to default

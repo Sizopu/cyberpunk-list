@@ -704,6 +704,11 @@ function loadData(data) {
     }
   }
   
+  // Trigger global save to persist all data
+  if (typeof saveAllCharacterData === 'function') {
+    saveAllCharacterData();
+  }
+  
   setTimeout(() => {
     location.reload();
   }, 100);

@@ -729,6 +729,11 @@ function loadData(data) {
     }
   }
   
+  // Trigger global save to persist all data
+  if (typeof saveAllCharacterData === 'function') {
+    saveAllCharacterData();
+  }
+  
   // Reload page after a short delay to apply all changes
   setTimeout(() => {
     location.reload();
