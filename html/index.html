@@ -36,8 +36,11 @@
 <div class="block id-block">
 <div class="block-header">id</div>
 <div class="id-content">
-<div class="fingerprint-area">
+<div class="fingerprint-area" id="avatar-container" title="Click to set avatar">
+<div class="avatar-placeholder" id="avatar-placeholder">
 <div class="fingerprint"></div>
+</div>
+<img class="avatar-image" id="avatar-image" style="display: none;" alt="Character Avatar">
 <div class="id-date">[03-06-22]</div>
 </div>
 <div class="id-fields">
@@ -198,6 +201,31 @@
 <script src="../js/utils.js"></script>
 <script src="../js/script.js"></script>
 <script src="../js/weapon-dice.js"></script>
+
+<!-- AVATAR DIALOG -->
+<div class="dialog-overlay" id="avatar-dialog-overlay">
+  <div class="dialog avatar-dialog">
+    <div class="dialog-header">
+      <span>Set Character Avatar</span>
+      <button class="dialog-close" id="avatar-dialog-close">×</button>
+    </div>
+    <div class="dialog-content">
+      <div class="avatar-dialog-section">
+        <label>Imgur Image URL</label>
+        <input type="url" id="avatar-url-input" class="avatar-url-input" placeholder="https://i.imgur.com/your-image.png">
+        <p class="avatar-help-text">Paste a direct link to an image from Imgur (ends with .png, .jpg, .gif, or .webp)</p>
+      </div>
+      <div class="avatar-preview-section" id="avatar-preview-section" style="display: none;">
+        <label>Preview</label>
+        <img id="avatar-preview" class="avatar-preview" alt="Preview">
+      </div>
+    </div>
+    <div class="dialog-footer">
+      <button class="dialog-btn" id="avatar-remove-btn">Remove Avatar</button>
+      <button class="dialog-btn dialog-btn-primary" id="avatar-save-btn">Save Avatar</button>
+    </div>
+  </div>
+</div>
 
 <!-- DICE ROLL DIALOG -->
 <div class="dialog-overlay" id="dice-dialog-overlay">

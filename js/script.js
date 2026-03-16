@@ -716,6 +716,12 @@ function saveAllCharacterData() {
     if (el) charData[id] = el.value;
   });
   
+  // Avatar
+  const avatarImage = document.getElementById('avatar-image');
+  if (avatarImage && avatarImage.src && avatarImage.style.display !== 'none') {
+    charData['avatar'] = avatarImage.src;
+  }
+  
   // Health
   const healthFields = ['hp_current', 'hp_max', 'death_save'];
   healthFields.forEach(id => {
@@ -804,6 +810,11 @@ function loadAllCharacterData() {
     if (el && charData[id]) el.value = charData[id];
   });
   
+  // Avatar
+  if (charData['avatar']) {
+    loadAvatar(charData['avatar']);
+  }
+
   // Health
   const healthFields = ['hp_current', 'hp_max', 'death_save'];
   healthFields.forEach(id => {
@@ -1291,6 +1302,11 @@ function loadData(data) {
   if ('humanity_max' in char && document.getElementById('humanity_max')) document.getElementById('humanity_max').value = char.humanity_max;
   if ('initiative' in char && document.getElementById('initiative')) document.getElementById('initiative').value = char.initiative;
   
+  // Avatar
+  if ('avatar' in char && char.avatar) {
+    loadAvatar(char.avatar);
+  }
+
   // Health
   if ('hp_current' in char && document.getElementById('hp_current')) document.getElementById('hp_current').value = char.hp_current;
   if ('hp_max' in char && document.getElementById('hp_max')) document.getElementById('hp_max').value = char.hp_max;
@@ -1568,3 +1584,147 @@ function displayDiceResult(rolls, totalText, description, isSkillRoll, diceType 
     diceDescription.textContent = description;
   }
 }
+
+// ========================================
+// AVATAR MANAGEMENT
+// ========================================
+
+// Load avatar from URL
+function loadAvatar(url) {
+  const avatarImage = document.getElementById('avatar-image');
+  const avatarPlaceholder = document.getElementById('avatar-placeholder');
+  
+  if (avatarImage && url) {
+    avatarImage.src = url;
+    avatarImage.style.display = 'block';
+    if (avatarPlaceholder) {
+      avatarPlaceholder.style.display = 'none';
+    }
+  }
+}
+
+// Remove avatar
+function removeAvatar() {
+  const avatarImage = document.getElementById('avatar-image');
+  const avatarPlaceholder = document.getElementById('avatar-placeholder');
+  
+  if (avatarImage) {
+    avatarImage.src = '';
+    avatarImage.style.display = 'none';
+  }
+  if (avatarPlaceholder) {
+    avatarPlaceholder.style.display = 'flex';
+  }
+  
+  // Clear from storage
+  const charData = JSON.parse(charStorage.getItem('characterData') || '{}');
+  delete charData['avatar'];
+  charStorage.setItem('characterData', JSON.stringify(charData));
+}
+
+// Show avatar dialog
+function showAvatarDialog() {
+  const dialogOverlay = document.getElementById('avatar-dialog-overlay');
+  const avatarInput = document.getElementById('avatar-url-input');
+  const avatarPreviewSection = document.getElementById('avatar-preview-section');
+  const avatarPreview = document.getElementById('avatar-preview');
+  const avatarImage = document.getElementById('avatar-image');
+  
+  if (!dialogOverlay) return;
+  
+  // Get current avatar URL
+  let currentUrl = '';
+  if (avatarImage && avatarImage.style.display !== 'none') {
+    currentUrl = avatarImage.src;
+  }
+  
+  // Set input value
+  if (avatarInput) {
+    avatarInput.value = currentUrl;
+  }
+  
+  // Show preview if URL exists
+  if (avatarPreviewSection && avatarPreview && currentUrl) {
+    avatarPreview.src = currentUrl;
+    avatarPreviewSection.style.display = 'flex';
+  } else if (avatarPreviewSection) {
+    avatarPreviewSection.style.display = 'none';
+  }
+  
+  dialogOverlay.classList.add('active');
+}
+
+// Initialize avatar functionality
+function initAvatar() {
+  const avatarContainer = document.getElementById('avatar-container');
+  const dialogOverlay = document.getElementById('avatar-dialog-overlay');
+  const dialogClose = document.getElementById('avatar-dialog-close');
+  const saveBtn = document.getElementById('avatar-save-btn');
+  const removeBtn = document.getElementById('avatar-remove-btn');
+  const avatarInput = document.getElementById('avatar-url-input');
+  const avatarPreviewSection = document.getElementById('avatar-preview-section');
+  const avatarPreview = document.getElementById('avatar-preview');
+  
+  // Open dialog on avatar click
+  if (avatarContainer) {
+    avatarContainer.addEventListener('click', showAvatarDialog);
+  }
+  
+  if (!dialogOverlay) return;
+  
+  // Close dialog
+  function closeAvatarDialog() {
+    dialogOverlay.classList.remove('active');
+  }
+  
+  if (dialogClose) {
+    dialogClose.addEventListener('click', closeAvatarDialog);
+  }
+  
+  // Close on overlay click
+  dialogOverlay.addEventListener('click', (e) => {
+    if (e.target === dialogOverlay) {
+      closeAvatarDialog();
+    }
+  });
+  
+  // Preview on input change
+  if (avatarInput) {
+    avatarInput.addEventListener('input', () => {
+      const url = avatarInput.value.trim();
+      if (url && (url.endsWith('.png') || url.endsWith('.jpg') || url.endsWith('.jpeg') || url.endsWith('.gif') || url.endsWith('.webp'))) {
+        if (avatarPreview) {
+          avatarPreview.src = url;
+          avatarPreviewSection.style.display = 'flex';
+        }
+      } else if (avatarPreviewSection) {
+        avatarPreviewSection.style.display = 'none';
+      }
+    });
+  }
+  
+  // Save avatar
+  if (saveBtn) {
+    saveBtn.addEventListener('click', () => {
+      const url = avatarInput.value.trim();
+      if (url) {
+        loadAvatar(url);
+        saveAllCharacterData();
+      }
+      closeAvatarDialog();
+    });
+  }
+  
+  // Remove avatar
+  if (removeBtn) {
+    removeBtn.addEventListener('click', () => {
+      removeAvatar();
+      closeAvatarDialog();
+    });
+  }
+}
+
+// Add avatar initialization to DOMContentLoaded
+document.addEventListener('DOMContentLoaded', () => {
+  initAvatar();
+});
