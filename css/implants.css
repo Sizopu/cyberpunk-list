@@ -297,20 +297,25 @@
   margin-top: 5px;
 }
 
-.total-weight {
+.inventory-totals {
+  display: flex;
+  gap: 20px;
+}
+
+.total-item {
   display: flex;
   align-items: center;
   gap: 10px;
 }
 
-.total-weight label {
+.total-item label {
   font-size: 8px;
   text-transform: uppercase;
   color: #8b949e;
   letter-spacing: 1px;
 }
 
-.total-weight span {
+.total-item span {
   font-size: 14px;
   font-weight: bold;
   color: #c9c6b9;

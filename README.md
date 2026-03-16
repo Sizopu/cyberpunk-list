@@ -93,11 +93,14 @@ project-dnd/
 | `character_{id}_weapons` | Оружие | `array` |
 | `character_{id}_armor` | Броня | `object` |
 | `character_{id}_health` | Здоровье (HP, Death Save) | `object` |
-| `character_{id}_idBlock` | ID блок (имя, возраст, роль, аватар) | `object` |
+| `character_{id}_idBlock` | ID блок (имя, возраст, роль, аватар, XP) | `object` |
 | `character_{id}_cyberware` | Киберимпланты | `array` |
 | `character_{id}_inventory` | Инвентарь | `array` |
+| `character_{id}_lifepath` | Lifepath данные | `object` |
 | `character_{id}_notes` | Заметки | `array` |
+| `character_{id}_mobs` | Мобы/NPC | `array` |
 | `character_{id}_avatar` | Ссылка на аватар (Imgur) | `string` |
+| `character_{id}_moneyTotal` | Общая сумма денег | `string` |
 
 ### Мобы/NPC (localStorage)
 
@@ -163,6 +166,10 @@ project-dnd/
 - Предпросмотр покажет изображение перед сохранением
 - Нажмите **Save Avatar** для сохранения
 - Нажмите **Remove Avatar** для удаления аватара
+
+**Опыт (XP):**
+- Введите текущее количество очков опыта в поле **XP**
+- Используется для отслеживания прогресса персонажа
 
 **Характеристики (Stats):**
 - Введите значения: INT, REF, DEX, TECH, COOL, WILL, LUCK, MOVE, BODY, EMP
@@ -243,9 +250,12 @@ project-dnd/
 Все данные сохраняются автоматически в `localStorage` браузера при каждом изменении.
 
 ### Экспорт (Save)
-1. Нажмите **💾 Save** в навигационной панели
-2. Скачается файл: `cyberpunk-character-YYYY-MM-DD.json`
-3. Файл содержит **все данные**:
+**Доступно только на странице Characters (`main.html`)**
+
+1. Откройте **Characters** (`main.html`)
+2. Нажмите **💾 Save All** в навигационной панели
+3. Скачается файл: `cyberpunk-all-characters-YYYY-MM-DD.json`
+4. Файл содержит **все данные**:
    - Все персонажи
    - Все импланты
    - Весь инвентарь
@@ -256,26 +266,37 @@ project-dnd/
 **Структура экспортного файла:**
 ```json
 {
-  "version": "1.0",
+  "version": "2.0",
   "exportDate": "2026-03-16T10:00:00.000Z",
-  "character": { ... },
-  "roleAbilities": [ ... ],
-  "weapons": [ ... ],
-  "skills": [ ... ],
-  "specialisedSkills": [ ... ],
-  "lifepath": { ... },
-  "inventory": { ... },
-  "cyberware": [ ... ],
-  "notes": [ ... ],
-  "mobs": [ ... ],
-  "moneyTotal": "1000"
+  "characters": [
+    {
+      "profile": { "id": 123, "name": "..." },
+      "character": { ... },
+      "roleAbilities": [ ... ],
+      "weapons": [ ... ],
+      "skills": [ ... ],
+      "specialisedSkills": [ ... ],
+      "lifepath": { ... },
+      "inventory": { ... },
+      "cyberware": [ ... ],
+      "notes": [ ... ],
+      "mobs": [ ... ],
+      "moneyTotal": "1000"
+    }
+  ]
 }
 ```
 
 ### Импорт (Load)
-1. Нажмите **📂 Load**
-2. Выберите JSON-файл экспорта
-3. Данные загрузятся и страница перезагрузится
+**Доступно только на странице Characters (`main.html`)**
+
+1. Откройте **Characters** (`main.html`)
+2. Нажмите **📂 Load**
+3. Выберите JSON-файл экспорта
+4. Персонажи **добавятся к существующим** (если персонаж с таким ID уже есть, он обновится)
+5. Страница перезагрузится
+
+**Примечание:** При загрузке файла персонажи не заменяют все существующие, а добавляются к ним. Если персонаж с таким же ID уже существует, его данные обновятся.
 
 ### Тестовый файл
 В проекте есть файл `test-character.json` для проверки загрузки:

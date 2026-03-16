@@ -211,6 +211,39 @@
   font-weight: bold;
 }
 
+/* Stats Summary */
+.stats-summary {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.stat-summary-item {
+  background: #232931;
+  border: 1px solid #3d4149;
+  border-radius: 3px;
+  padding: 8px;
+  text-align: center;
+}
+
+.stat-label {
+  display: block;
+  font-size: 8px;
+  font-weight: bold;
+  text-transform: uppercase;
+  color: #f78166;
+  margin-bottom: 4px;
+  letter-spacing: 1px;
+}
+
+.stat-value {
+  display: block;
+  font-size: 14px;
+  color: #c9c6b9;
+  font-weight: bold;
+}
+
 /* Action Buttons */
 .character-actions {
   display: flex;

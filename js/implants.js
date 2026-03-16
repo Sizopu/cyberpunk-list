@@ -489,67 +489,73 @@ function renderImplantMarkers() {
 }
 
 function saveCyberwareData() {
-  localStorage.setItem('cyberwareImplants', JSON.stringify(implants));
+  charStorage.setItem('cyberwareImplants', JSON.stringify(implants));
 }
 
 function loadCyberwareData() {
-  const saved = localStorage.getItem('cyberwareImplants');
+  const saved = charStorage.getItem('cyberwareImplants');
   if (!saved) return;
-  
+
   implants = JSON.parse(saved);
 }
 
 // Load character data from localStorage on page load
 function loadCharacterFromStorage() {
-  const lifepathData = localStorage.getItem('lifepathData');
-  if (lifepathData) {
-    const data = JSON.parse(lifepathData);
-    
+  // Load lifepath data from character-specific storage
+  const lifepathData = JSON.parse(charStorage.getItem('lifepathData') || '{}');
+  
+  if (Object.keys(lifepathData).length > 0) {
     // Load Improvement Points
-    if ('impCurrent' in data && document.getElementById('imp-current')) {
-      document.getElementById('imp-current').value = data.impCurrent;
+    if ('impCurrent' in lifepathData && document.getElementById('imp-current')) {
+      document.getElementById('imp-current').value = lifepathData.impCurrent;
     }
-    if ('impMax' in data && document.getElementById('imp-max')) {
-      document.getElementById('imp-max').value = data.impMax;
+    if ('impMax' in lifepathData && document.getElementById('imp-max')) {
+      document.getElementById('imp-max').value = lifepathData.impMax;
     }
     // Load Reputation
-    if ('repValue' in data && document.getElementById('rep-value')) {
-      document.getElementById('rep-value').value = data.repValue;
+    if ('repValue' in lifepathData && document.getElementById('rep-value')) {
+      document.getElementById('rep-value').value = lifepathData.repValue;
     }
     // Load Money Total
-    if ('moneyTotal' in data && document.getElementById('money-total')) {
-      document.getElementById('money-total').value = data.moneyTotal;
+    if ('moneyTotal' in lifepathData && document.getElementById('money-total')) {
+      document.getElementById('money-total').value = lifepathData.moneyTotal;
     }
   }
+
+  // Load inventory from character-specific storage
+  const inventoryData = charStorage.getItem('inventoryData');
+  const inventoryBody = document.getElementById('inventory-body');
   
-  // Load inventory
-  const inventoryData = localStorage.getItem('inventoryData');
-  if (inventoryData) {
-    const data = JSON.parse(inventoryData);
-    const inventoryBody = document.getElementById('inventory-body');
-    if (inventoryBody && data.length > 0) {
-      inventoryBody.innerHTML = '';
-      data.forEach(item => {
-        const tr = document.createElement('tr');
-        tr.innerHTML = `
-          <td><input type="text" class="inventory-gear" value="${item.gear || ''}"></td>
-          <td><input type="number" class="inventory-cost" value="${item.cost || ''}"></td>
-          <td><input type="number" class="inventory-weight" value="${item.weight || ''}"></td>
-          <td><input type="text" class="inventory-notes" value="${item.notes || ''}"></td>
-          <td><input type="number" class="inventory-cash" value="${item.cash || ''}"></td>
-        `;
-        inventoryBody.appendChild(tr);
-      });
-      if (typeof updateTotalWeight === 'function') updateTotalWeight();
-      if (typeof updateTotalMoney === 'function') updateTotalMoney();
+  if (inventoryBody) {
+    inventoryBody.innerHTML = '';
+    
+    if (inventoryData) {
+      const data = JSON.parse(inventoryData);
+      if (data.length > 0) {
+        data.forEach(item => {
+          const tr = document.createElement('tr');
+          tr.innerHTML = `
+            <td><input type="text" class="inventory-gear" value="${item.gear || ''}"></td>
+            <td><input type="number" class="inventory-cost" value="${item.cost || ''}"></td>
+            <td><input type="number" class="inventory-weight" value="${item.weight || ''}"></td>
+            <td><input type="text" class="inventory-notes" value="${item.notes || ''}"></td>
+            <td><input type="number" class="inventory-cash" value="${item.cash || ''}"></td>
+          `;
+          inventoryBody.appendChild(tr);
+        });
+      }
     }
+    
+    // Update totals
+    if (typeof updateTotalWeight === 'function') updateTotalWeight();
+    if (typeof updateTotalMoney === 'function') updateTotalMoney();
   }
 }
 
 // Save character data to localStorage
 function saveCharacterToStorage() {
-  const lifepathData = JSON.parse(localStorage.getItem('lifepathData') || '{}');
-  
+  const lifepathData = JSON.parse(charStorage.getItem('lifepathData') || '{}');
+
   if (document.getElementById('imp-current')) {
     lifepathData.impCurrent = document.getElementById('imp-current').value;
   }
@@ -562,8 +568,8 @@ function saveCharacterToStorage() {
   if (document.getElementById('money-total')) {
     lifepathData.moneyTotal = document.getElementById('money-total').value;
   }
-  
-  localStorage.setItem('lifepathData', JSON.stringify(lifepathData));
+
+  charStorage.setItem('lifepathData', JSON.stringify(lifepathData));
 }
 
 // Helper function to safely get element value
@@ -667,12 +673,12 @@ function saveAllData() {
       lvl: row.querySelector('.ss-lvl')?.value || '0'
     })),
     // LocalStorage data
-    lifepath: JSON.parse(localStorage.getItem('lifepathData') || '{}'),
-    inventory: JSON.parse(localStorage.getItem('inventoryData') || '{}'),
-    cyberware: JSON.parse(localStorage.getItem('cyberwareImplants') || '[]'),
-    notes: JSON.parse(localStorage.getItem('notesData') || '[]'),
-    mobs: JSON.parse(localStorage.getItem('mobsData') || '[]'),
-    moneyTotal: localStorage.getItem('moneyTotal') || ''
+    lifepath: JSON.parse(charStorage.getItem('lifepathData') || '{}'),
+    inventory: JSON.parse(charStorage.getItem('inventoryData') || '[]'),
+    cyberware: JSON.parse(charStorage.getItem('cyberwareImplants') || '[]'),
+    notes: JSON.parse(charStorage.getItem('notesData') || '[]'),
+    mobs: JSON.parse(charStorage.getItem('mobsData') || '[]'),
+    moneyTotal: charStorage.getItem('moneyTotal') || ''
   };
   
   // Create and download file
@@ -725,9 +731,11 @@ function loadData(data) {
   if ('stat_emp_max' in char && document.getElementById('stat_emp_max')) document.getElementById('stat_emp_max').value = char.stat_emp_max;
   
   // ID Block
+  if ('char_name' in char && document.getElementById('char-name')) document.getElementById('char-name').value = char.char_name;
   if ('age' in char && document.getElementById('age')) document.getElementById('age').value = char.age;
   if ('role' in char && document.getElementById('role')) document.getElementById('role').value = char.role;
   if ('role_rank' in char && document.getElementById('role_rank')) document.getElementById('role_rank').value = char.role_rank;
+  if ('xp_current' in char && document.getElementById('xp_current')) document.getElementById('xp_current').value = char.xp_current;
   if ('humanity_current' in char && document.getElementById('humanity_current')) document.getElementById('humanity_current').value = char.humanity_current;
   if ('humanity_max' in char && document.getElementById('humanity_max')) document.getElementById('humanity_max').value = char.humanity_max;
   if ('initiative' in char && document.getElementById('initiative')) document.getElementById('initiative').value = char.initiative;
@@ -833,7 +841,7 @@ function loadData(data) {
   
   // LocalStorage data
   if (data.lifepath && Object.keys(data.lifepath).length > 0) {
-    localStorage.setItem('lifepathData', JSON.stringify(data.lifepath));
+    charStorage.setItem('lifepathData', JSON.stringify(data.lifepath));
     // Also update DOM elements for imp-current, imp-max, rep-value
     if (data.lifepath.impCurrent && document.getElementById('imp-current')) {
       document.getElementById('imp-current').value = data.lifepath.impCurrent;
@@ -846,28 +854,28 @@ function loadData(data) {
     }
   }
   if (data.inventory && Object.keys(data.inventory).length > 0) {
-    localStorage.setItem('inventoryData', JSON.stringify(data.inventory));
+    charStorage.setItem('inventoryData', JSON.stringify(data.inventory));
   }
   if (data.cyberware) {
-    localStorage.setItem('cyberwareImplants', JSON.stringify(data.cyberware));
+    charStorage.setItem('cyberwareImplants', JSON.stringify(data.cyberware));
   }
   if (data.notes) {
-    localStorage.setItem('notesData', JSON.stringify(data.notes));
+    charStorage.setItem('notesData', JSON.stringify(data.notes));
   }
   if (data.mobs) {
-    localStorage.setItem('mobsData', JSON.stringify(data.mobs));
+    charStorage.setItem('mobsData', JSON.stringify(data.mobs));
   }
   if (data.moneyTotal) {
-    localStorage.setItem('moneyTotal', data.moneyTotal);
+    charStorage.setItem('moneyTotal', data.moneyTotal);
     if (document.getElementById('money-total')) {
       document.getElementById('money-total').value = data.moneyTotal;
     }
   }
-  
-  // Reload page after a short delay to apply all changes
-  setTimeout(() => {
-    location.reload();
-  }, 100);
+
+  // Reload character data to update the page
+  if (typeof loadAllCharacterData === 'function') {
+    loadAllCharacterData();
+  }
 }
 
 // ==================== INVENTORY ====================
@@ -891,8 +899,9 @@ function initInventory() {
       addInventoryRow();
     }
     updateTotalWeight();
+    updateTotalMoney();
   }
-  
+
   // Save on input
   inventoryBody.addEventListener('input', saveInventoryData);
 }
@@ -921,7 +930,7 @@ function saveInventoryData() {
       cash: row.querySelector('.inventory-cash')?.value || ''
     });
   });
-  localStorage.setItem('inventoryData', JSON.stringify(data));
+  charStorage.setItem('inventoryData', JSON.stringify(data));
   updateTotalWeight();
 }
 
@@ -934,27 +943,47 @@ function updateTotalWeight() {
   if (el) el.textContent = total.toFixed(2);
 }
 
+function updateTotalMoney() {
+  let total = 0;
+  document.querySelectorAll('.inventory-cash').forEach(input => {
+    total += parseFloat(input.value) || 0;
+  });
+  const el = document.getElementById('total-cash-value');
+  if (el) el.textContent = total.toFixed(0);
+}
+
 function loadInventoryData() {
-  const saved = localStorage.getItem('inventoryData');
+  const saved = charStorage.getItem('inventoryData');
   const inventoryBody = document.getElementById('inventory-body');
-  if (!saved) return;
   
-  const data = JSON.parse(saved);
+  if (!inventoryBody) return;
+  
   inventoryBody.innerHTML = '';
   
-  data.forEach(item => {
-    const tr = document.createElement('tr');
-    tr.innerHTML = `
-      <td><input type="text" class="inventory-gear" value="${item.gear || ''}"></td>
-      <td><input type="number" class="inventory-cost" value="${item.cost || ''}"></td>
-      <td><input type="number" class="inventory-weight" value="${item.weight || ''}"></td>
-      <td><input type="text" class="inventory-notes" value="${item.notes || ''}"></td>
-      <td><input type="number" class="inventory-cash" value="${item.cash || ''}"></td>
-    `;
-    inventoryBody.appendChild(tr);
-  });
+  if (!saved) {
+    updateTotalWeight();
+    updateTotalMoney();
+    return;
+  }
+
+  const data = JSON.parse(saved);
   
+  if (data.length > 0) {
+    data.forEach(item => {
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td><input type="text" class="inventory-gear" value="${item.gear || ''}"></td>
+        <td><input type="number" class="inventory-cost" value="${item.cost || ''}"></td>
+        <td><input type="number" class="inventory-weight" value="${item.weight || ''}"></td>
+        <td><input type="text" class="inventory-notes" value="${item.notes || ''}"></td>
+        <td><input type="number" class="inventory-cash" value="${item.cash || ''}"></td>
+      `;
+      inventoryBody.appendChild(tr);
+    });
+  }
+
   updateTotalWeight();
+  updateTotalMoney();
 }
 
 // ==================== LIFEPATH ====================
@@ -979,6 +1008,10 @@ function saveLifepathData() {
     repValue: document.getElementById('rep-value')?.value || '0',
     // Money Total
     moneyTotal: document.getElementById('money-total')?.value || '',
+    // Aliases
+    aliases: document.querySelector('.aliases-input')?.value || '',
+    // Enemies
+    enemies: Array.from(document.querySelectorAll('.enemies-grid input')).map(input => input.value || ''),
     // Main lifepath
     culturalOrigins: document.getElementById('cultural-origins')?.value || '',
     personality: document.getElementById('personality')?.value || '',
@@ -1003,24 +1036,41 @@ function saveLifepathData() {
     rent: document.getElementById('rent')?.value || '',
     lifestyle: document.getElementById('lifestyle')?.value || ''
   };
-  localStorage.setItem('lifepathData', JSON.stringify(data));
+  charStorage.setItem('lifepathData', JSON.stringify(data));
 }
 
 function loadLifepathData() {
-  const saved = localStorage.getItem('lifepathData');
+  const saved = charStorage.getItem('lifepathData');
   if (!saved) return;
-  
+
   const data = JSON.parse(saved);
-  
+
   const setVal = (id, value) => {
     const el = document.getElementById(id);
     if (el) el.value = value || '';
   };
-  
+
   setVal('imp-current', data.impCurrent);
   setVal('imp-max', data.impMax);
   setVal('rep-value', data.repValue);
   setVal('money-total', data.moneyTotal);
+  
+  // Load aliases
+  const aliasesInput = document.querySelector('.aliases-input');
+  if (aliasesInput) {
+    aliasesInput.value = data.aliases || '';
+  }
+  
+  // Load enemies
+  const enemiesInputs = document.querySelectorAll('.enemies-grid input');
+  if (data.enemies && Array.isArray(data.enemies)) {
+    data.enemies.forEach((enemy, index) => {
+      if (enemiesInputs[index]) {
+        enemiesInputs[index].value = enemy;
+      }
+    });
+  }
+  
   setVal('cultural-origins', data.culturalOrigins);
   setVal('personality', data.personality);
   setVal('clothing-styles', data.clothingStyles);

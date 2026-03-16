@@ -19,13 +19,8 @@
     <a href="notes.html" class="nav-link">Notes</a>
     <a href="mobs.html" class="nav-link">Mobs</a>
     <button class="nav-btn" id="dice-roll-btn">🎲 Roll Dice</button>
-    <button class="nav-btn save-btn" id="save-data-btn">💾 Save</button>
-    <button class="nav-btn load-btn" id="load-data-btn">📂 Load</button>
   </div>
 </div>
-
-<!-- Hidden file input for loading -->
-<input type="file" id="load-file-input" accept=".json" style="display: none;">
 
 <div class="sheet">
 
@@ -57,6 +52,7 @@
   </div>
 </div>
 <div class="id-row"><label>role rank</label><input type="text" id="role_rank"></div>
+<div class="id-row"><label>XP</label><input type="number" id="xp_current" class="xp-input" placeholder="0"></div>
 <div class="id-row"><label>humanity</label><input type="number" id="humanity_current" class="humanity-input"><span>/</span><input type="number" id="humanity_max" class="humanity-input"></div>
 </div>
 </div>

@@ -19,13 +19,8 @@
     <a href="notes.html" class="nav-link">Notes</a>
     <a href="mobs.html" class="nav-link">Mobs</a>
     <button class="nav-btn" id="dice-roll-btn">🎲 Roll Dice</button>
-    <button class="nav-btn save-btn" id="save-data-btn">💾 Save</button>
-    <button class="nav-btn load-btn" id="load-data-btn">📂 Load</button>
   </div>
 </div>
-
-<!-- Hidden file input for loading -->
-<input type="file" id="load-file-input" accept=".json" style="display: none;">
 
 <div class="cyberware-page">
   <div class="cyberware-container">
@@ -159,9 +154,15 @@
             </tbody>
           </table>
           <div class="inventory-footer">
-            <div class="total-weight">
-              <label>TOTAL WEIGHT</label>
-              <span id="total-weight-value">0</span>
+            <div class="inventory-totals">
+              <div class="total-item">
+                <label>TOTAL WEIGHT</label>
+                <span id="total-weight-value">0</span>
+              </div>
+              <div class="total-item">
+                <label>TOTAL CASH</label>
+                <span id="total-cash-value">0</span>
+              </div>
             </div>
           </div>
           <button class="add-row-btn" id="add-inventory-row">+</button>

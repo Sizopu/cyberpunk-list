@@ -184,6 +184,19 @@
   padding: 5px 8px;
 }
 
+/* XP input specific */
+.id-row:has(#xp_current) {
+  gap: 10px;
+}
+
+.id-row:has(#xp_current) label {
+  min-width: 100px;
+}
+
+.id-row:has(#xp_current) input {
+  max-width: 100px;
+}
+
 /* Humanity row specific */
 .id-row:has(#humanity_current) {
   gap: 5px;

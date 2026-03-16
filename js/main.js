@@ -117,25 +117,41 @@ function selectCharacter(id) {
 function renderCharacterDetails() {
   const details = document.getElementById('character-details');
   if (!details) return;
-  
+
   if (!selectedCharacterId) {
     details.innerHTML = '<div class="details-placeholder"><p>Select a character or create a new one</p></div>';
     return;
   }
-  
+
   const char = characters.find(c => c.id === selectedCharacterId);
   if (!char) return;
+
+  // Load character data from localStorage with correct key
+  const charDataKey = 'character_' + char.id + '_characterData';
+  const charData = JSON.parse(localStorage.getItem(charDataKey) || '{}');
   
-  // Load character data from localStorage
-  const charData = JSON.parse(localStorage.getItem('character_' + char.id) || '{}');
+  // Get name from character data if available
+  const characterName = charData.char_name || char.name || 'Unnamed';
   
+  // Get stats
+  const stats = {
+    int: charData.stat_int || '-',
+    ref: charData.stat_ref || '-',
+    dex: charData.stat_dex || '-',
+    tech: charData.stat_tech || '-',
+    cool: charData.stat_cool || '-',
+    will: charData.stat_will || '-',
+    body: charData.stat_body || '-',
+    emp: charData.stat_emp_current || '-'
+  };
+
   details.innerHTML = `
     <div class="character-detail-section">
       <h3>Character Info</h3>
       <div class="detail-grid">
         <div class="detail-item">
           <div class="detail-item-label">Name</div>
-          <div class="detail-item-value">${char.name || 'Unnamed'}</div>
+          <div class="detail-item-value">${characterName}</div>
         </div>
         ${char.description ? `
         <div class="detail-item">
@@ -144,12 +160,54 @@ function renderCharacterDetails() {
         </div>
         ` : ''}
         <div class="detail-item">
+          <div class="detail-item-label">Role</div>
+          <div class="detail-item-value">${charData.role || 'Not set'}</div>
+        </div>
+        <div class="detail-item">
           <div class="detail-item-label">Created</div>
           <div class="detail-item-value">${formatDate(char.createdAt)}</div>
         </div>
         <div class="detail-item">
           <div class="detail-item-label">Last Modified</div>
           <div class="detail-item-value">${formatDate(char.updatedAt || char.createdAt)}</div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="character-detail-section">
+      <h3>Stats</h3>
+      <div class="stats-summary">
+        <div class="stat-summary-item">
+          <span class="stat-label">INT</span>
+          <span class="stat-value">${stats.int}</span>
+        </div>
+        <div class="stat-summary-item">
+          <span class="stat-label">REF</span>
+          <span class="stat-value">${stats.ref}</span>
+        </div>
+        <div class="stat-summary-item">
+          <span class="stat-label">DEX</span>
+          <span class="stat-value">${stats.dex}</span>
+        </div>
+        <div class="stat-summary-item">
+          <span class="stat-label">TECH</span>
+          <span class="stat-value">${stats.tech}</span>
+        </div>
+        <div class="stat-summary-item">
+          <span class="stat-label">COOL</span>
+          <span class="stat-value">${stats.cool}</span>
+        </div>
+        <div class="stat-summary-item">
+          <span class="stat-label">WILL</span>
+          <span class="stat-value">${stats.will}</span>
+        </div>
+        <div class="stat-summary-item">
+          <span class="stat-label">BODY</span>
+          <span class="stat-value">${stats.body}</span>
+        </div>
+        <div class="stat-summary-item">
+          <span class="stat-label">EMP</span>
+          <span class="stat-value">${stats.emp}</span>
         </div>
       </div>
     </div>
@@ -168,7 +226,6 @@ function renderCharacterDetails() {
     
     <div class="character-actions">
       <button class="action-btn action-btn-primary" onclick="loadCharacterToSheet('${char.id}')">Load to Character Sheet</button>
-      <button class="action-btn action-btn-secondary" onclick="duplicateCharacter('${char.id}')">Duplicate</button>
       <button class="action-btn action-btn-danger" onclick="deleteCharacter('${char.id}')">Delete</button>
     </div>
   `;
@@ -300,34 +357,6 @@ window.loadCharacterToSheet = function(charId) {
   window.location.href = 'index.html';
 };
 
-// Duplicate character (global function)
-window.duplicateCharacter = function(charId) {
-  const char = characters.find(c => c.id === charId);
-  if (!char) return;
-
-  const newChar = {
-    id: 'char_' + Date.now(),
-    name: char.name + ' (Copy)',
-    description: char.description,
-    createdAt: Date.now(),
-    updatedAt: Date.now()
-  };
-
-  characters.push(newChar);
-
-  // Copy character data
-  const charData = localStorage.getItem('character_' + charId);
-  if (charData) {
-    localStorage.setItem('character_' + newChar.id, charData);
-  } else {
-    localStorage.setItem('character_' + newChar.id, JSON.stringify({}));
-  }
-
-  saveCharacters();
-  renderCharactersList();
-  renderCharacterDetails();
-};
-
 // Save/Load All Characters
 function saveAllCharacters() {
   // Get all characters
@@ -397,19 +426,27 @@ function handleLoadAll(event) {
 
 function loadAllCharacters(data) {
   if (data.characters && Array.isArray(data.characters)) {
+    // Get existing characters
+    const existingCharacters = JSON.parse(localStorage.getItem('characters') || '[]');
+    const newCharacters = [];
+    
     data.characters.forEach(charData => {
       const profile = charData.profile;
       const charId = profile.id;
       const charDataKey = 'character_' + charId;
+
+      // Check if character already exists
+      const existingIndex = existingCharacters.findIndex(c => c.id === charId);
       
-      // Save profile
-      const characters = JSON.parse(localStorage.getItem('characters') || '[]');
-      if (!characters.find(c => c.id === charId)) {
-        characters.push(profile);
-        localStorage.setItem('characters', JSON.stringify(characters));
+      if (existingIndex >= 0) {
+        // Update existing character profile
+        existingCharacters[existingIndex] = profile;
+      } else {
+        // Add new character
+        newCharacters.push(profile);
       }
-      
-      // Save character-specific data
+
+      // Save character-specific data (always update)
       if (charData.character) localStorage.setItem(charDataKey + '_characterData', JSON.stringify(charData.character));
       if (charData.roleAbilities) localStorage.setItem(charDataKey + '_roleAbilitiesData', JSON.stringify(charData.roleAbilities));
       if (charData.weapons) localStorage.setItem(charDataKey + '_weaponsData', JSON.stringify(charData.weapons));
@@ -422,6 +459,10 @@ function loadAllCharacters(data) {
       if (charData.mobs) localStorage.setItem(charDataKey + '_mobsData', JSON.stringify(charData.mobs));
       if (charData.moneyTotal) localStorage.setItem(charDataKey + '_moneyTotal', charData.moneyTotal);
     });
+    
+    // Merge existing and new characters
+    const allCharacters = [...existingCharacters, ...newCharacters];
+    localStorage.setItem('characters', JSON.stringify(allCharacters));
   }
 }
 

@@ -621,7 +621,6 @@ window.onload = () => {
   updateAllSkills();
   updateAllSpecialised();
   initDiceRoller();
-  initSaveLoad();
   loadAllCharacterData();
 };
 
@@ -647,9 +646,9 @@ function loadCharacterFromStorage() {
       document.getElementById('money-total').value = data.moneyTotal;
     }
   }
-  
-  // Load inventory
-  const inventoryData = localStorage.getItem('inventoryData');
+
+  // Load inventory from character-specific storage
+  const inventoryData = charStorage.getItem('inventoryData');
   if (inventoryData) {
     const data = JSON.parse(inventoryData);
     const inventoryBody = document.getElementById('inventory-body');
@@ -668,14 +667,13 @@ function loadCharacterFromStorage() {
       });
       // Update totals
       if (typeof updateTotalWeight === 'function') updateTotalWeight();
-      if (typeof updateTotalMoney === 'function') updateTotalMoney();
     }
   }
 }
 
 // Save character data to localStorage
 function saveCharacterToStorage() {
-  const lifepathData = JSON.parse(localStorage.getItem('lifepathData') || '{}');
+  const lifepathData = JSON.parse(charStorage.getItem('lifepathData') || '{}');
 
   // Save Improvement Points
   if (document.getElementById('imp-current')) {
@@ -693,7 +691,7 @@ function saveCharacterToStorage() {
     lifepathData.moneyTotal = document.getElementById('money-total').value;
   }
 
-  localStorage.setItem('lifepathData', JSON.stringify(lifepathData));
+  charStorage.setItem('lifepathData', JSON.stringify(lifepathData));
 }
 
 // Save all character stats and data to localStorage
@@ -710,7 +708,7 @@ function saveAllCharacterData() {
   });
   
   // ID Block
-  const idFields = ['char_name', 'age', 'role', 'role_rank', 'humanity_current', 'humanity_max', 'initiative'];
+  const idFields = ['char_name', 'age', 'role', 'role_rank', 'xp_current', 'humanity_current', 'humanity_max', 'initiative'];
   idFields.forEach(id => {
     const el = document.getElementById(id);
     if (el) charData[id] = el.value;
@@ -804,7 +802,7 @@ function loadAllCharacterData() {
   });
   
   // ID Block
-  const idFields = ['char_name', 'age', 'role', 'role_rank', 'humanity_current', 'humanity_max', 'initiative'];
+  const idFields = ['char_name', 'age', 'role', 'role_rank', 'xp_current', 'humanity_current', 'humanity_max', 'initiative'];
   idFields.forEach(id => {
     const el = document.getElementById(id);
     if (el && charData[id]) el.value = charData[id];
@@ -1298,6 +1296,7 @@ function loadData(data) {
   if ('age' in char && document.getElementById('age')) document.getElementById('age').value = char.age;
   if ('role' in char && document.getElementById('role')) document.getElementById('role').value = char.role;
   if ('role_rank' in char && document.getElementById('role_rank')) document.getElementById('role_rank').value = char.role_rank;
+  if ('xp_current' in char && document.getElementById('xp_current')) document.getElementById('xp_current').value = char.xp_current;
   if ('humanity_current' in char && document.getElementById('humanity_current')) document.getElementById('humanity_current').value = char.humanity_current;
   if ('humanity_max' in char && document.getElementById('humanity_max')) document.getElementById('humanity_max').value = char.humanity_max;
   if ('initiative' in char && document.getElementById('initiative')) document.getElementById('initiative').value = char.initiative;
@@ -1423,19 +1422,19 @@ function loadData(data) {
     }
   }
   if (data.inventory && Object.keys(data.inventory).length > 0) {
-    localStorage.setItem('inventoryData', JSON.stringify(data.inventory));
+    charStorage.setItem('inventoryData', JSON.stringify(data.inventory));
   }
   if (data.cyberware) {
-    localStorage.setItem('cyberwareImplants', JSON.stringify(data.cyberware));
+    charStorage.setItem('cyberwareImplants', JSON.stringify(data.cyberware));
   }
   if (data.notes) {
-    localStorage.setItem('notesData', JSON.stringify(data.notes));
+    charStorage.setItem('notesData', JSON.stringify(data.notes));
   }
   if (data.mobs) {
-    localStorage.setItem('mobsData', JSON.stringify(data.mobs));
+    charStorage.setItem('mobsData', JSON.stringify(data.mobs));
   }
   if (data.moneyTotal) {
-    localStorage.setItem('moneyTotal', data.moneyTotal);
+    charStorage.setItem('moneyTotal', data.moneyTotal);
     if (document.getElementById('money-total')) {
       document.getElementById('money-total').value = data.moneyTotal;
     }
