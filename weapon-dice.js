@@ -224,6 +224,11 @@ function rollWeaponDice(formula, weaponRow = null, attackSlot = null) {
     return;
   }
 
+  // Get seriously wounded modifier
+  const seriouslyWounded = document.getElementById("seriously_wounded")?.checked || false;
+  const swModifier = seriouslyWounded ? -2 : 0;
+  const swText = seriouslyWounded ? ' (SW -2)' : '';
+
   const rolls = [];
   let total = 0;
   let detailString = '';
@@ -261,20 +266,23 @@ function rollWeaponDice(formula, weaponRow = null, attackSlot = null) {
     }
   });
 
+  // Apply seriously wounded modifier to total
+  total += swModifier;
+
   // Убираем первый знак если это +
   if (detailString.startsWith(' +')) {
     detailString = detailString.substring(3);
   }
 
   // Показываем результат
-  showWeaponDiceResult(rolls, total, detailString, weaponRow, formula, attackSlot);
+  showWeaponDiceResult(rolls, total, detailString, weaponRow, formula, attackSlot, swText);
 }
 
 // Показ результата броска
-function showWeaponDiceResult(rolls, total, detailString, weaponRow, formula, attackSlot = null) {
+function showWeaponDiceResult(rolls, total, detailString, weaponRow, formula, attackSlot = null, swText = '') {
   // Создаём или находим контейнер для результата
   let resultContainer;
-  
+
   if (attackSlot) {
     // Ищем результат после этого attackSlot
     resultContainer = attackSlot.nextElementSibling;
@@ -321,7 +329,7 @@ function showWeaponDiceResult(rolls, total, detailString, weaponRow, formula, at
     <div class="weapon-dice-total">
       <span class="total-label">Итого:</span>
       <span class="total-value">${total}</span>
-      <span class="total-formula">(${detailString} = ${total})</span>
+      <span class="total-formula">(${detailString}${swText} = ${total})</span>
     </div>
     <button class="weapon-dice-clear" type="button">×</button>
   `;

@@ -4,6 +4,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initInventory();
   initLifepath();
   initSaveLoad();
+  initDiceRoller();
   loadCharacterFromStorage();
   
   // Add event listeners for character data saving

@@ -2,6 +2,7 @@
 document.addEventListener('DOMContentLoaded', () => {
   initNotes();
   initSaveLoad();
+  initDiceRoller();
   loadCharacterFromStorage();
   
   // Add event listeners for character data saving

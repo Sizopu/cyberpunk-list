@@ -315,6 +315,51 @@
   </div>
 </div>
 
+<!-- DICE ROLL DIALOG -->
+<div class="dialog-overlay" id="dice-dialog-overlay">
+  <div class="dialog dice-dialog">
+    <div class="dialog-header">
+      <span>Dice Roll</span>
+      <button class="dialog-close" id="dice-dialog-close">×</button>
+    </div>
+    <div class="dialog-content">
+      <div class="dice-options" id="dice-options">
+        <div class="dice-option-group">
+          <label>Dice Type</label>
+          <div class="dice-type-buttons">
+            <button class="dice-type-btn" data-dice="4">d4</button>
+            <button class="dice-type-btn" data-dice="6">d6</button>
+            <button class="dice-type-btn" data-dice="8">d8</button>
+            <button class="dice-type-btn active" data-dice="10">d10</button>
+            <button class="dice-type-btn" data-dice="12">d12</button>
+            <button class="dice-type-btn" data-dice="20">d20</button>
+          </div>
+        </div>
+        <div class="dice-option-group">
+          <label>Number of Dice</label>
+          <div class="dice-count-control">
+            <button class="dice-count-btn" id="dice-count-dec">-</button>
+            <input type="number" id="dice-count" value="1" min="1" max="10">
+            <button class="dice-count-btn" id="dice-count-inc">+</button>
+          </div>
+        </div>
+        <button class="dialog-btn dialog-btn-primary dice-roll-btn" id="dice-roll-confirm">Roll</button>
+      </div>
+      <div class="dice-result-section" id="dice-result-section" style="display: none;">
+        <div class="dice-rolls" id="dice-rolls"></div>
+        <div class="dice-total-display">
+          <span class="dice-total-label">Total:</span>
+          <span class="dice-total-value" id="dice-total-value">0</span>
+        </div>
+        <p class="dice-description" id="dice-description">Roll: 1d10</p>
+      </div>
+    </div>
+    <div class="dialog-footer">
+      <button class="dialog-btn" id="dice-dialog-cancel">Close</button>
+    </div>
+  </div>
+</div>
+
 <script src="script.js"></script>
 <script src="implants.js"></script>
 </body>

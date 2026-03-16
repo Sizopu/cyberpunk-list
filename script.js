@@ -707,7 +707,7 @@ function saveAllCharacterData() {
   });
   
   // ID Block
-  const idFields = ['age', 'role', 'role_rank', 'humanity_current', 'humanity_max', 'initiative'];
+  const idFields = ['char_name', 'age', 'role', 'role_rank', 'humanity_current', 'humanity_max', 'initiative'];
   idFields.forEach(id => {
     const el = document.getElementById(id);
     if (el) charData[id] = el.value;
@@ -794,7 +794,7 @@ function loadAllCharacterData() {
   });
   
   // ID Block
-  const idFields = ['age', 'role', 'role_rank', 'humanity_current', 'humanity_max', 'initiative'];
+  const idFields = ['char_name', 'age', 'role', 'role_rank', 'humanity_current', 'humanity_max', 'initiative'];
   idFields.forEach(id => {
     const el = document.getElementById(id);
     if (el && charData[id]) el.value = charData[id];
@@ -1013,6 +1013,10 @@ function initDiceRoller() {
 
   if (!dialogOverlay) return;
 
+  // Initialize global dice state if not exists
+  if (window.currentDiceType === undefined) window.currentDiceType = 10;
+  if (window.currentDiceCount === undefined) window.currentDiceCount = 1;
+
   // Open dialog from nav button (with dice selection)
   if (diceBtn) {
     diceBtn.addEventListener("click", () => {
@@ -1036,32 +1040,37 @@ function initDiceRoller() {
     }
   });
 
+  // Close button in result section
+  if (dialogCancel) {
+    dialogCancel.addEventListener("click", closeDialog);
+  }
+
   // Dice type selection
   diceTypeBtns.forEach(btn => {
     btn.addEventListener("click", () => {
       diceTypeBtns.forEach(b => b.classList.remove("active"));
       btn.classList.add("active");
-      currentDiceType = parseInt(btn.dataset.dice);
+      window.currentDiceType = parseInt(btn.dataset.dice);
     });
   });
 
   // Dice count controls
-  if (diceCountDec) {
+  if (diceCountDec && diceCountInput) {
     diceCountDec.addEventListener("click", () => {
       let count = parseInt(diceCountInput.value) || 1;
       if (count > 1) {
         diceCountInput.value = count - 1;
-        currentDiceCount = count - 1;
+        window.currentDiceCount = count - 1;
       }
     });
   }
 
-  if (diceCountInc) {
+  if (diceCountInc && diceCountInput) {
     diceCountInc.addEventListener("click", () => {
       let count = parseInt(diceCountInput.value) || 1;
       if (count < 10) {
         diceCountInput.value = count + 1;
-        currentDiceCount = count + 1;
+        window.currentDiceCount = count + 1;
       }
     });
   }
@@ -1071,7 +1080,7 @@ function initDiceRoller() {
       let count = parseInt(diceCountInput.value) || 1;
       count = Math.max(1, Math.min(10, count));
       diceCountInput.value = count;
-      currentDiceCount = count;
+      window.currentDiceCount = count;
     });
   }
 
@@ -1081,6 +1090,35 @@ function initDiceRoller() {
       performCustomRoll();
     });
   }
+  
+  // Initiative roll button (main page only)
+  const rollInitBtn = document.getElementById("roll-init-btn");
+  if (rollInitBtn) {
+    rollInitBtn.addEventListener("click", () => {
+      const refValue = parseInt(document.getElementById("stat_ref")?.value) || 0;
+      performInitiativeRoll(refValue);
+    });
+  }
+}
+
+// Perform initiative roll (1d10 + REF)
+function performInitiativeRoll(refValue) {
+  const dialogOverlay = document.getElementById("dice-dialog-overlay");
+  if (!dialogOverlay) return;
+
+  // Show dialog
+  dialogOverlay.classList.add("active");
+
+  // Hide options, show results section
+  document.getElementById("dice-options").style.display = "none";
+  document.getElementById("dice-result-section").style.display = "flex";
+
+  // Roll 1d10
+  const roll = Math.floor(Math.random() * 10) + 1;
+  const total = roll + refValue;
+
+  // Display result with animation
+  displayDiceResult([roll], `${roll} + ${refValue} = ${total}`, `1d10 + ${refValue} (Initiative)`, true, 10);
 }
 
 // ==================== SAVE/LOAD FUNCTIONS ====================
@@ -1408,6 +1446,11 @@ function performSkillRoll(baseValue, skillName) {
   const dialogOverlay = document.getElementById("dice-dialog-overlay");
   if (!dialogOverlay) return;
 
+  // Get seriously wounded modifier
+  const seriouslyWounded = document.getElementById("seriously_wounded")?.checked || false;
+  const swModifier = seriouslyWounded ? -2 : 0;
+  const swText = seriouslyWounded ? ' (SW -2)' : '';
+
   // Show dialog
   dialogOverlay.classList.add("active");
 
@@ -1417,17 +1460,18 @@ function performSkillRoll(baseValue, skillName) {
 
   // Roll 1d10
   const roll = Math.floor(Math.random() * 10) + 1;
-  const total = roll + baseValue;
+  const total = roll + baseValue + swModifier;
 
   // Display result with animation
-  displayDiceResult([roll], `${roll} + ${baseValue} = ${total}`, `1d10 + ${baseValue} (${skillName})`, true, 10);
+  const description = `1d10 + ${baseValue}${swText} = ${total} (${skillName})`;
+  displayDiceResult([roll], `${roll} + ${baseValue}${swText} = ${total}`, description, true, 10);
 }
 
 // Perform custom roll (nav button with selection)
 function performCustomRoll() {
   const diceOptions = document.getElementById("dice-options");
   const diceResultSection = document.getElementById("dice-result-section");
-  
+
   if (!diceOptions || !diceResultSection) return;
 
   // Hide options, show results
@@ -1436,14 +1480,32 @@ function performCustomRoll() {
 
   // Roll dice
   const rolls = [];
-  for (let i = 0; i < currentDiceCount; i++) {
-    rolls.push(Math.floor(Math.random() * currentDiceType) + 1);
+  for (let i = 0; i < window.currentDiceCount; i++) {
+    rolls.push(Math.floor(Math.random() * window.currentDiceType) + 1);
   }
-  
+
   const total = rolls.reduce((a, b) => a + b, 0);
 
   // Display result with animation
-  displayDiceResult(rolls, total.toString(), `${currentDiceCount}d${currentDiceType}`, false, currentDiceType);
+  displayDiceResult(rolls, total.toString(), `${window.currentDiceCount}d${window.currentDiceType}`, false, window.currentDiceType);
+}
+
+// Reset dice options to default
+function resetDiceOptions() {
+  window.currentDiceType = 10;
+  window.currentDiceCount = 1;
+
+  document.querySelectorAll(".dice-type-btn").forEach(btn => {
+    btn.classList.toggle("active", btn.dataset.dice === "10");
+  });
+
+  const diceCountInput = document.getElementById("dice-count");
+  if (diceCountInput) diceCountInput.value = 1;
+
+  const diceOptions = document.getElementById("dice-options");
+  const diceResultSection = document.getElementById("dice-result-section");
+  if (diceOptions) diceOptions.style.display = "flex";
+  if (diceResultSection) diceResultSection.style.display = "none";
 }
 
 // Display dice result with animation
@@ -1456,33 +1518,49 @@ function displayDiceResult(rolls, totalText, description, isSkillRoll, diceType 
 
   // Clear previous results
   diceRollsContainer.innerHTML = "";
-  diceTotalValue.textContent = "0";
-
-  // Map dice type to shape class
-  const shapeClass = {
-    4: 'd4',
-    6: 'd6',
-    8: 'd8',
-    10: 'd10',
-    12: 'd12',
-    20: 'd20'
-  }[diceType] || 'd10';
-
+  
   // Display each die with staggered animation
   rolls.forEach((roll, index) => {
+    const dieEl = document.createElement("div");
+    dieEl.className = "dice-roll-item";
+    
+    const isCritFail = roll === 1;
+    const isCritSuccess = roll === diceType;
+    
+    if (isCritFail) dieEl.classList.add("crit-fail");
+    if (isCritSuccess) dieEl.classList.add("crit-success");
+    
+    dieEl.textContent = roll;
+    dieEl.style.opacity = '0';
+    dieEl.style.transform = 'scale(0.5)';
+    diceRollsContainer.appendChild(dieEl);
+    
+    // Animate each roll with delay
     setTimeout(() => {
-      const dieEl = document.createElement("div");
-      dieEl.className = `die-result ${shapeClass}`;
-      dieEl.setAttribute("data-value", roll);
-      diceRollsContainer.appendChild(dieEl);
-
-      // Update total after last die
-      if (index === rolls.length - 1) {
-        setTimeout(() => {
-          diceTotalValue.textContent = totalText;
-          diceDescription.textContent = description;
-        }, 100);
-      }
-    }, index * 150);
+      dieEl.style.transition = 'opacity 0.2s, transform 0.2s';
+      dieEl.style.opacity = '1';
+      dieEl.style.transform = 'scale(1)';
+    }, index * 100);
   });
+  
+  // Animate total
+  if (diceTotalValue) {
+    diceTotalValue.style.opacity = '0';
+    diceTotalValue.textContent = totalText;
+    diceTotalValue.classList.remove("crit-fail", "crit-success");
+    
+    if (isSkillRoll && parseInt(totalText) === 10) {
+      diceTotalValue.classList.add("crit-success");
+    }
+    
+    setTimeout(() => {
+      diceTotalValue.style.transition = 'opacity 0.3s';
+      diceTotalValue.style.opacity = '1';
+    }, rolls.length * 100 + 100);
+  }
+  
+  // Set description
+  if (diceDescription) {
+    diceDescription.textContent = description;
+  }
 }

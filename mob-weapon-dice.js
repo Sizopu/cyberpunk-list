@@ -177,3 +177,4 @@ function showDiceNotification(message, type = 'info') {
 // Экспорт функций
 window.rollMobWeaponDice = rollMobWeaponDice;
 window.parseMobDiceFormula = parseMobDiceFormula;
+window.showDiceNotification = showDiceNotification;

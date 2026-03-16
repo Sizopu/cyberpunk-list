@@ -313,6 +313,33 @@ body {
   min-height: 60px;
 }
 
+.dice-roll-item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 50px;
+  height: 50px;
+  font-size: 24px;
+  font-weight: bold;
+  color: #f78166;
+  background: #232931;
+  border: 2px solid #f78166;
+  border-radius: 8px;
+  animation: none;
+}
+
+.dice-roll-item.crit-success {
+  background: #2ea043;
+  border-color: #2ea043;
+  color: #0f1115;
+}
+
+.dice-roll-item.crit-fail {
+  background: #da3633;
+  border-color: #da3633;
+  color: #0f1115;
+}
+
 .die-result {
   display: flex;
   align-items: center;
@@ -770,16 +797,56 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
+  gap: 8px;
 }
 
 .initiative-input {
-  width: 100px;
+  width: 80px;
   height: 40px;
   text-align: center;
   font-size: 20px;
   font-weight: bold;
   background: #0d1117;
   border: 2px solid #484f58;
+}
+
+.roll-init-btn {
+  background: #2d3139;
+  border: 1px solid #484f58;
+  color: #f78166;
+  width: 40px;
+  height: 40px;
+  font-size: 20px;
+  cursor: pointer;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+
+.roll-init-btn:hover {
+  background: #f78166;
+  border-color: #f78166;
+  color: #0f1115;
+}
+
+.char-name-input {
+  width: 100%;
+  background: #0d1117;
+  border: 1px solid #484f58;
+  color: #c9c6b9;
+  padding: 6px 8px;
+  font-family: 'Courier New', monospace;
+  font-size: 11px;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.char-name-input:focus {
+  outline: none;
+  border-color: #f78166;
 }
 
 /* Stats */
@@ -2750,8 +2817,14 @@ input[type="checkbox"] {
   background: #242830;
 }
 
-.mob-item-name {
+.mob-item-info {
   flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.mob-item-name {
   font-size: 10px;
   color: #c9c6b9;
   text-transform: uppercase;
@@ -2759,6 +2832,52 @@ input[type="checkbox"] {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+.mob-item-initiative {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 9px;
+  color: #8b949e;
+}
+
+.mob-item-initiative span {
+  font-size: 8px;
+  font-weight: bold;
+}
+
+.mob-init-input {
+  width: 40px;
+  background: #0d1117;
+  border: 1px solid #3d4149;
+  color: #f78166;
+  padding: 2px 4px;
+  font-family: 'Courier New', monospace;
+  font-size: 9px;
+  border-radius: 3px;
+  text-align: center;
+}
+
+.mob-roll-init-btn {
+  background: #2d3139;
+  border: 1px solid #5d6970;
+  color: #f78166;
+  width: 20px;
+  height: 20px;
+  font-size: 12px;
+  cursor: pointer;
+  border-radius: 3px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+
+.mob-roll-init-btn:hover {
+  background: #f78166;
+  border-color: #f78166;
+  color: #0f1115;
 }
 
 .mob-item-delete {
@@ -3104,6 +3223,128 @@ input[type="checkbox"] {
   font-family: 'Courier New', monospace;
   font-size: 10px;
   resize: vertical;
+}
+
+/* Mob Skills */
+.mob-skills-section {
+  background: #1a1d24;
+  border: 1px solid #3d4149;
+  margin-bottom: 12px;
+}
+
+.mob-skills-section .section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 12px;
+  background: #2d3139;
+  border-bottom: 1px solid #3d4149;
+}
+
+.mob-skills-section .section-header span {
+  font-size: 9px;
+  font-weight: bold;
+  text-transform: uppercase;
+  color: #8b949e;
+}
+
+.add-mob-skill-btn {
+  background: #238636;
+  border: 1px solid #2ea043;
+  color: #0f1115;
+  padding: 4px 10px;
+  font-size: 9px;
+  font-weight: bold;
+  font-family: 'Courier New', monospace;
+  text-transform: uppercase;
+  cursor: pointer;
+  border-radius: 3px;
+  transition: all 0.2s;
+}
+
+.add-mob-skill-btn:hover {
+  background: #2ea043;
+  border-color: #3fb950;
+}
+
+.mob-skills-list {
+  padding: 8px;
+}
+
+.mob-skill-row {
+  display: grid;
+  grid-template-columns: 1fr 80px 50px 32px 24px;
+  gap: 6px;
+  align-items: center;
+  margin-bottom: 6px;
+  padding: 6px;
+  background: #0d1117;
+  border: 1px solid #3d4149;
+  border-radius: 3px;
+}
+
+.mob-skill-select,
+.mob-skill-stat {
+  background: #2a2d35 !important;
+  border: 1px solid #3d4149 !important;
+  color: #c9c6b9;
+  padding: 4px 6px;
+  font-family: 'Courier New', monospace;
+  font-size: 9px;
+  border-radius: 3px;
+}
+
+.mob-skill-lvl {
+  background: #2a2d35 !important;
+  border: 1px solid #3d4149 !important;
+  color: #c9c6b9;
+  padding: 4px 6px;
+  font-family: 'Courier New', monospace;
+  font-size: 9px;
+  border-radius: 3px;
+  text-align: center;
+}
+
+.mob-skill-roll-btn {
+  background: #2d3139;
+  border: 1px solid #5d6970;
+  color: #f78166;
+  width: 28px;
+  height: 24px;
+  font-size: 14px;
+  cursor: pointer;
+  border-radius: 3px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+
+.mob-skill-roll-btn:hover {
+  background: #f78166;
+  border-color: #f78166;
+  color: #0f1115;
+}
+
+.delete-mob-skill-btn {
+  background: #2d3139;
+  border: 1px solid #5d6970;
+  color: #8b949e;
+  width: 24px;
+  height: 24px;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 3px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+
+.delete-mob-skill-btn:hover {
+  background: #da3633;
+  border-color: #da3633;
+  color: #0f1115;
 }
 
 /* Responsive for mobs page */

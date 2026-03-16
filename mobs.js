@@ -19,6 +19,26 @@ document.addEventListener('DOMContentLoaded', () => {
 
 let mobs = [];
 let selectedMobId = null;
+let skillPresets = [];
+
+// Load skill presets
+fetch('skill-presets.json')
+  .then(response => response.json())
+  .then(data => {
+    skillPresets = data.skills || [];
+  })
+  .catch(err => {
+    console.log('Could not load skill presets, using defaults');
+    skillPresets = [];
+  });
+
+// Get skill presets options HTML
+function getSkillPresetsOptions(selectedName) {
+  if (!skillPresets || skillPresets.length === 0) return '';
+  return skillPresets.map(skill => 
+    `<option value="${skill.name}" ${skill.name === selectedName ? 'selected' : ''}>${skill.name} (${skill.stat})</option>`
+  ).join('');
+}
 
 function initMobs() {
   const addMobBtn = document.getElementById('add-mob-btn');
@@ -56,12 +76,14 @@ function addMob() {
     hitPoints: { current: 0, max: 0 },
     seriouslyWounded: false,
     deathSave: 0,
+    initiative: 0,
     weapons: [{ name: '', dmg: '', mag: '', rof: '', notes: '', diceFormula: '' }],
     handWeapons: [{ name: '', dmg: '', rof: '', notes: '', diceFormula: '' }],
     armor: {
       head: { sp: '', notes: '', penalty: '' },
       body: { sp: '', notes: '', penalty: '' }
     },
+    skills: [],
     skillBases: '',
     cyberware: ''
   };
@@ -146,27 +168,68 @@ function deleteWeapon(id, type, index) {
 function renderMobsList() {
   const container = document.getElementById('mobs-list');
   if (!container) return;
-  
+
   container.innerHTML = '';
-  
+
   mobs.forEach(mob => {
     const mobItem = document.createElement('div');
     mobItem.className = `mob-item ${selectedMobId === mob.id ? 'selected' : ''}`;
     mobItem.innerHTML = `
-      <div class="mob-item-name">${mob.name || 'Untitled'}</div>
+      <div class="mob-item-info">
+        <div class="mob-item-name">${mob.name || 'Untitled'}</div>
+        <div class="mob-item-initiative">
+          <span>INI:</span>
+          <input type="number" class="mob-init-input" value="${mob.initiative || 0}" data-id="${mob.id}" title="Initiative">
+          <button class="mob-roll-init-btn" data-id="${mob.id}" title="Roll Initiative">🎲</button>
+        </div>
+      </div>
       <button class="mob-item-delete" data-id="${mob.id}" title="Delete">×</button>
     `;
-    
+
     container.appendChild(mobItem);
-    
+
+    // Delete button
     const deleteBtn = mobItem.querySelector('.mob-item-delete');
     deleteBtn.addEventListener('click', (e) => {
       e.stopPropagation();
       deleteMob(mob.id);
     });
-    
-    mobItem.addEventListener('click', () => {
-      selectMob(mob.id);
+
+    // Click to select
+    mobItem.addEventListener('click', (e) => {
+      if (!e.target.classList.contains('mob-roll-init-btn') && !e.target.classList.contains('mob-init-input')) {
+        selectMob(mob.id);
+      }
+    });
+
+    // Initiative input
+    const initInput = mobItem.querySelector('.mob-init-input');
+    initInput.addEventListener('click', (e) => e.stopPropagation());
+    initInput.addEventListener('change', (e) => {
+      e.stopPropagation();
+      const mob = mobs.find(m => m.id === mob.id);
+      if (mob) {
+        mob.initiative = parseInt(e.target.value) || 0;
+        saveMobs();
+      }
+    });
+
+    // Roll initiative button
+    const rollInitBtn = mobItem.querySelector('.mob-roll-init-btn');
+    rollInitBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const currentMob = mobs.find(m => m.id === mob.id);
+      if (currentMob) {
+        const refValue = currentMob.stats.ref || 0;
+        const roll = Math.floor(Math.random() * 10) + 1;
+        currentMob.initiative = roll + refValue;
+        saveMobs();
+        renderMobsList();
+        // Use mob dice roller
+        if (typeof window.performMobInitiativeRoll === 'function') {
+          window.performMobInitiativeRoll(refValue, currentMob.name || 'Mob');
+        }
+      }
     });
   });
 }
@@ -327,6 +390,39 @@ function renderMobEditor() {
         </div>
       </div>
       
+      <!-- SKILLS -->
+      <div class="mob-skills-section">
+        <div class="section-header">
+          <span>SKILLS</span>
+          <button class="add-mob-skill-btn" data-id="${mob.id}">+ Add Skill</button>
+        </div>
+        <div class="mob-skills-list" id="mob-skills-list-${mob.id}">
+          ${mob.skills.map((skill, i) => `
+            <div class="mob-skill-row" data-skill-index="${i}">
+              <select class="mob-skill-select" data-skill-index="${i}">
+                <option value="">-- Custom --</option>
+                ${getSkillPresetsOptions(skill.name)}
+              </select>
+              <select class="mob-skill-stat" data-skill-index="${i}">
+                <option value="INT" ${skill.stat === 'INT' ? 'selected' : ''}>INT</option>
+                <option value="REF" ${skill.stat === 'REF' ? 'selected' : ''}>REF</option>
+                <option value="DEX" ${skill.stat === 'DEX' ? 'selected' : ''}>DEX</option>
+                <option value="TECH" ${skill.stat === 'TECH' ? 'selected' : ''}>TECH</option>
+                <option value="COOL" ${skill.stat === 'COOL' ? 'selected' : ''}>COOL</option>
+                <option value="WILL" ${skill.stat === 'WILL' ? 'selected' : ''}>WILL</option>
+                <option value="LUCK" ${skill.stat === 'LUCK' ? 'selected' : ''}>LUCK</option>
+                <option value="MOVE" ${skill.stat === 'MOVE' ? 'selected' : ''}>MOVE</option>
+                <option value="BODY" ${skill.stat === 'BODY' ? 'selected' : ''}>BODY</option>
+                <option value="EMP" ${skill.stat === 'EMP' ? 'selected' : ''}>EMP</option>
+              </select>
+              <input type="number" class="mob-skill-lvl" placeholder="LVL" value="${skill.lvl || 0}" min="0" max="10" data-skill-index="${i}">
+              <button class="mob-skill-roll-btn" data-skill-index="${i}" title="Roll">🎲</button>
+              <button class="delete-mob-skill-btn" data-skill-index="${i}" title="Delete">×</button>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+
       <!-- SKILL BASES -->
       <div class="mob-skill-bases">
         <label>SKILL_bases</label>
@@ -469,12 +565,114 @@ function renderMobEditor() {
   skillBasesInput.addEventListener('input', (e) => {
     updateMob(mob.id, 'skillBases', e.target.value);
   });
-  
+
+  // Mob Skills
+  const addMobSkillBtn = container.querySelector('.add-mob-skill-btn');
+  if (addMobSkillBtn) {
+    addMobSkillBtn.addEventListener('click', () => {
+      addMobSkill(mob.id);
+    });
+  }
+
+  // Skill select change
+  const skillSelects = container.querySelectorAll('.mob-skill-select');
+  skillSelects.forEach(select => {
+    select.addEventListener('change', (e) => {
+      const skillIndex = parseInt(e.target.dataset.skillIndex);
+      const currentMob = mobs.find(m => m.id === mob.id);
+      if (currentMob && currentMob.skills[skillIndex]) {
+        const selectedValue = e.target.value;
+        if (selectedValue && skillPresets.length > 0) {
+          const preset = skillPresets.find(s => s.name === selectedValue);
+          if (preset) {
+            currentMob.skills[skillIndex].name = preset.name;
+            currentMob.skills[skillIndex].stat = preset.stat;
+          }
+        } else {
+          currentMob.skills[skillIndex].name = '';
+        }
+        renderMobEditor();
+        saveMobs();
+      }
+    });
+  });
+
+  // Skill stat change
+  const skillStats = container.querySelectorAll('.mob-skill-stat');
+  skillStats.forEach(select => {
+    select.addEventListener('change', (e) => {
+      const skillIndex = parseInt(e.target.dataset.skillIndex);
+      const currentMob = mobs.find(m => m.id === mob.id);
+      if (currentMob && currentMob.skills[skillIndex]) {
+        currentMob.skills[skillIndex].stat = e.target.value;
+        saveMobs();
+      }
+    });
+  });
+
+  // Skill lvl change
+  const skillLvls = container.querySelectorAll('.mob-skill-lvl');
+  skillLvls.forEach(input => {
+    input.addEventListener('input', (e) => {
+      const skillIndex = parseInt(e.target.dataset.skillIndex);
+      const currentMob = mobs.find(m => m.id === mob.id);
+      if (currentMob && currentMob.skills[skillIndex]) {
+        currentMob.skills[skillIndex].lvl = parseInt(e.target.value) || 0;
+        saveMobs();
+      }
+    });
+  });
+
+  // Skill roll button
+  const skillRollBtns = container.querySelectorAll('.mob-skill-roll-btn');
+  skillRollBtns.forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      const skillIndex = parseInt(e.target.dataset.skillIndex);
+      const currentMob = mobs.find(m => m.id === mob.id);
+      if (currentMob && currentMob.skills[skillIndex]) {
+        const skill = currentMob.skills[skillIndex];
+        const statValue = currentMob.stats[skill.stat.toLowerCase()] || 0;
+        const skillLvl = skill.lvl || 0;
+        const swModifier = currentMob.seriouslyWounded ? -2 : 0;
+        const baseValue = statValue + skillLvl + swModifier;
+        
+        // Use mob dice roller
+        if (typeof window.performMobSkillRoll === 'function') {
+          window.performMobSkillRoll(baseValue, skill.name || 'Custom Skill', currentMob.seriouslyWounded);
+        }
+      }
+    });
+  });
+
+  // Delete skill button
+  const deleteSkillBtns = container.querySelectorAll('.delete-mob-skill-btn');
+  deleteSkillBtns.forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      const skillIndex = parseInt(e.target.dataset.skillIndex);
+      const currentMob = mobs.find(m => m.id === mob.id);
+      if (currentMob && currentMob.skills.length > 0) {
+        currentMob.skills.splice(skillIndex, 1);
+        renderMobEditor();
+        saveMobs();
+      }
+    });
+  });
+
   // Cyberware
   const cyberwareInput = container.querySelector('.cyberware-input');
   cyberwareInput.addEventListener('input', (e) => {
     updateMob(mob.id, 'cyberware', e.target.value);
   });
+}
+
+// Add mob skill
+function addMobSkill(mobId) {
+  const mob = mobs.find(m => m.id === mobId);
+  if (mob) {
+    mob.skills.push({ name: '', stat: 'REF', lvl: 0 });
+    renderMobEditor();
+    saveMobs();
+  }
 }
 
 function saveMobs() {
