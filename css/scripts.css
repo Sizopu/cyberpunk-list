@@ -373,6 +373,31 @@
   font-size: 8px;
 }
 
+/* Responsive adjustments */
+@media (max-width: 1400px) {
+  .cyberdeck-main-content {
+    grid-template-columns: 1fr;
+  }
+  
+  .programs-panel {
+    overflow-x: auto;
+  }
+  
+  .programs-table {
+    min-width: 800px;
+  }
+}
+
+@media (max-width: 1000px) {
+  .cyberdeck-top-blocks {
+    grid-template-columns: 1fr;
+  }
+  
+  .cyberdeck-abilities-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
 /* Section label cell */
 .section-label-cell {
   background: #c41e3a;
