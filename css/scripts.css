@@ -373,10 +373,85 @@
   font-size: 8px;
 }
 
-/* Responsive adjustments */
-@media (max-width: 1400px) {
+/* ========================================
+   MOBILE RESPONSIVE
+   ======================================== */
+@media (max-width: 768px) {
+  .top-nav {
+    flex-direction: column;
+    gap: 10px;
+    padding: 10px;
+  }
+  
+  .nav-links {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 5px;
+  }
+  
+  .nav-link {
+    font-size: 9px;
+    padding: 6px 8px;
+  }
+  
+  .cyberdeck-page {
+    padding: 5px;
+  }
+  
+  .cyberdeck-top-blocks {
+    grid-template-columns: 1fr !important;
+    gap: 5px;
+  }
+  
+  .cyberdeck-info-block {
+    padding: 8px;
+  }
+  
+  .cyberdeck-info-row {
+    flex-direction: column;
+    gap: 5px;
+  }
+  
+  .cyberdeck-info-label {
+    font-size: 8px;
+    min-width: 100%;
+  }
+  
+  .cyberdeck-info-input {
+    font-size: 10px;
+    padding: 4px;
+  }
+  
+  .cyberdeck-tests-block {
+    padding: 8px;
+  }
+  
+  .cyberdeck-test-row {
+    font-size: 8px;
+    padding: 6px 8px;
+  }
+  
+  .cyberdeck-abilities-block {
+    padding: 8px;
+  }
+  
+  .cyberdeck-abilities-title {
+    font-size: 9px;
+    padding: 6px 8px;
+  }
+  
+  .cyberdeck-abilities-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 5px;
+  }
+  
+  .ability-label {
+    font-size: 8px;
+  }
+  
   .cyberdeck-main-content {
-    grid-template-columns: 1fr;
+    grid-template-columns: 1fr !important;
+    gap: 5px;
   }
   
   .programs-panel {
@@ -385,6 +460,222 @@
   
   .programs-table {
     min-width: 800px;
+    font-size: 8px;
+  }
+  
+  .programs-table th {
+    font-size: 7px;
+    padding: 4px 2px;
+  }
+  
+  .programs-table td {
+    padding: 0;
+  }
+  
+  .programs-table input {
+    font-size: 9px;
+    padding: 4px;
+  }
+  
+  .section-label-cell {
+    font-size: 8px;
+    min-width: 40px;
+  }
+  
+  .program-dice-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  
+  .program-dice-wrapper input {
+    min-width: 150px;
+    font-size: 8px;
+  }
+  
+  .program-roll-btn {
+    font-size: 12px;
+    padding: 4px 8px;
+  }
+  
+  .program-dice-result {
+    font-size: 8px;
+    padding: 6px;
+  }
+  
+  .sub-row-content {
+    padding: 6px;
+  }
+  
+  .sub-row-labels {
+    font-size: 7px;
+    min-width: 150px;
+  }
+  
+  .sub-row-inputs input {
+    font-size: 9px;
+    padding: 4px;
+    width: 50px;
+  }
+  
+  .add-section-btn {
+    font-size: 9px;
+    padding: 6px 10px;
+  }
+  
+  .delete-row-btn {
+    font-size: 14px;
+    padding: 0 4px;
+  }
+  
+  .add-attack-btn,
+  .remove-attack-btn {
+    font-size: 10px;
+    padding: 4px 6px;
+  }
+  
+  /* Hardware */
+  .hardware-block {
+    overflow-x: auto;
+  }
+  
+  .hardware-table {
+    min-width: 400px;
+    font-size: 8px;
+  }
+  
+  .hardware-table th {
+    font-size: 7px;
+    padding: 4px 2px;
+  }
+  
+  .hardware-table td {
+    padding: 0;
+  }
+  
+  .hardware-table input {
+    font-size: 9px;
+    padding: 4px;
+  }
+  
+  .add-hardware-btn {
+    font-size: 9px;
+    padding: 6px 10px;
+  }
+  
+  .delete-hardware-btn {
+    font-size: 14px;
+    padding: 0 4px;
+  }
+  
+  /* Notes */
+  .notes-block {
+    min-height: 200px;
+  }
+  
+  .notes-header {
+    font-size: 9px;
+    padding: 6px 8px;
+  }
+  
+  .notes-textarea {
+    font-size: 10px;
+    padding: 8px;
+  }
+  
+  /* Help */
+  .cyberdeck-help-btn {
+    font-size: 9px;
+    padding: 6px 10px;
+  }
+  
+  .help-dialog {
+    max-width: 95%;
+  }
+  
+  .help-dialog-content {
+    font-size: 9px;
+    padding: 10px;
+  }
+}
+
+@media (max-width: 480px) {
+  .nav-brand {
+    font-size: 12px;
+  }
+  
+  .nav-link {
+    font-size: 8px;
+    padding: 4px 6px;
+  }
+  
+  .cyberdeck-info-label {
+    font-size: 7px;
+  }
+  
+  .cyberdeck-info-input {
+    font-size: 9px;
+  }
+  
+  .cyberdeck-test-row {
+    font-size: 7px;
+  }
+  
+  .cyberdeck-abilities-title {
+    font-size: 8px;
+  }
+  
+  .cyberdeck-abilities-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .ability-label {
+    font-size: 7px;
+  }
+  
+  .programs-table {
+    min-width: 600px;
+  }
+  
+  .programs-table th {
+    font-size: 6px;
+  }
+  
+  .programs-table input {
+    font-size: 8px;
+  }
+  
+  .section-label-cell {
+    font-size: 7px;
+    min-width: 35px;
+  }
+  
+  .program-dice-wrapper input {
+    min-width: 120px;
+    font-size: 7px;
+  }
+  
+  .sub-row-labels {
+    font-size: 6px;
+  }
+  
+  .sub-row-inputs input {
+    font-size: 8px;
+    width: 40px;
+  }
+  
+  .hardware-table {
+    min-width: 350px;
+  }
+  
+  .add-section-btn {
+    font-size: 8px;
+    padding: 4px 8px;
+  }
+  
+  .add-hardware-btn {
+    font-size: 8px;
+    padding: 4px 8px;
   }
 }
 

@@ -842,41 +842,309 @@
   color: #0f1115;
 }
 
-/* Responsive adjustments */
-@media (max-width: 1400px) {
+/* ========================================
+   MOBILE RESPONSIVE
+   ======================================== */
+@media (max-width: 768px) {
+  .top-nav {
+    flex-direction: column;
+    gap: 10px;
+    padding: 10px;
+  }
+  
+  .nav-links {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 5px;
+  }
+  
+  .nav-link {
+    font-size: 9px;
+    padding: 6px 8px;
+  }
+  
+  .mobs-page {
+    padding: 5px;
+  }
+  
   .mobs-container {
     grid-template-columns: 1fr !important;
+    gap: 5px;
+  }
+  
+  .mobs-sidebar {
+    max-height: 300px;
+    overflow-y: auto;
+  }
+  
+  .mobs-header {
+    padding: 8px 10px;
+  }
+  
+  .mobs-header span {
+    font-size: 9px;
+  }
+  
+  .add-mob-btn {
+    width: 26px;
+    height: 26px;
+    font-size: 16px;
+  }
+  
+  .mobs-list {
+    padding: 5px;
+  }
+  
+  .mob-item {
+    padding: 8px;
+    margin-bottom: 5px;
+  }
+  
+  .mob-item-name {
+    font-size: 9px;
+  }
+  
+  .mob-item-type {
+    font-size: 7px;
+  }
+  
+  .mob-item-btn {
+    font-size: 12px;
+    padding: 4px 6px;
+  }
+  
+  .mob-content-panel {
+    min-height: 400px;
   }
   
   .mob-editor-content {
+    padding: 10px;
     overflow-x: auto;
   }
   
+  .mob-name-input {
+    font-size: 12px;
+    padding: 6px;
+  }
+  
   .mob-stats-block {
-    min-width: 600px;
+    margin-bottom: 10px;
+  }
+  
+  .stats-label {
+    font-size: 9px;
+    padding: 6px 8px;
+  }
+  
+  .stats-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 5px;
+  }
+  
+  .stat-field label {
+    font-size: 7px;
+  }
+  
+  .stat-field input {
+    font-size: 10px;
+    padding: 4px;
+  }
+  
+  .mob-health-row {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  
+  .health-field label {
+    font-size: 8px;
+  }
+  
+  .health-field input {
+    font-size: 10px;
+    padding: 4px;
+  }
+  
+  .mob-combat-section {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .weapons-section,
+  .hand-weapons-section,
+  .armor-section {
+    min-width: 400px;
+  }
+  
+  .section-header {
+    font-size: 9px;
+    padding: 6px 8px;
+  }
+  
+  .weapon-row {
+    font-size: 8px;
+  }
+  
+  .weapon-row input {
+    font-size: 9px;
+    padding: 4px;
+  }
+  
+  .mob-weapon-dice-container {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .mob-weapon-dice-formula {
+    min-width: 200px;
+    font-size: 9px;
+  }
+  
+  .mob-weapon-roll-btn {
+    font-size: 12px;
+    padding: 4px 8px;
+  }
+  
+  .armor-row {
+    font-size: 8px;
+  }
+  
+  .armor-row input {
+    font-size: 9px;
+    padding: 4px;
+  }
+  
+  .mob-skills-section {
+    min-width: 400px;
+  }
+  
+  .skill-bases-input {
+    font-size: 9px;
+    padding: 4px;
+  }
+  
+  .mob-skill-row {
+    font-size: 8px;
+  }
+  
+  .mob-skill-row select,
+  .mob-skill-row input {
+    font-size: 9px;
+    padding: 4px;
+  }
+  
+  .add-mob-skill-btn,
+  .remove-mob-skill-btn {
+    font-size: 12px;
+    padding: 4px 6px;
+  }
+  
+  .mob-initiative-block {
+    display: flex;
+    gap: 10px;
+  }
+  
+  .mob-init-input {
+    font-size: 10px;
+    padding: 4px;
+  }
+  
+  .mob-roll-init-btn {
+    font-size: 12px;
+    padding: 4px 8px;
+  }
+}
+
+@media (max-width: 480px) {
+  .nav-brand {
+    font-size: 12px;
+  }
+  
+  .nav-link {
+    font-size: 8px;
+    padding: 4px 6px;
+  }
+  
+  .mobs-header span {
+    font-size: 8px;
+  }
+  
+  .add-mob-btn {
+    width: 24px;
+    height: 24px;
+    font-size: 14px;
+  }
+  
+  .mob-item {
+    padding: 6px;
+  }
+  
+  .mob-item-name {
+    font-size: 8px;
+  }
+  
+  .mob-item-type {
+    font-size: 6px;
+  }
+  
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .stat-field label {
+    font-size: 6px;
+  }
+  
+  .stat-field input {
+    font-size: 9px;
+  }
+  
+  .weapons-section,
+  .hand-weapons-section,
+  .armor-section {
+    min-width: 350px;
+  }
+  
+  .mob-weapon-dice-formula {
+    min-width: 150px;
+    font-size: 8px;
+  }
+  
+  .mob-skills-section {
+    min-width: 350px;
+  }
+  
+  .mob-skill-row {
+    font-size: 7px;
+  }
+  
+  .mob-skill-row select,
+  .mob-skill-row input {
+    font-size: 8px;
   }
 }
 
 @media (max-width: 1000px) {
   .mobs-sidebar {
-    max-height: 300px;
-  }
-  
-  .mob-list {
     max-height: 250px;
   }
   
+  .mobs-list {
+    max-height: 200px;
+  }
+  
   .stats-grid {
-    grid-template-columns: repeat(3, 1fr) !important;
+    grid-template-columns: repeat(3, 1fr);
   }
 }
 
 @media (max-width: 700px) {
   .stats-grid {
-    grid-template-columns: repeat(2, 1fr) !important;
+    grid-template-columns: repeat(2, 1fr);
   }
   
   .mob-health-row {
-    grid-template-columns: 1fr !important;
+    grid-template-columns: 1fr;
   }
 }

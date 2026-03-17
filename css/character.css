@@ -3369,3 +3369,263 @@ input[type="checkbox"] {
   align-self: center;
 }
 
+/* ========================================
+   MOBILE RESPONSIVE
+   ======================================== */
+@media (max-width: 768px) {
+  .top-nav {
+    flex-direction: column;
+    gap: 10px;
+    padding: 10px;
+  }
+  
+  .nav-links {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 5px;
+  }
+  
+  .nav-link {
+    font-size: 9px;
+    padding: 6px 8px;
+  }
+  
+  .sheet {
+    grid-template-columns: 1fr !important;
+    padding: 5px;
+    gap: 10px;
+  }
+  
+  .left-column,
+  .middle-column,
+  .right-column {
+    width: 100% !important;
+  }
+  
+  .block {
+    margin-bottom: 10px;
+  }
+  
+  .block-header {
+    font-size: 9px;
+    padding: 6px 8px;
+  }
+  
+  /* Stats grid */
+  .stats-vertical {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 5px;
+  }
+  
+  .stat-row label {
+    min-width: 35px;
+    font-size: 8px;
+  }
+  
+  .stat-row input {
+    font-size: 10px;
+    padding: 4px;
+  }
+  
+  /* Skills tables */
+  .skill-table,
+  .specialised-skills-table {
+    font-size: 8px;
+    overflow-x: auto;
+    display: block;
+    min-width: 400px;
+  }
+  
+  .skill-table th,
+  .skill-table td,
+  .specialised-skills-table th,
+  .specialised-skills-table td {
+    padding: 4px 2px;
+  }
+  
+  /* Weapons */
+  .weapons-content {
+    overflow-x: auto;
+  }
+  
+  .weapon-row {
+    min-width: 600px;
+  }
+  
+  /* ID block */
+  .id-content {
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .fingerprint-area {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+  }
+  
+  .id-fields {
+    width: 100%;
+  }
+  
+  .id-row {
+    flex-direction: column;
+    gap: 5px;
+  }
+  
+  .id-row label {
+    min-width: 100%;
+    font-size: 8px;
+  }
+  
+  .id-row input {
+    font-size: 10px;
+    padding: 4px;
+  }
+  
+  /* Armor */
+  .armor-content {
+    overflow-x: auto;
+  }
+  
+  .armor-section {
+    min-width: 400px;
+    margin-bottom: 10px;
+  }
+  
+  .armor-header,
+  .armor-row {
+    font-size: 8px;
+  }
+  
+  /* Health */
+  .health-content {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  
+  .health-row {
+    flex-wrap: wrap;
+    gap: 5px;
+  }
+  
+  .health-row label {
+    font-size: 8px;
+  }
+  
+  .health-row input {
+    font-size: 10px;
+    padding: 4px;
+  }
+  
+  /* Initiative */
+  .initiative-content {
+    display: flex;
+    gap: 10px;
+  }
+  
+  .initiative-input {
+    font-size: 10px;
+    padding: 4px;
+  }
+  
+  /* Role ability */
+  .role-ability-container {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+  
+  .role-ability-entry {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+  
+  .role-ability-entry input {
+    font-size: 10px;
+    padding: 4px;
+  }
+  
+  /* Notes textarea */
+  .notes-block textarea {
+    font-size: 10px;
+    padding: 8px;
+  }
+  
+  /* Buttons */
+  .add-btn,
+  .roll-init-btn,
+  .roll-skill-btn,
+  .delete-btn {
+    font-size: 12px;
+    padding: 4px 8px;
+  }
+}
+
+@media (max-width: 480px) {
+  .nav-brand {
+    font-size: 12px;
+  }
+  
+  .nav-link {
+    font-size: 8px;
+    padding: 4px 6px;
+  }
+  
+  .block-header {
+    font-size: 8px;
+    padding: 6px 8px;
+  }
+  
+  .stat-row label {
+    min-width: 30px;
+    font-size: 7px;
+  }
+  
+  input[type="text"],
+  input[type="number"] {
+    font-size: 9px;
+    padding: 4px;
+  }
+  
+  /* Skills - stack vertically */
+  .skills-content {
+    grid-template-columns: 1fr !important;
+  }
+  
+  .skill-group {
+    margin-bottom: 15px;
+  }
+  
+  .skill-table {
+    min-width: 350px;
+  }
+  
+  .specialised-skills-table {
+    min-width: 350px;
+  }
+  
+  /* Weapons */
+  .weapon-row {
+    min-width: 500px;
+  }
+  
+  /* Armor */
+  .armor-section {
+    min-width: 350px;
+  }
+  
+  /* Stats in 1 column */
+  .stats-vertical {
+    grid-template-columns: 1fr;
+  }
+  
+  /* Health row in 1 column */
+  .health-row {
+    flex-direction: column;
+  }
+}
+

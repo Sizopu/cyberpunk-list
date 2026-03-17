@@ -990,3 +990,264 @@
     padding-right: 0;
   }
 }
+
+/* ========================================
+   MOBILE RESPONSIVE
+   ======================================== */
+@media (max-width: 768px) {
+  .top-nav {
+    flex-direction: column;
+    gap: 10px;
+    padding: 10px;
+  }
+  
+  .nav-links {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 5px;
+  }
+  
+  .nav-link {
+    font-size: 9px;
+    padding: 6px 8px;
+  }
+  
+  .cyberware-page {
+    padding: 5px;
+  }
+  
+  .cyberware-container {
+    grid-template-columns: 1fr !important;
+    gap: 5px;
+  }
+  
+  .left-panel,
+  .right-panel {
+    width: 100%;
+  }
+  
+  .cyber-header {
+    padding: 8px 10px;
+  }
+  
+  .cyber-header span {
+    font-size: 9px;
+  }
+  
+  .add-cyber-btn {
+    width: 26px;
+    height: 26px;
+    font-size: 16px;
+  }
+  
+  .cyber-block {
+    margin-bottom: 8px;
+  }
+  
+  .cyber-block-header {
+    font-size: 9px;
+    padding: 6px 8px;
+  }
+  
+  .cyber-block-content {
+    padding: 8px;
+  }
+  
+  .cyberware-list {
+    padding: 5px;
+  }
+  
+  .cyberware-item {
+    padding: 8px;
+    margin-bottom: 5px;
+  }
+  
+  .cyberware-item-name {
+    font-size: 9px;
+  }
+  
+  .cyberware-item-type {
+    font-size: 7px;
+  }
+  
+  .cyberware-item-btn {
+    font-size: 12px;
+    padding: 4px 6px;
+  }
+  
+  .cyberware-content-panel {
+    min-height: 400px;
+  }
+  
+  .cyberware-editor {
+    padding: 10px;
+  }
+  
+  .cyberware-name-input {
+    font-size: 12px;
+    padding: 6px;
+  }
+  
+  /* Stats grid */
+  .stats-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 5px;
+  }
+  
+  .stat-field label {
+    font-size: 7px;
+  }
+  
+  .stat-field input {
+    font-size: 10px;
+    padding: 4px;
+  }
+  
+  /* Health row */
+  .health-row {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  
+  .health-field label {
+    font-size: 8px;
+  }
+  
+  .health-field input {
+    font-size: 10px;
+    padding: 4px;
+  }
+  
+  .emp-field {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+  
+  /* Inventory table */
+  .inventory-table {
+    font-size: 8px;
+    overflow-x: auto;
+    display: block;
+    min-width: 400px;
+  }
+  
+  .inventory-table th,
+  .inventory-table td {
+    padding: 4px 2px;
+  }
+  
+  .inventory-table input {
+    font-size: 9px;
+    padding: 4px;
+  }
+  
+  /* Lifepath grid */
+  .lifepath-grid {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+  
+  .lifepath-top-content {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  
+  .lifepath-content input,
+  .lifepath-content textarea,
+  .lifepath-content select {
+    font-size: 10px;
+    padding: 4px;
+  }
+  
+  .enemies-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 5px;
+  }
+  
+  .enemies-grid input {
+    font-size: 9px;
+    padding: 4px;
+  }
+  
+  /* Buttons */
+  .save-data-btn,
+  .load-data-btn,
+  .add-enemy-btn,
+  .remove-enemy-btn {
+    font-size: 9px;
+    padding: 6px 10px;
+  }
+}
+
+@media (max-width: 480px) {
+  .nav-brand {
+    font-size: 12px;
+  }
+  
+  .nav-link {
+    font-size: 8px;
+    padding: 4px 6px;
+  }
+  
+  .cyber-header span {
+    font-size: 8px;
+  }
+  
+  .add-cyber-btn {
+    width: 24px;
+    height: 24px;
+    font-size: 14px;
+  }
+  
+  .cyberware-item {
+    padding: 6px;
+  }
+  
+  .cyberware-item-name {
+    font-size: 8px;
+  }
+  
+  .cyberware-item-type {
+    font-size: 6px;
+  }
+  
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .stat-field label {
+    font-size: 6px;
+  }
+  
+  .stat-field input {
+    font-size: 9px;
+  }
+  
+  .health-row {
+    grid-template-columns: 1fr;
+  }
+  
+  .inventory-table {
+    min-width: 350px;
+  }
+  
+  .enemies-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .lifepath-content input,
+  .lifepath-content textarea,
+  .lifepath-content select {
+    font-size: 9px;
+    padding: 4px;
+  }
+  
+  .save-data-btn,
+  .load-data-btn {
+    font-size: 8px;
+    padding: 4px 8px;
+  }
+}
