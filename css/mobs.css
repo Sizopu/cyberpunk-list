@@ -434,6 +434,14 @@
   border-color: #f78166;
 }
 
+.weapon-notes-row .mob-weapon-dice-container {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 6px;
+}
+
+
 /* Armor Row */
 .armor-row {
   display: grid;
@@ -589,7 +597,6 @@
 
 /* Mob Weapon Dice Result */
 .mob-weapon-dice-result {
-  grid-column: 1 / -1;
   background: #232931;
   border: 1px solid #3d4149;
   border-left: 3px solid #f78166;
@@ -699,9 +706,21 @@
 /* Mob Weapon Dice Container */
 .mob-weapon-dice-container {
   display: flex;
-  align-items: center;
+  flex-direction: column;
   gap: 6px;
   margin-top: 6px;
+}
+
+.attack-slots {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.attack-slot {
+  display: flex;
+  align-items: center;
+  gap: 6px;
 }
 
 .mob-weapon-dice-formula {
@@ -723,6 +742,61 @@
 .mob-weapon-dice-formula:focus {
   outline: none;
   border-color: #f78166 !important;
+}
+
+.mob-attack-notes {
+  flex: 1;
+  min-width: 100px;
+  background: #232931 !important;
+  border: 1px solid #3d4149 !important;
+  color: #c9c6b9;
+  padding: 6px 8px;
+  font-family: 'Courier New', monospace;
+  font-size: 9px;
+  border-radius: 3px;
+}
+
+.mob-attack-notes::placeholder {
+  color: #6e7681;
+}
+
+.mob-attack-notes:focus {
+  outline: none;
+  border-color: #f78166 !important;
+}
+
+.remove-attack-btn {
+  background: transparent;
+  border: none;
+  color: #f85149;
+  font-size: 16px;
+  cursor: pointer;
+  padding: 0 4px;
+  opacity: 0.7;
+  transition: opacity 0.2s;
+}
+
+.remove-attack-btn:hover {
+  opacity: 1;
+  color: #ff6b6b;
+}
+
+.add-attack-btn {
+  background: #1a1f2e;
+  border: 1px solid #484f58;
+  color: #8b949e;
+  padding: 4px 10px;
+  font-size: 9px;
+  cursor: pointer;
+  border-radius: 3px;
+  transition: all 0.2s;
+  align-self: flex-start;
+}
+
+.add-attack-btn:hover {
+  background: #232931;
+  border-color: #f78166;
+  color: #f78166;
 }
 
 .mob-weapon-roll-btn {

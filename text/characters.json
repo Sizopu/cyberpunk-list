@@ -1,0 +1,1038 @@
+{
+  "version": "2.0",
+  "exportDate": "2026-03-17T00:00:00.000Z",
+  "characters": [
+    {
+      "profile": {
+        "id": "char_001",
+        "name": "Johnny Silverhand",
+        "description": "Rockerboy legend and terrorist",
+        "createdAt": 1710590000000,
+        "updatedAt": 1710590000000
+      },
+      "character": {
+        "char-name": "Johnny Silverhand",
+        "age": "35",
+        "role": "Rockerboy",
+        "role_rank": "5",
+        "xp_current": "50",
+        "humanity_current": "18",
+        "humanity_max": "20",
+        "initiative": "15",
+        "stat_int": "8",
+        "stat_ref": "9",
+        "stat_dex": "8",
+        "stat_tech": "7",
+        "stat_cool": "10",
+        "stat_will": "9",
+        "stat_luck_current": "10",
+        "stat_luck_max": "10",
+        "stat_move": "8",
+        "stat_body": "8",
+        "stat_emp_current": "18",
+        "stat_emp_max": "20",
+        "hp_current": "32",
+        "hp_max": "32",
+        "death_save": "15",
+        "seriously_wounded": false,
+        "armor_head_sp": "12",
+        "armor_head_notes": "Helmet",
+        "armor_head_penalty": "0",
+        "armor_body_sp": "18",
+        "armor_body_notes": "Kevlar vest",
+        "armor_body_penalty": "0",
+        "armor_shield_sp": "0",
+        "armor_shield_notes": "",
+        "armor_shield_penalty": "",
+        "critical_injuries": "",
+        "addictions": "",
+        "notes": "Looking for Arasaka"
+      },
+      "roleAbilities": [
+        {"name": "Charismatic Impact", "lvl": "5"},
+        {"name": "Lead Singer", "lvl": "3"},
+        {"name": "Stage Presence", "lvl": "4"}
+      ],
+      "weapons": [
+        {"name": "Malorian Arms 3516", "dmg": "6d6+3", "mag": "7", "rof": "1", "notes": "Legendary pistol"},
+        {"name": "Combat Knife", "dmg": "1d6+3", "mag": "", "rof": "", "notes": "Silver plated"}
+      ],
+      "skills": [
+        {"skillName": "performance", "mod": "0", "lvl": "8", "stat": "COOL"},
+        {"skillName": "persuasion", "mod": "0", "lvl": "7", "stat": "COOL"},
+        {"skillName": "handgun", "mod": "0", "lvl": "8", "stat": "REF"}
+      ],
+      "specialisedSkills": [
+        {"stat": "COOL", "name": "guitar", "mod": "2", "lvl": "6"}
+      ],
+      "lifepath": {
+        "impCurrent": "5",
+        "impMax": "10",
+        "repValue": "50",
+        "moneyTotal": "5000",
+        "aliases": "Silverhand, Johnny Boy",
+        "enemies": ["Arasaka Corporation", "Adam Smasher"],
+        "culturalOrigins": "American",
+        "personality": "Rebellious, charismatic",
+        "clothingStyles": "Rocker, leather",
+        "hairstyle": "Mohawk",
+        "valueMost": "Freedom",
+        "feelingsPeople": "Distrustful of corps",
+        "valuedPerson": "Alt Cunningham",
+        "valuedPossession": "Malorian Arms 3516",
+        "familyBackground": "Military family",
+        "childhoodEnvironment": "Base housing",
+        "familyCrisis": "Father died in service",
+        "lifeGoals": "Destroy Arasaka",
+        "fashion": "Black leather, chrome",
+        "friends": "Morgan Blackhand",
+        "tragicLove": "Alt Cunningham",
+        "roleLifepath": "Started as soldier, became rockerboy",
+        "repEvents": "Destroyed Arasaka tower"
+      },
+      "inventory": [
+        {"gear": "Malorian Arms 3516", "cost": "5000", "weight": "2", "notes": "Legendary", "cash": ""},
+        {"gear": "Cyberarm", "cost": "2000", "weight": "1", "notes": "Chrome", "cash": ""}
+      ],
+      "cyberwareImplants": [
+        {"name": "Cyberarm", "type": "cyberarm", "zone": "arm", "notes": "Chrome plated with gun mount"},
+        {"name": "Neural Link", "type": "neuralware", "zone": "brain", "notes": "Interface plugs"}
+      ],
+      "notes": [],
+      "mobs": [],
+      "moneyTotal": "5000",
+      "programsData": {
+        "poor": [{"name": "Scanner", "class": "Utility", "per": "", "spd": "", "atkFormulas": [""], "defFormulas": [""], "rez": "4", "effect": "Scan netspace", "cost": "100", "slots": {"slots": "", "program": "", "hardware": ""}}],
+        "standard": [],
+        "excellent": [],
+        "cyberarm": []
+      },
+      "hardwareData": [
+        {"name": "Interface Plugs", "effect": "Connect to net", "cost": "500"}
+      ]
+    },
+    {
+      "profile": {
+        "id": "char_002",
+        "name": "Morgan Blackhand",
+        "description": "Legendary Solo",
+        "createdAt": 1710590000001,
+        "updatedAt": 1710590000001
+      },
+      "character": {
+        "char-name": "Morgan Blackhand",
+        "age": "42",
+        "role": "Solo",
+        "role_rank": "6",
+        "xp_current": "75",
+        "humanity_current": "15",
+        "humanity_max": "20",
+        "initiative": "18",
+        "stat_int": "7",
+        "stat_ref": "10",
+        "stat_dex": "10",
+        "stat_tech": "6",
+        "stat_cool": "9",
+        "stat_will": "8",
+        "stat_luck_current": "10",
+        "stat_luck_max": "10",
+        "stat_move": "9",
+        "stat_body": "9",
+        "stat_emp_current": "15",
+        "stat_emp_max": "20",
+        "hp_current": "36",
+        "hp_max": "36",
+        "death_save": "18",
+        "seriously_wounded": false,
+        "armor_head_sp": "20",
+        "armor_head_notes": "Combat helmet",
+        "armor_head_penalty": "0",
+        "armor_body_sp": "25",
+        "armor_body_notes": "Heavy armor",
+        "armor_body_penalty": "-2",
+        "armor_shield_sp": "0",
+        "armor_shield_notes": "",
+        "armor_shield_penalty": "",
+        "critical_injuries": "",
+        "addictions": "",
+        "notes": "Looking for Johnny"
+      },
+      "roleAbilities": [
+        {"name": "Combat Sense", "lvl": "6"},
+        {"name": "Danger Sense", "lvl": "4"},
+        {"name": "Tactical Analysis", "lvl": "5"}
+      ],
+      "weapons": [
+        {"name": "Assault Rifle", "dmg": "5d6", "mag": "30", "rof": "3", "notes": "Military grade"},
+        {"name": "Katana", "dmg": "3d6+4", "mag": "", "rof": "", "notes": "Monowire edge"}
+      ],
+      "skills": [
+        {"skillName": "athletics", "mod": "0", "lvl": "7", "stat": "DEX"},
+        {"skillName": "stealth", "mod": "0", "lvl": "6", "stat": "DEX"},
+        {"skillName": "rifle", "mod": "0", "lvl": "9", "stat": "REF"}
+      ],
+      "specialisedSkills": [
+        {"stat": "REF", "name": "melee weapon", "mod": "3", "lvl": "7"}
+      ],
+      "lifepath": {
+        "impCurrent": "7",
+        "impMax": "10",
+        "repValue": "75",
+        "moneyTotal": "10000",
+        "aliases": "The Blackhand, Morgan",
+        "enemies": ["Arasaka", "Militech"],
+        "culturalOrigins": "American",
+        "personality": "Cold, professional",
+        "clothingStyles": "Tactical gear",
+        "hairstyle": "Buzz cut",
+        "valueMost": "Survival",
+        "feelingsPeople": "Trust no one",
+        "valuedPerson": "Johnny Silverhand",
+        "valuedPossession": "Combat implants",
+        "familyBackground": "Military",
+        "childhoodEnvironment": "War zone",
+        "familyCrisis": "Lost family in war",
+        "lifeGoals": "Be the best solo",
+        "fashion": "Black tactical",
+        "friends": "Johnny Silverhand",
+        "tragicLove": "None",
+        "roleLifepath": "Special forces to mercenary",
+        "repEvents": "Survived 100+ missions"
+      },
+      "inventory": [
+        {"gear": "Assault Rifle", "cost": "3000", "weight": "5", "notes": "Modded", "cash": ""},
+        {"gear": "Katana", "cost": "2000", "weight": "2", "notes": "Monowire", "cash": ""}
+      ],
+      "cyberwareImplants": [
+        {"name": "Combat Implants", "type": "cyberarm", "zone": "arm", "notes": "+2 to hit"},
+        {"name": "Subdermal Armor", "type": "fashionware", "zone": "body", "notes": "+5 SP"}
+      ],
+      "notes": [],
+      "mobs": [],
+      "moneyTotal": "10000",
+      "programsData": {"poor": [], "standard": [], "excellent": [], "cyberarm": []},
+      "hardwareData": []
+    },
+    {
+      "profile": {
+        "id": "char_003",
+        "name": "Alt Cunningham",
+        "description": "Netrunner legend, now AI",
+        "createdAt": 1710590000002,
+        "updatedAt": 1710590000002
+      },
+      "character": {
+        "char-name": "Alt Cunningham",
+        "age": "38",
+        "role": "Netrunner",
+        "role_rank": "6",
+        "xp_current": "80",
+        "humanity_current": "10",
+        "humanity_max": "20",
+        "initiative": "12",
+        "stat_int": "10",
+        "stat_ref": "7",
+        "stat_dex": "7",
+        "stat_tech": "10",
+        "stat_cool": "8",
+        "stat_will": "10",
+        "stat_luck_current": "10",
+        "stat_luck_max": "10",
+        "stat_move": "6",
+        "stat_body": "6",
+        "stat_emp_current": "10",
+        "stat_emp_max": "20",
+        "hp_current": "24",
+        "hp_max": "24",
+        "death_save": "12",
+        "seriously_wounded": false,
+        "armor_head_sp": "10",
+        "armor_head_notes": "Neural interface",
+        "armor_head_penalty": "0",
+        "armor_body_sp": "10",
+        "armor_body_notes": "Light armor",
+        "armor_body_penalty": "0",
+        "armor_shield_sp": "0",
+        "armor_shield_notes": "",
+        "armor_shield_penalty": "",
+        "critical_injuries": "",
+        "addictions": "",
+        "notes": "Exists in the Net"
+      },
+      "roleAbilities": [
+        {"name": "Interface", "lvl": "6"},
+        {"name": "Code Warrior", "lvl": "5"},
+        {"name": "Net Presence", "lvl": "6"}
+      ],
+      "weapons": [
+        {"name": "Light Pistol", "dmg": "2d6", "mag": "10", "rof": "2", "notes": "Backup weapon"}
+      ],
+      "skills": [
+        {"skillName": "interface", "mod": "0", "lvl": "10", "stat": "INT"},
+        {"skillName": "basic tech", "mod": "0", "lvl": "8", "stat": "TECH"},
+        {"skillName": "electronics/security tech", "mod": "0", "lvl": "9", "stat": "TECH"}
+      ],
+      "specialisedSkills": [
+        {"stat": "INT", "name": "programming", "mod": "4", "lvl": "8"}
+      ],
+      "lifepath": {
+        "impCurrent": "10",
+        "impMax": "10",
+        "repValue": "100",
+        "moneyTotal": "15000",
+        "aliases": "The Ghost, Alt",
+        "enemies": ["Arasaka Corporation"],
+        "culturalOrigins": "American",
+        "personality": "Brilliant, distant",
+        "clothingStyles": "Minimal",
+        "hairstyle": "Short blonde",
+        "valueMost": "Knowledge",
+        "feelingsPeople": "Disconnected",
+        "valuedPerson": "Johnny Silverhand",
+        "valuedPossession": "Neural interface",
+        "familyBackground": "Tech family",
+        "childhoodEnvironment": "Lab",
+        "familyCrisis": "Parents worked for corps",
+        "lifeGoals": "Transcend humanity",
+        "fashion": "Simple, functional",
+        "friends": "Johnny Silverhand",
+        "tragicLove": "Johnny Silverhand",
+        "roleLifepath": "Programmer to netrunner to AI",
+        "repEvents": "Created Soulkiller"
+      },
+      "inventory": [
+        {"gear": "Cyberdeck", "cost": "5000", "weight": "3", "notes": "Custom build", "cash": ""}
+      ],
+      "cyberwareImplants": [
+        {"name": "Neural Processor", "type": "neuralware", "zone": "brain", "notes": "+2 Interface"},
+        {"name": "Interface Plugs", "type": "neuralware", "zone": "hands", "notes": "Standard"}
+      ],
+      "notes": [],
+      "mobs": [],
+      "moneyTotal": "15000",
+      "programsData": {
+        "poor": [{"name": "Scanner", "class": "Utility", "per": "", "spd": "", "atkFormulas": [""], "defFormulas": [""], "rez": "4", "effect": "Scan", "cost": "100", "slots": {"slots": "", "program": "", "hardware": ""}}],
+        "standard": [{"name": "Deamon", "class": "Combat", "per": "", "spd": "", "atkFormulas": ["3d6"], "defFormulas": [""], "rez": "6", "effect": "Attack ICE", "cost": "500", "slots": {"slots": "", "program": "", "hardware": ""}}],
+        "excellent": [{"name": "Soulkiller", "class": "Special", "per": "", "spd": "", "atkFormulas": ["5d6"], "defFormulas": [""], "rez": "10", "effect": "Digitize soul", "cost": "5000", "slots": {"slots": "", "program": "", "hardware": ""}}],
+        "cyberarm": []
+      },
+      "hardwareData": [
+        {"name": "Neural Link", "effect": "+1 Interface", "cost": "1000"},
+        {"name": "Memory Chip", "effect": "+2 storage", "cost": "200"}
+      ]
+    },
+    {
+      "profile": {
+        "id": "char_004",
+        "name": "Rogue Amendiares",
+        "description": "Fixer of Afterlife",
+        "createdAt": 1710590000003,
+        "updatedAt": 1710590000003
+      },
+      "character": {
+        "char-name": "Rogue Amendiares",
+        "age": "55",
+        "role": "Fixer",
+        "role_rank": "5",
+        "xp_current": "60",
+        "humanity_current": "16",
+        "humanity_max": "20",
+        "initiative": "11",
+        "stat_int": "9",
+        "stat_ref": "8",
+        "stat_dex": "8",
+        "stat_tech": "7",
+        "stat_cool": "10",
+        "stat_will": "9",
+        "stat_luck_current": "10",
+        "stat_luck_max": "10",
+        "stat_move": "7",
+        "stat_body": "7",
+        "stat_emp_current": "16",
+        "stat_emp_max": "20",
+        "hp_current": "28",
+        "hp_max": "28",
+        "death_save": "14",
+        "seriously_wounded": false,
+        "armor_head_sp": "15",
+        "armor_head_notes": "",
+        "armor_head_penalty": "0",
+        "armor_body_sp": "15",
+        "armor_body_notes": "Armored coat",
+        "armor_body_penalty": "0",
+        "armor_shield_sp": "0",
+        "armor_shield_notes": "",
+        "armor_shield_penalty": "",
+        "critical_injuries": "",
+        "addictions": "",
+        "notes": "Runs the Afterlife"
+      },
+      "roleAbilities": [
+        {"name": "Resources", "lvl": "5"},
+        {"name": "Connections", "lvl": "6"},
+        {"name": "Favor Bank", "lvl": "4"}
+      ],
+      "weapons": [
+        {"name": "Heavy Pistol", "dmg": "4d6", "mag": "12", "rof": "2", "notes": "Reliable"}
+      ],
+      "skills": [
+        {"skillName": "persuasion", "mod": "0", "lvl": "8", "stat": "COOL"},
+        {"skillName": "trading", "mod": "0", "lvl": "7", "stat": "COOL"},
+        {"skillName": "streetwise", "mod": "0", "lvl": "9", "stat": "COOL"}
+      ],
+      "specialisedSkills": [
+        {"stat": "COOL", "name": "negotiation", "mod": "3", "lvl": "6"}
+      ],
+      "lifepath": {
+        "impCurrent": "6",
+        "impMax": "10",
+        "repValue": "80",
+        "moneyTotal": "20000",
+        "aliases": "The Queen of Afterlife",
+        "enemies": ["Corpos"],
+        "culturalOrigins": "American",
+        "personality": "Tough, fair",
+        "clothingStyles": "Professional",
+        "hairstyle": "Short gray",
+        "valueMost": "Respect",
+        "feelingsPeople": "Cynical",
+        "valuedPerson": "Johnny Silverhand",
+        "valuedPossession": "Afterlife bar",
+        "familyBackground": "Street kid",
+        "childhoodEnvironment": "Night City streets",
+        "familyCrisis": "Lost family young",
+        "lifeGoals": "Control Night City",
+        "fashion": "Business casual",
+        "friends": "Johnny Silverhand",
+        "tragicLove": "Johnny Silverhand",
+        "roleLifepath": "Street kid to fixer",
+        "repEvents": "Took over Afterlife"
+      },
+      "inventory": [
+        {"gear": "Heavy Pistol", "cost": "1500", "weight": "2", "notes": "", "cash": ""}
+      ],
+      "cyberwareImplants": [
+        {"name": "Basic Processor", "type": "neuralware", "zone": "brain", "notes": ""}
+      ],
+      "notes": [],
+      "mobs": [],
+      "moneyTotal": "20000",
+      "programsData": {"poor": [], "standard": [], "excellent": [], "cyberarm": []},
+      "hardwareData": []
+    },
+    {
+      "profile": {
+        "id": "char_005",
+        "name": "V",
+        "description": "Mercenary with Relic",
+        "createdAt": 1710590000004,
+        "updatedAt": 1710590000004
+      },
+      "character": {
+        "char-name": "V",
+        "age": "28",
+        "role": "Solo",
+        "role_rank": "4",
+        "xp_current": "40",
+        "humanity_current": "14",
+        "humanity_max": "20",
+        "initiative": "14",
+        "stat_int": "7",
+        "stat_ref": "9",
+        "stat_dex": "9",
+        "stat_tech": "6",
+        "stat_cool": "8",
+        "stat_will": "8",
+        "stat_luck_current": "10",
+        "stat_luck_max": "10",
+        "stat_move": "8",
+        "stat_body": "8",
+        "stat_emp_current": "14",
+        "stat_emp_max": "20",
+        "hp_current": "32",
+        "hp_max": "32",
+        "death_save": "16",
+        "seriously_wounded": false,
+        "armor_head_sp": "12",
+        "armor_head_notes": "",
+        "armor_head_penalty": "0",
+        "armor_body_sp": "15",
+        "armor_body_notes": "Subdermal",
+        "armor_body_penalty": "0",
+        "armor_shield_sp": "0",
+        "armor_shield_notes": "",
+        "armor_shield_penalty": "",
+        "critical_injuries": "Relic in head",
+        "addictions": "",
+        "notes": "Dying from Relic"
+      },
+      "roleAbilities": [
+        {"name": "Combat Sense", "lvl": "4"},
+        {"name": "Adrenaline Rush", "lvl": "3"},
+        {"name": "Tactical Analysis", "lvl": "3"}
+      ],
+      "weapons": [
+        {"name": "Tech Pistol", "dmg": "3d6+2", "mag": "15", "rof": "2", "notes": "Tech weapon"},
+        {"name": "Mantis Blades", "dmg": "4d6+3", "mag": "", "rof": "", "notes": "Cyberware"}
+      ],
+      "skills": [
+        {"skillName": "handgun", "mod": "0", "lvl": "7", "stat": "REF"},
+        {"skillName": "athletics", "mod": "0", "lvl": "5", "stat": "DEX"},
+        {"skillName": "stealth", "mod": "0", "lvl": "6", "stat": "DEX"}
+      ],
+      "specialisedSkills": [
+        {"stat": "REF", "name": "melee weapon", "mod": "2", "lvl": "5"}
+      ],
+      "lifepath": {
+        "impCurrent": "4",
+        "impMax": "10",
+        "repValue": "40",
+        "moneyTotal": "3000",
+        "aliases": "V",
+        "enemies": ["Arasaka"],
+        "culturalOrigins": "Night City",
+        "personality": "Determined",
+        "clothingStyles": "Street",
+        "hairstyle": "Variable",
+        "valueMost": "Survival",
+        "feelingsPeople": "Cautious",
+        "valuedPerson": "Jackie",
+        "valuedPossession": "Mantis Blades",
+        "familyBackground": "Unknown",
+        "childhoodEnvironment": "Streets",
+        "familyCrisis": "None",
+        "lifeGoals": "Survive",
+        "fashion": "Street wear",
+        "friends": "Jackie, Panam",
+        "tragicLove": "None",
+        "roleLifepath": "Street kid to merc",
+        "repEvents": "Heist on Konpeki Plaza"
+      },
+      "inventory": [
+        {"gear": "Tech Pistol", "cost": "2000", "weight": "1", "notes": "", "cash": ""},
+        {"gear": "Medkit", "cost": "500", "weight": "1", "notes": "", "cash": ""}
+      ],
+      "cyberwareImplants": [
+        {"name": "Mantis Blades", "type": "cyberarm", "zone": "arm", "notes": ""},
+        {"name": "Kiroshi Optics", "type": "cyberoptics", "zone": "eyes", "notes": "Scanner"}
+      ],
+      "notes": [],
+      "mobs": [],
+      "moneyTotal": "3000",
+      "programsData": {"poor": [], "standard": [], "excellent": [], "cyberarm": []},
+      "hardwareData": []
+    },
+    {
+      "profile": {
+        "id": "char_006",
+        "name": "Panam Palmer",
+        "description": "Nomad of the Aldecaldos",
+        "createdAt": 1710590000005,
+        "updatedAt": 1710590000005
+      },
+      "character": {
+        "char-name": "Panam Palmer",
+        "age": "29",
+        "role": "Nomad",
+        "role_rank": "4",
+        "xp_current": "45",
+        "humanity_current": "17",
+        "humanity_max": "20",
+        "initiative": "13",
+        "stat_int": "7",
+        "stat_ref": "8",
+        "stat_dex": "8",
+        "stat_tech": "8",
+        "stat_cool": "8",
+        "stat_will": "9",
+        "stat_luck_current": "10",
+        "stat_luck_max": "10",
+        "stat_move": "8",
+        "stat_body": "8",
+        "stat_emp_current": "17",
+        "stat_emp_max": "20",
+        "hp_current": "32",
+        "hp_max": "32",
+        "death_save": "15",
+        "seriously_wounded": false,
+        "armor_head_sp": "10",
+        "armor_head_notes": "",
+        "armor_head_penalty": "0",
+        "armor_body_sp": "12",
+        "armor_body_notes": "Nomad gear",
+        "armor_body_penalty": "0",
+        "armor_shield_sp": "0",
+        "armor_shield_notes": "",
+        "armor_shield_penalty": "",
+        "critical_injuries": "",
+        "addictions": "",
+        "notes": "Aldecaldos family"
+      },
+      "roleAbilities": [
+        {"name": "Mentor", "lvl": "4"},
+        {"name": "Family", "lvl": "5"},
+        {"name": "Nomad Training", "lvl": "4"}
+      ],
+      "weapons": [
+        {"name": "Assault Rifle", "dmg": "5d6", "mag": "30", "rof": "3", "notes": ""},
+        {"name": "Sniper Rifle", "dmg": "7d6", "mag": "5", "rof": "1", "notes": "Long range"}
+      ],
+      "skills": [
+        {"skillName": "drive land vehicle", "mod": "0", "lvl": "8", "stat": "REF"},
+        {"skillName": "rifle", "mod": "0", "lvl": "7", "stat": "REF"},
+        {"skillName": "basic tech", "mod": "0", "lvl": "6", "stat": "TECH"}
+      ],
+      "specialisedSkills": [
+        {"stat": "TECH", "name": "land vehicle tech", "mod": "2", "lvl": "5"}
+      ],
+      "lifepath": {
+        "impCurrent": "5",
+        "impMax": "10",
+        "repValue": "35",
+        "moneyTotal": "2500",
+        "aliases": "Palmer",
+        "enemies": ["Wraiths"],
+        "culturalOrigins": "Nomad",
+        "personality": "Loyal, hot-headed",
+        "clothingStyles": "Nomad",
+        "hairstyle": "Long brown",
+        "valueMost": "Family",
+        "feelingsPeople": "Protective",
+        "valuedPerson": "Saul",
+        "valuedPossession": "Basilisk tank",
+        "familyBackground": "Aldecaldos",
+        "childhoodEnvironment": "Badlands",
+        "familyCrisis": "Left family temporarily",
+        "lifeGoals": "Help her family",
+        "fashion": "Nomad gear",
+        "friends": "V",
+        "tragicLove": "V",
+        "roleLifepath": "Born nomad, stayed nomad",
+        "repEvents": "Retaken Basilisk"
+      },
+      "inventory": [
+        {"gear": "Assault Rifle", "cost": "3000", "weight": "5", "notes": "", "cash": ""},
+        {"gear": "Nomad Gear", "cost": "1000", "weight": "3", "notes": "", "cash": ""}
+      ],
+      "cyberwareImplants": [
+        {"name": "Basic Optics", "type": "cyberoptics", "zone": "eyes", "notes": ""}
+      ],
+      "notes": [],
+      "mobs": [],
+      "moneyTotal": "2500",
+      "programsData": {"poor": [], "standard": [], "excellent": [], "cyberarm": []},
+      "hardwareData": []
+    },
+    {
+      "profile": {
+        "id": "char_007",
+        "name": "Judy Alvarez",
+        "description": "Braindance technician",
+        "createdAt": 1710590000006,
+        "updatedAt": 1710590000006
+      },
+      "character": {
+        "char-name": "Judy Alvarez",
+        "age": "30",
+        "role": "Techie",
+        "role_rank": "4",
+        "xp_current": "40",
+        "humanity_current": "18",
+        "humanity_max": "20",
+        "initiative": "10",
+        "stat_int": "9",
+        "stat_ref": "7",
+        "stat_dex": "7",
+        "stat_tech": "10",
+        "stat_cool": "7",
+        "stat_will": "8",
+        "stat_luck_current": "10",
+        "stat_luck_max": "10",
+        "stat_move": "7",
+        "stat_body": "6",
+        "stat_emp_current": "18",
+        "stat_emp_max": "20",
+        "hp_current": "24",
+        "hp_max": "24",
+        "death_save": "12",
+        "seriously_wounded": false,
+        "armor_head_sp": "8",
+        "armor_head_notes": "",
+        "armor_head_penalty": "0",
+        "armor_body_sp": "10",
+        "armor_body_notes": "",
+        "armor_body_penalty": "0",
+        "armor_shield_sp": "0",
+        "armor_shield_notes": "",
+        "armor_shield_penalty": "",
+        "critical_injuries": "",
+        "addictions": "",
+        "notes": "BD technician"
+      },
+      "roleAbilities": [
+        {"name": "Invention", "lvl": "4"},
+        {"name": "Jury Rig", "lvl": "3"},
+        {"name": "Technical Expert", "lvl": "4"}
+      ],
+      "weapons": [
+        {"name": "Light Pistol", "dmg": "2d6", "mag": "10", "rof": "2", "notes": "Self defense"}
+      ],
+      "skills": [
+        {"skillName": "basic tech", "mod": "0", "lvl": "8", "stat": "TECH"},
+        {"skillName": "electronics/security tech", "mod": "0", "lvl": "7", "stat": "TECH"},
+        {"skillName": "first aid", "mod": "0", "lvl": "5", "stat": "TECH"}
+      ],
+      "specialisedSkills": [
+        {"stat": "TECH", "name": "braindance editing", "mod": "3", "lvl": "7"}
+      ],
+      "lifepath": {
+        "impCurrent": "4",
+        "impMax": "10",
+        "repValue": "30",
+        "moneyTotal": "2000",
+        "aliases": "Jude",
+        "enemies": ["Tyger Claws"],
+        "culturalOrigins": "Latina",
+        "personality": "Caring, passionate",
+        "clothingStyles": "Casual",
+        "hairstyle": "Blue mohawk",
+        "valueMost": "Helping people",
+        "feelingsPeople": "Empathetic",
+        "valuedPerson": "Evelyn",
+        "valuedPossession": "BD equipment",
+        "familyBackground": "Mox",
+        "childhoodEnvironment": "Night City",
+        "familyCrisis": "Lost Evelyn",
+        "lifeGoals": "Help dolls",
+        "fashion": "Tech wear",
+        "friends": "V",
+        "tragicLove": "Evelyn",
+        "roleLifepath": "Tech to BD tech",
+        "repEvents": "Saved Evelyn"
+      },
+      "inventory": [
+        {"gear": "BD Equipment", "cost": "5000", "weight": "10", "notes": "Professional", "cash": ""}
+      ],
+      "cyberwareImplants": [
+        {"name": "Basic Processor", "type": "neuralware", "zone": "brain", "notes": "BD editing"}
+      ],
+      "notes": [],
+      "mobs": [],
+      "moneyTotal": "2000",
+      "programsData": {"poor": [], "standard": [], "excellent": [], "cyberarm": []},
+      "hardwareData": []
+    },
+    {
+      "profile": {
+        "id": "char_008",
+        "name": "Goro Takemura",
+        "description": "Arasaka bodyguard",
+        "createdAt": 1710590000007,
+        "updatedAt": 1710590000007
+      },
+      "character": {
+        "char-name": "Goro Takemura",
+        "age": "58",
+        "role": "Solo",
+        "role_rank": "5",
+        "xp_current": "55",
+        "humanity_current": "15",
+        "humanity_max": "20",
+        "initiative": "14",
+        "stat_int": "8",
+        "stat_ref": "9",
+        "stat_dex": "8",
+        "stat_tech": "6",
+        "stat_cool": "9",
+        "stat_will": "10",
+        "stat_luck_current": "10",
+        "stat_luck_max": "10",
+        "stat_move": "7",
+        "stat_body": "8",
+        "stat_emp_current": "15",
+        "stat_emp_max": "20",
+        "hp_current": "32",
+        "hp_max": "32",
+        "death_save": "16",
+        "seriously_wounded": false,
+        "armor_head_sp": "15",
+        "armor_head_notes": "",
+        "armor_head_penalty": "0",
+        "armor_body_sp": "18",
+        "armor_body_notes": "Arasaka armor",
+        "armor_body_penalty": "0",
+        "armor_shield_sp": "0",
+        "armor_shield_notes": "",
+        "armor_shield_penalty": "",
+        "critical_injuries": "",
+        "addictions": "",
+        "notes": "Seeking revenge"
+      },
+      "roleAbilities": [
+        {"name": "Combat Sense", "lvl": "5"},
+        {"name": "Adrenaline Rush", "lvl": "4"},
+        {"name": "Tactical Analysis", "lvl": "4"}
+      ],
+      "weapons": [
+        {"name": "Katana", "dmg": "3d6+3", "mag": "", "rof": "", "notes": "Traditional"},
+        {"name": "Heavy Pistol", "dmg": "4d6", "mag": "12", "rof": "2", "notes": ""}
+      ],
+      "skills": [
+        {"skillName": "melee weapon", "mod": "0", "lvl": "8", "stat": "DEX"},
+        {"skillName": "handgun", "mod": "0", "lvl": "7", "stat": "REF"},
+        {"skillName": "stealth", "mod": "0", "lvl": "6", "stat": "DEX"}
+      ],
+      "specialisedSkills": [
+        {"stat": "DEX", "name": "katana", "mod": "3", "lvl": "7"}
+      ],
+      "lifepath": {
+        "impCurrent": "5",
+        "impMax": "10",
+        "repValue": "50",
+        "moneyTotal": "5000",
+        "aliases": "Takemura",
+        "enemies": ["Arasaka (Saburo's killers)"],
+        "culturalOrigins": "Japanese",
+        "personality": "Honorable, loyal",
+        "clothingStyles": "Traditional",
+        "hairstyle": "Short gray",
+        "valueMost": "Honor",
+        "feelingsPeople": "Respectful",
+        "valuedPerson": "Saburo Arasaka",
+        "valuedPossession": "Katana",
+        "familyBackground": "Samurai lineage",
+        "childhoodEnvironment": "Japan",
+        "familyCrisis": "Lost honor",
+        "lifeGoals": "Restore honor",
+        "fashion": "Traditional Japanese",
+        "friends": "V",
+        "tragicLove": "None",
+        "roleLifepath": "Samurai to bodyguard",
+        "repEvents": "Saved Hanako"
+      },
+      "inventory": [
+        {"gear": "Katana", "cost": "3000", "weight": "2", "notes": "Family heirloom", "cash": ""}
+      ],
+      "cyberwareImplants": [
+        {"name": "Basic Implants", "type": "cyberarm", "zone": "arm", "notes": ""}
+      ],
+      "notes": [],
+      "mobs": [],
+      "moneyTotal": "5000",
+      "programsData": {"poor": [], "standard": [], "excellent": [], "cyberarm": []},
+      "hardwareData": []
+    },
+    {
+      "profile": {
+        "id": "char_009",
+        "name": "Jackie Welles",
+        "description": "Aspiring mercenary",
+        "createdAt": 1710590000008,
+        "updatedAt": 1710590000008
+      },
+      "character": {
+        "char-name": "Jackie Welles",
+        "age": "26",
+        "role": "Solo",
+        "role_rank": "3",
+        "xp_current": "30",
+        "humanity_current": "19",
+        "humanity_max": "20",
+        "initiative": "12",
+        "stat_int": "6",
+        "stat_ref": "8",
+        "stat_dex": "8",
+        "stat_tech": "5",
+        "stat_cool": "8",
+        "stat_will": "8",
+        "stat_luck_current": "10",
+        "stat_luck_max": "10",
+        "stat_move": "8",
+        "stat_body": "9",
+        "stat_emp_current": "19",
+        "stat_emp_max": "20",
+        "hp_current": "36",
+        "hp_max": "36",
+        "death_save": "18",
+        "seriously_wounded": false,
+        "armor_head_sp": "10",
+        "armor_head_notes": "",
+        "armor_head_penalty": "0",
+        "armor_body_sp": "12",
+        "armor_body_notes": "",
+        "armor_body_penalty": "0",
+        "armor_shield_sp": "0",
+        "armor_shield_notes": "",
+        "armor_shield_penalty": "",
+        "critical_injuries": "",
+        "addictions": "",
+        "notes": "Want to be legend"
+      },
+      "roleAbilities": [
+        {"name": "Combat Sense", "lvl": "3"},
+        {"name": "Adrenaline Rush", "lvl": "2"},
+        {"name": "Tactical Analysis", "lvl": "2"}
+      ],
+      "weapons": [
+        {"name": "Submachine Gun", "dmg": "4d6", "mag": "40", "rof": "4", "notes": ""},
+        {"name": "Combat Knife", "dmg": "1d6+2", "mag": "", "rof": "", "notes": ""}
+      ],
+      "skills": [
+        {"skillName": "handgun", "mod": "0", "lvl": "6", "stat": "REF"},
+        {"skillName": "athletics", "mod": "0", "lvl": "5", "stat": "DEX"},
+        {"skillName": "brawling", "mod": "0", "lvl": "6", "stat": "DEX"}
+      ],
+      "specialisedSkills": [
+        {"stat": "DEX", "name": "melee weapon", "mod": "1", "lvl": "4"}
+      ],
+      "lifepath": {
+        "impCurrent": "3",
+        "impMax": "10",
+        "repValue": "20",
+        "moneyTotal": "1000",
+        "aliases": "Jackie",
+        "enemies": ["Gangs"],
+        "culturalOrigins": "Latino",
+        "personality": "Friendly, ambitious",
+        "clothingStyles": "Street",
+        "hairstyle": "Short dark",
+        "valueMost": "Family",
+        "feelingsPeople": "Friendly",
+        "valuedPerson": "Mama Welles",
+        "valuedPossession": "Motorcycle",
+        "familyBackground": "Valentinos",
+        "childhoodEnvironment": "Heywood",
+        "familyCrisis": "Left Valentinos",
+        "lifeGoals": "Become legend",
+        "fashion": "Street wear",
+        "friends": "V",
+        "tragicLove": "Misty",
+        "roleLifepath": "Gang member to merc",
+        "repEvents": "Konpeki Plaza heist"
+      },
+      "inventory": [
+        {"gear": "SMG", "cost": "2000", "weight": "3", "notes": "", "cash": ""},
+        {"gear": "Motorcycle", "cost": "5000", "weight": "200", "notes": "Arch", "cash": ""}
+      ],
+      "cyberwareImplants": [
+        {"name": "Basic Implants", "type": "cyberarm", "zone": "arm", "notes": ""}
+      ],
+      "notes": [],
+      "mobs": [],
+      "moneyTotal": "1000",
+      "programsData": {"poor": [], "standard": [], "excellent": [], "cyberarm": []},
+      "hardwareData": []
+    },
+    {
+      "profile": {
+        "id": "char_010",
+        "name": "Adam Smasher",
+        "description": "Arasaka cyborg enforcer",
+        "createdAt": 1710590000009,
+        "updatedAt": 1710590000009
+      },
+      "character": {
+        "char-name": "Adam Smasher",
+        "age": "65",
+        "role": "Solo",
+        "role_rank": "6",
+        "xp_current": "100",
+        "humanity_current": "2",
+        "humanity_max": "20",
+        "initiative": "20",
+        "stat_int": "7",
+        "stat_ref": "10",
+        "stat_dex": "10",
+        "stat_tech": "8",
+        "stat_cool": "10",
+        "stat_will": "10",
+        "stat_luck_current": "10",
+        "stat_luck_max": "10",
+        "stat_move": "10",
+        "stat_body": "10",
+        "stat_emp_current": "2",
+        "stat_emp_max": "20",
+        "hp_current": "50",
+        "hp_max": "50",
+        "death_save": "25",
+        "seriously_wounded": false,
+        "armor_head_sp": "30",
+        "armor_head_notes": "Cybernetic",
+        "armor_head_penalty": "0",
+        "armor_body_sp": "40",
+        "armor_body_notes": "Full body conversion",
+        "armor_body_penalty": "0",
+        "armor_shield_sp": "20",
+        "armor_shield_notes": "Energy shield",
+        "armor_shield_penalty": "0",
+        "critical_injuries": "",
+        "addictions": "",
+        "notes": "96% cybernetic"
+      },
+      "roleAbilities": [
+        {"name": "Combat Sense", "lvl": "6"},
+        {"name": "Adrenaline Rush", "lvl": "6"},
+        {"name": "Tactical Analysis", "lvl": "5"}
+      ],
+      "weapons": [
+        {"name": "Arm Cannon", "dmg": "8d6", "mag": "∞", "rof": "3", "notes": "Built-in"},
+        {"name": "Monowire", "dmg": "5d6+5", "mag": "", "rof": "", "notes": "Cyberware"}
+      ],
+      "skills": [
+        {"skillName": "heavy weapons", "mod": "0", "lvl": "10", "stat": "REF"},
+        {"skillName": "melee weapon", "mod": "0", "lvl": "9", "stat": "DEX"},
+        {"skillName": "athletics", "mod": "0", "lvl": "8", "stat": "DEX"}
+      ],
+      "specialisedSkills": [
+        {"stat": "REF", "name": "heavy weapons", "mod": "5", "lvl": "8"}
+      ],
+      "lifepath": {
+        "impCurrent": "10",
+        "impMax": "10",
+        "repValue": "100",
+        "moneyTotal": "50000",
+        "aliases": "The Cyborg",
+        "enemies": ["Everyone"],
+        "culturalOrigins": "American",
+        "personality": "Psychotic, violent",
+        "clothingStyles": "None (cyborg)",
+        "hairstyle": "None",
+        "valueMost": "Violence",
+        "feelingsPeople": "Contempt",
+        "valuedPerson": "Saburo Arasaka",
+        "valuedPossession": "His body",
+        "familyBackground": "Military",
+        "childhoodEnvironment": "War",
+        "familyCrisis": "None (no family)",
+        "lifeGoals": "Kill everyone",
+        "fashion": "Chrome",
+        "friends": "None",
+        "tragicLove": "None",
+        "roleLifepath": "Soldier to cyborg",
+        "repEvents": "Killed Johnny Silverhand"
+      },
+      "inventory": [
+        {"gear": "Arm Cannon", "cost": "10000", "weight": "5", "notes": "Built-in", "cash": ""}
+      ],
+      "cyberwareImplants": [
+        {"name": "Full Body Conversion", "type": "cyberarm", "zone": "full", "notes": "96% cybernetic"},
+        {"name": "Arm Cannon", "type": "cyberarm", "zone": "arm", "notes": "Heavy weapon"},
+        {"name": "Monowire", "type": "cyberarm", "zone": "arm", "notes": "Melee weapon"}
+      ],
+      "notes": [],
+      "mobs": [],
+      "moneyTotal": "50000",
+      "programsData": {
+        "poor": [{"name": "Scanner", "class": "Utility", "per": "", "spd": "", "atkFormulas": [""], "defFormulas": [""], "rez": "4", "effect": "Scan", "cost": "100", "slots": {"slots": "", "program": "", "hardware": ""}}],
+        "standard": [{"name": "Deamon", "class": "Combat", "per": "", "spd": "", "atkFormulas": ["4d6"], "defFormulas": [""], "rez": "8", "effect": "Attack ICE", "cost": "500", "slots": {"slots": "", "program": "", "hardware": ""}}],
+        "excellent": [{"name": "Hellhound", "class": "Combat", "per": "", "spd": "", "atkFormulas": ["6d6"], "defFormulas": [""], "rez": "12", "effect": "Destroy ICE", "cost": "2000", "slots": {"slots": "", "program": "", "hardware": ""}}],
+        "cyberarm": [{"name": "Arasaka Defense", "class": "Defense", "per": "", "spd": "", "atkFormulas": [""], "defFormulas": ["5d6"], "rez": "15", "effect": "Auto defense", "cost": "5000", "slots": {"slots": "", "program": "", "hardware": ""}}]
+      },
+      "hardwareData": [
+        {"name": "Neural Processor", "effect": "+2 Interface", "cost": "2000"},
+        {"name": "Memory Chip", "effect": "+5 storage", "cost": "500"},
+        {"name": "Targeting System", "effect": "+1 to hit", "cost": "3000"}
+      ]
+    }
+  ]
+}

@@ -380,6 +380,8 @@ function saveAllCharacters() {
       cyberware: JSON.parse(localStorage.getItem(charDataKey + '_cyberwareImplants') || '[]'),
       notes: JSON.parse(localStorage.getItem(charDataKey + '_notesData') || '[]'),
       mobs: JSON.parse(localStorage.getItem(charDataKey + '_mobsData') || '[]'),
+      programsData: JSON.parse(localStorage.getItem(charDataKey + '_programsData') || '{"poor":[],"standard":[],"excellent":[],"cyberarm":[]}'),
+      hardwareData: JSON.parse(localStorage.getItem(charDataKey + '_hardwareData') || '[]'),
       moneyTotal: localStorage.getItem(charDataKey + '_moneyTotal') || ''
     };
     allCharactersData.push(charFullData);
@@ -415,7 +417,8 @@ function handleLoadAll(event) {
       const data = JSON.parse(e.target.result);
       loadAllCharacters(data);
       alert('All characters loaded successfully!');
-      location.reload();
+      renderCharactersList();
+      renderCharacterDetails();
     } catch (error) {
       alert('Error loading file: ' + error.message);
     }
@@ -457,6 +460,8 @@ function loadAllCharacters(data) {
       if (charData.cyberware) localStorage.setItem(charDataKey + '_cyberwareImplants', JSON.stringify(charData.cyberware));
       if (charData.notes) localStorage.setItem(charDataKey + '_notesData', JSON.stringify(charData.notes));
       if (charData.mobs) localStorage.setItem(charDataKey + '_mobsData', JSON.stringify(charData.mobs));
+      if (charData.programsData) localStorage.setItem(charDataKey + '_programsData', JSON.stringify(charData.programsData));
+      if (charData.hardwareData) localStorage.setItem(charDataKey + '_hardwareData', JSON.stringify(charData.hardwareData));
       if (charData.moneyTotal) localStorage.setItem(charDataKey + '_moneyTotal', charData.moneyTotal);
     });
     

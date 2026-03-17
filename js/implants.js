@@ -6,17 +6,31 @@ document.addEventListener('DOMContentLoaded', () => {
   initSaveLoad();
   initDiceRoller();
   loadCharacterFromStorage();
-  
+
   // Add event listeners for character data saving
   const impCurrent = document.getElementById('imp-current');
   const impMax = document.getElementById('imp-max');
   const repValue = document.getElementById('rep-value');
   const moneyTotal = document.getElementById('money-total');
-  
+
   [impCurrent, impMax, repValue, moneyTotal].forEach(el => {
     if (el) {
       el.addEventListener('input', saveCharacterToStorage);
     }
+  });
+
+  // Auto-save on navigation
+  document.querySelectorAll('.nav-link').forEach(link => {
+    link.addEventListener('click', () => {
+      saveLifepathData();
+      saveCharacterToStorage();
+    });
+  });
+
+  // Auto-save on page unload
+  window.addEventListener('beforeunload', () => {
+    saveLifepathData();
+    saveCharacterToStorage();
   });
 });
 
@@ -501,9 +515,75 @@ function loadCyberwareData() {
 
 // Load character data from localStorage on page load
 function loadCharacterFromStorage() {
+  // Load main character data from character-specific storage
+  const charDataStr = charStorage.getItem('characterData');
+  const charData = charDataStr ? JSON.parse(charDataStr) : {};
+  
+  // Load character data if available
+  if (Object.keys(charData).length > 0) {
+    // Stats
+    const statIds = ['stat_int', 'stat_ref', 'stat_dex', 'stat_tech', 'stat_cool', 'stat_will',
+                     'stat_luck_current', 'stat_luck_max', 'stat_move', 'stat_body',
+                     'stat_emp_current', 'stat_emp_max'];
+    statIds.forEach(id => {
+      const el = document.getElementById(id);
+      if (el && charData[id] !== undefined) {
+        el.value = charData[id];
+      }
+    });
+
+    // ID Block - including char-name
+    const idFields = ['char-name', 'age', 'role', 'role_rank', 'xp_current', 'humanity_current', 'humanity_max', 'initiative'];
+    idFields.forEach(id => {
+      const el = document.getElementById(id);
+      if (el && charData[id] !== undefined) {
+        el.value = charData[id];
+      }
+    });
+
+    // Health
+    const healthFields = ['hp_current', 'hp_max', 'death_save'];
+    healthFields.forEach(id => {
+      const el = document.getElementById(id);
+      if (el && charData[id] !== undefined) {
+        el.value = charData[id];
+      }
+    });
+    
+    const seriouslyWounded = document.getElementById('seriously_wounded');
+    if (seriouslyWounded && charData['seriously_wounded'] !== undefined) {
+      seriouslyWounded.checked = charData['seriously_wounded'];
+    }
+
+    // Armor
+    const armorFields = ['armor_head_sp', 'armor_head_notes', 'armor_head_penalty',
+                         'armor_body_sp', 'armor_body_notes', 'armor_body_penalty',
+                         'armor_shield_sp', 'armor_shield_notes', 'armor_shield_penalty'];
+    armorFields.forEach(id => {
+      const el = document.getElementById(id);
+      if (el && charData[id] !== undefined) {
+        el.value = charData[id];
+      }
+    });
+
+    // Notes
+    const notesFields = ['critical_injuries', 'addictions', 'notes'];
+    notesFields.forEach(id => {
+      const el = document.getElementById(id);
+      if (el && charData[id] !== undefined) {
+        el.value = charData[id];
+      }
+    });
+
+    // Load avatar
+    if (charData['avatar'] && typeof loadAvatar === 'function') {
+      loadAvatar(charData['avatar']);
+    }
+  }
+
   // Load lifepath data from character-specific storage
   const lifepathData = JSON.parse(charStorage.getItem('lifepathData') || '{}');
-  
+
   if (Object.keys(lifepathData).length > 0) {
     // Load Improvement Points
     if ('impCurrent' in lifepathData && document.getElementById('imp-current')) {
@@ -525,10 +605,10 @@ function loadCharacterFromStorage() {
   // Load inventory from character-specific storage
   const inventoryData = charStorage.getItem('inventoryData');
   const inventoryBody = document.getElementById('inventory-body');
-  
+
   if (inventoryBody) {
     inventoryBody.innerHTML = '';
-    
+
     if (inventoryData) {
       const data = JSON.parse(inventoryData);
       if (data.length > 0) {
@@ -545,7 +625,7 @@ function loadCharacterFromStorage() {
         });
       }
     }
-    
+
     // Update totals
     if (typeof updateTotalWeight === 'function') updateTotalWeight();
     if (typeof updateTotalMoney === 'function') updateTotalMoney();
@@ -567,6 +647,18 @@ function saveCharacterToStorage() {
   }
   if (document.getElementById('money-total')) {
     lifepathData.moneyTotal = document.getElementById('money-total').value;
+  }
+  
+  // Save aliases
+  const aliasesInput = document.querySelector('.aliases-input');
+  if (aliasesInput) {
+    lifepathData.aliases = aliasesInput.value;
+  }
+  
+  // Save enemies
+  const enemiesInputs = document.querySelectorAll('.enemies-grid input');
+  if (enemiesInputs.length > 0) {
+    lifepathData.enemies = Array.from(enemiesInputs).map(input => input.value || '');
   }
 
   charStorage.setItem('lifepathData', JSON.stringify(lifepathData));

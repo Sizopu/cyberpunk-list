@@ -3,17 +3,31 @@ document.addEventListener('DOMContentLoaded', () => {
   initMobs();
   initSaveLoad();
   loadCharacterFromStorage();
-  
+
   // Add event listeners for character data saving
   const impCurrent = document.getElementById('imp-current');
   const impMax = document.getElementById('imp-max');
   const repValue = document.getElementById('rep-value');
   const moneyTotal = document.getElementById('money-total');
-  
+
   [impCurrent, impMax, repValue, moneyTotal].forEach(el => {
     if (el) {
       el.addEventListener('input', saveCharacterToStorage);
     }
+  });
+
+  // Auto-save on navigation
+  document.querySelectorAll('.nav-link').forEach(link => {
+    link.addEventListener('click', () => {
+      saveMobs();
+      saveCharacterToStorage();
+    });
+  });
+
+  // Auto-save on page unload
+  window.addEventListener('beforeunload', () => {
+    saveMobs();
+    saveCharacterToStorage();
   });
 });
 
@@ -368,8 +382,17 @@ function renderMobEditor() {
             <div class="weapon-notes-row">
               <input type="text" class="weapon-notes" placeholder="NOTES" value="${weapon.notes}" data-id="${mob.id}" data-type="weapon" data-index="${i}">
               <div class="mob-weapon-dice-container">
-                <input type="text" class="mob-weapon-dice-formula" placeholder="3d6 + 2d10 + 5" value="${weapon.diceFormula || ''}">
-                <button class="mob-weapon-roll-btn" type="button" title="Roll Damage">🎲</button>
+                <div class="attack-slots">
+                  ${(weapon.attackSlots || [{formula: weapon.diceFormula || '', notes: ''}]).map((slot, j) => `
+                    <div class="attack-slot">
+                      <input type="text" class="mob-weapon-dice-formula" placeholder="3d6 + 2d10 + 5" value="${slot.formula || ''}" data-index="${j}">
+                      <button class="mob-weapon-roll-btn" type="button" title="Roll Damage">🎲</button>
+                      ${j > 0 ? '<button class="remove-attack-btn" type="button" title="Remove attack">−</button>' : ''}
+                      <input type="text" class="mob-attack-notes" placeholder="Attack notes" value="${slot.notes || ''}" data-index="${j}">
+                    </div>
+                  `).join('')}
+                </div>
+                <button class="add-attack-btn" type="button" title="Add attack">+ Attack</button>
               </div>
               <div class="mob-weapon-dice-result"></div>
             </div>
@@ -391,8 +414,17 @@ function renderMobEditor() {
             <div class="weapon-notes-row">
               <input type="text" class="weapon-notes" placeholder="NOTES" value="${weapon.notes}" data-id="${mob.id}" data-type="hand" data-index="${i}">
               <div class="mob-weapon-dice-container">
-                <input type="text" class="mob-weapon-dice-formula" placeholder="3d6 + 2d10 + 5" value="${weapon.diceFormula || ''}">
-                <button class="mob-weapon-roll-btn" type="button" title="Roll Damage">🎲</button>
+                <div class="attack-slots">
+                  ${(weapon.attackSlots || [{formula: weapon.diceFormula || '', notes: ''}]).map((slot, j) => `
+                    <div class="attack-slot">
+                      <input type="text" class="mob-weapon-dice-formula" placeholder="3d6 + 2d10 + 5" value="${slot.formula || ''}" data-index="${j}">
+                      <button class="mob-weapon-roll-btn" type="button" title="Roll Damage">🎲</button>
+                      ${j > 0 ? '<button class="remove-attack-btn" type="button" title="Remove attack">−</button>' : ''}
+                      <input type="text" class="mob-attack-notes" placeholder="Attack notes" value="${slot.notes || ''}" data-index="${j}">
+                    </div>
+                  `).join('')}
+                </div>
+                <button class="add-attack-btn" type="button" title="Add attack">+ Attack</button>
               </div>
               <div class="mob-weapon-dice-result"></div>
             </div>
@@ -550,9 +582,9 @@ function renderMobEditor() {
   diceRollBtns.forEach(btn => {
     btn.addEventListener('click', (e) => {
       e.stopPropagation();
-      const weaponRow = btn.closest('.weapon-notes-row');
-      const formulaInput = weaponRow.querySelector('.mob-weapon-dice-formula');
-      const resultContainer = weaponRow.querySelector('.mob-weapon-dice-result');
+      const attackSlot = btn.closest('.attack-slot');
+      const formulaInput = attackSlot.querySelector('.mob-weapon-dice-formula');
+      const resultContainer = attackSlot.closest('.mob-weapon-dice-container')?.querySelector('.mob-weapon-dice-result');
       const formula = formulaInput.value.trim();
 
       if (formula) {
@@ -562,11 +594,12 @@ function renderMobEditor() {
         const weaponRow2 = weaponNotesRow.previousElementSibling;
         const weaponType = weaponRow2.dataset.weaponType;
         const weaponIndex = weaponRow2.dataset.weaponIndex;
+        const attackIndex = formulaInput.dataset.index;
         const mob = mobs.find(m => m.id === selectedMobId);
         if (mob) {
           const weapons = weaponType === 'weapon' ? mob.weapons : mob.handWeapons;
-          if (weapons[weaponIndex]) {
-            weapons[weaponIndex].diceFormula = formula;
+          if (weapons[weaponIndex] && weapons[weaponIndex].attackSlots[attackIndex]) {
+            weapons[weaponIndex].attackSlots[attackIndex].formula = formula;
             saveMobs();
           }
         }
@@ -576,11 +609,12 @@ function renderMobEditor() {
     });
   });
 
-  // Save dice formula on input
-  const diceFormulaInputs = container.querySelectorAll('.mob-weapon-dice-formula');
-  diceFormulaInputs.forEach(input => {
-    input.addEventListener('input', (e) => {
-      const weaponNotesRow = input.closest('.weapon-notes-row');
+  // Add attack button
+  const addAttackBtns = container.querySelectorAll('.add-attack-btn');
+  addAttackBtns.forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const weaponNotesRow = btn.closest('.weapon-notes-row');
       const weaponRow = weaponNotesRow.previousElementSibling;
       const weaponType = weaponRow.dataset.weaponType;
       const weaponIndex = weaponRow.dataset.weaponIndex;
@@ -588,7 +622,81 @@ function renderMobEditor() {
       if (mob) {
         const weapons = weaponType === 'weapon' ? mob.weapons : mob.handWeapons;
         if (weapons[weaponIndex]) {
-          weapons[weaponIndex].diceFormula = input.value;
+          if (!weapons[weaponIndex].attackSlots) {
+            weapons[weaponIndex].attackSlots = [{formula: weapons[weaponIndex].diceFormula || '', notes: ''}];
+          }
+          weapons[weaponIndex].attackSlots.push({formula: '', notes: ''});
+          saveMobs();
+          renderMobEditor();
+        }
+      }
+    });
+  });
+
+  // Remove attack button
+  const removeAttackBtns = container.querySelectorAll('.remove-attack-btn');
+  removeAttackBtns.forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const attackSlot = btn.closest('.attack-slot');
+      const attackIndex = parseInt(attackSlot.querySelector('.mob-weapon-dice-formula').dataset.index);
+      const weaponNotesRow = btn.closest('.weapon-notes-row');
+      const weaponRow = weaponNotesRow.previousElementSibling;
+      const weaponType = weaponRow.dataset.weaponType;
+      const weaponIndex = weaponRow.dataset.weaponIndex;
+      const mob = mobs.find(m => m.id === selectedMobId);
+      if (mob) {
+        const weapons = weaponType === 'weapon' ? mob.weapons : mob.handWeapons;
+        if (weapons[weaponIndex] && weapons[weaponIndex].attackSlots && attackIndex > 0) {
+          weapons[weaponIndex].attackSlots.splice(attackIndex, 1);
+          // Re-index remaining slots
+          weapons[weaponIndex].attackSlots = weapons[weaponIndex].attackSlots.map(slot => ({
+            formula: slot.formula,
+            notes: slot.notes
+          }));
+          saveMobs();
+          renderMobEditor();
+        }
+      }
+    });
+  });
+
+  // Save dice formula on input
+  const diceFormulaInputs = container.querySelectorAll('.mob-weapon-dice-formula');
+  diceFormulaInputs.forEach(input => {
+    input.addEventListener('input', (e) => {
+      const attackSlot = input.closest('.attack-slot');
+      const attackIndex = parseInt(input.dataset.index);
+      const weaponNotesRow = input.closest('.weapon-notes-row');
+      const weaponRow = weaponNotesRow.previousElementSibling;
+      const weaponType = weaponRow.dataset.weaponType;
+      const weaponIndex = weaponRow.dataset.weaponIndex;
+      const mob = mobs.find(m => m.id === selectedMobId);
+      if (mob) {
+        const weapons = weaponType === 'weapon' ? mob.weapons : mob.handWeapons;
+        if (weapons[weaponIndex] && weapons[weaponIndex].attackSlots && weapons[weaponIndex].attackSlots[attackIndex]) {
+          weapons[weaponIndex].attackSlots[attackIndex].formula = input.value;
+          saveMobs();
+        }
+      }
+    });
+  });
+
+  // Save attack notes on input
+  const attackNotesInputs = container.querySelectorAll('.mob-attack-notes');
+  attackNotesInputs.forEach(input => {
+    input.addEventListener('input', (e) => {
+      const attackSlot = input.closest('.attack-slot');
+      const attackIndex = parseInt(input.dataset.index);
+      const weaponNotesRow = input.closest('.weapon-notes-row');
+      const weaponRow = weaponNotesRow.previousElementSibling;
+      const weaponType = weaponRow.dataset.weaponType;
+      const weaponIndex = weaponRow.dataset.weaponIndex;
+      const mob = mobs.find(m => m.id === selectedMobId);
+      if (mob) {
+        const weapons = weaponType === 'weapon' ? mob.weapons : mob.handWeapons;
+        if (weapons[weaponIndex] && weapons[weaponIndex].attackSlots && weapons[weaponIndex].attackSlots[attackIndex]) {
+          weapons[weaponIndex].attackSlots[attackIndex].notes = input.value;
           saveMobs();
         }
       }
@@ -1024,8 +1132,74 @@ function loadData(data) {
 
 // Load character data from localStorage on page load
 function loadCharacterFromStorage() {
-  const lifepathData = JSON.parse(charStorage.getItem('lifepathData') || '{}');
+  // Load main character data from character-specific storage
+  const charDataStr = charStorage.getItem('characterData');
+  const charData = charDataStr ? JSON.parse(charDataStr) : {};
   
+  // Load character data if available
+  if (Object.keys(charData).length > 0) {
+    // Stats
+    const statIds = ['stat_int', 'stat_ref', 'stat_dex', 'stat_tech', 'stat_cool', 'stat_will',
+                     'stat_luck_current', 'stat_luck_max', 'stat_move', 'stat_body',
+                     'stat_emp_current', 'stat_emp_max'];
+    statIds.forEach(id => {
+      const el = document.getElementById(id);
+      if (el && charData[id] !== undefined) {
+        el.value = charData[id];
+      }
+    });
+
+    // ID Block - including char-name
+    const idFields = ['char-name', 'age', 'role', 'role_rank', 'xp_current', 'humanity_current', 'humanity_max', 'initiative'];
+    idFields.forEach(id => {
+      const el = document.getElementById(id);
+      if (el && charData[id] !== undefined) {
+        el.value = charData[id];
+      }
+    });
+
+    // Health
+    const healthFields = ['hp_current', 'hp_max', 'death_save'];
+    healthFields.forEach(id => {
+      const el = document.getElementById(id);
+      if (el && charData[id] !== undefined) {
+        el.value = charData[id];
+      }
+    });
+    
+    const seriouslyWounded = document.getElementById('seriously_wounded');
+    if (seriouslyWounded && charData['seriously_wounded'] !== undefined) {
+      seriouslyWounded.checked = charData['seriously_wounded'];
+    }
+
+    // Armor
+    const armorFields = ['armor_head_sp', 'armor_head_notes', 'armor_head_penalty',
+                         'armor_body_sp', 'armor_body_notes', 'armor_body_penalty',
+                         'armor_shield_sp', 'armor_shield_notes', 'armor_shield_penalty'];
+    armorFields.forEach(id => {
+      const el = document.getElementById(id);
+      if (el && charData[id] !== undefined) {
+        el.value = charData[id];
+      }
+    });
+
+    // Notes
+    const notesFields = ['critical_injuries', 'addictions', 'notes'];
+    notesFields.forEach(id => {
+      const el = document.getElementById(id);
+      if (el && charData[id] !== undefined) {
+        el.value = charData[id];
+      }
+    });
+
+    // Load avatar
+    if (charData['avatar'] && typeof loadAvatar === 'function') {
+      loadAvatar(charData['avatar']);
+    }
+  }
+
+  const lifepathData = JSON.parse(charStorage.getItem('lifepathData') || '{}');
+
   if (Object.keys(lifepathData).length > 0) {
     if ('impCurrent' in lifepathData && document.getElementById('imp-current')) {
       document.getElementById('imp-current').value = lifepathData.impCurrent;
@@ -1043,10 +1217,10 @@ function loadCharacterFromStorage() {
 
   const inventoryData = charStorage.getItem('inventoryData');
   const inventoryBody = document.getElementById('inventory-body');
-  
+
   if (inventoryBody) {
     inventoryBody.innerHTML = '';
-    
+
     if (inventoryData) {
       const data = JSON.parse(inventoryData);
       if (data.length > 0) {

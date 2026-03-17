@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Cyberpunk RED - Cyberdeck</title>
+<link rel="icon" type="image/png" href="../images/cyberpunk.png">
+<link rel="stylesheet" href="../css/common.css">
+<link rel="stylesheet" href="../css/scripts.css">
+</head>
+<body class="cyber-page">
+
+<!-- TOP NAVIGATION BAR -->
+<div class="top-nav">
+  <div class="nav-brand">CYBERPUNK RED</div>
+  <div class="nav-links">
+    <a href="main.html" class="nav-link">Characters</a>
+    <a href="index.html" class="nav-link">Character Sheet</a>
+    <a href="implants.html" class="nav-link">Implants</a>
+    <a href="notes.html" class="nav-link">Notes</a>
+    <a href="mobs.html" class="nav-link">Mobs</a>
+    <a href="scripts.html" class="nav-link active">Cyberdeck</a>
+    <button class="nav-btn" id="dice-roll-btn">🎲 Roll Dice</button>
+  </div>
+</div>
+
+<div class="cyberdeck-page">
+  
+  <!-- Top Info Block -->
+  <div class="cyberdeck-top-blocks">
+    <!-- Left Top - Cyberdeck Info -->
+    <div class="cyberdeck-info-block">
+      <div class="cyberdeck-info-row">
+        <div class="cyberdeck-info-label">Model</div>
+        <input type="text" class="cyberdeck-info-input" id="deck-model" placeholder="">
+      </div>
+      <div class="cyberdeck-info-row">
+        <div class="cyberdeck-info-label">Icon</div>
+        <input type="text" class="cyberdeck-info-input" id="deck-icon" placeholder="">
+      </div>
+      <div class="cyberdeck-info-row">
+        <div class="cyberdeck-info-label">NET Actions</div>
+        <input type="number" class="cyberdeck-net-actions" id="deck-net-actions" min="0" max="10">
+        <div class="cyberdeck-info-label">Black</div>
+        <input type="number" class="cyberdeck-black" id="deck-black" min="0" max="10">
+      </div>
+      <div class="cyberdeck-info-row">
+        <div class="cyberdeck-info-label">Cyberdeck Cost</div>
+        <input type="number" class="cyberdeck-info-input" id="deck-cost" placeholder="">
+      </div>
+    </div>
+
+    <!-- Right Top - Tests & Abilities -->
+    <div class="cyberdeck-tests-block">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+        <button class="cyberdeck-help-btn" id="cyberdeck-help-btn">📖 Help</button>
+      </div>
+      <div class="cyberdeck-test-row">
+        <div class="cyberdeck-test-label">Test = Interface + 1d10 vs. DV</div>
+      </div>
+      <div class="cyberdeck-test-row">
+        <div class="cyberdeck-combat-label">
+          <strong>Net Combat</strong> = Interface + Program/Black ICE ATK + 1d10 vs.<br>
+          Target's Interface or Program/Black ICE DEF + 1d10
+        </div>
+      </div>
+      <div class="cyberdeck-abilities-block">
+        <div class="cyberdeck-abilities-title">Interface Abilities</div>
+        <div class="cyberdeck-abilities-grid">
+          <label class="ability-label"><input type="checkbox" data-ability="backdoor"> Backdoor</label>
+          <label class="ability-label"><input type="checkbox" data-ability="cloak"> Cloak</label>
+          <label class="ability-label"><input type="checkbox" data-ability="control"> Control</label>
+          <label class="ability-label"><input type="checkbox" data-ability="eyedee"> Eye-Dee</label>
+          <label class="ability-label"><input type="checkbox" data-ability="pathfinder"> Pathfinder</label>
+          <label class="ability-label"><input type="checkbox" data-ability="scanner"> Scanner</label>
+          <label class="ability-label"><input type="checkbox" data-ability="slide"> Slide</label>
+          <label class="ability-label"><input type="checkbox" data-ability="virus"> Virus</label>
+          <label class="ability-label"><input type="checkbox" data-ability="zap"> Zap</label>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <div class="cyberdeck-main-content">
+    <!-- Left Panel - Programs Table -->
+    <div class="programs-panel">
+      <div class="programs-table-wrapper">
+        <table class="programs-table">
+          <thead>
+            <tr>
+              <th class="col-section">Section</th>
+              <th class="col-name">Name</th>
+              <th class="col-class">Class</th>
+              <th class="col-stat">PER</th>
+              <th class="col-stat">SPD</th>
+              <th class="col-attack">ATK</th>
+              <th class="col-defense">DEF</th>
+              <th class="col-stat">REZ</th>
+              <th class="col-effect">Effect</th>
+              <th class="col-cost">Cost</th>
+              <th class="col-action"></th>
+            </tr>
+          </thead>
+          <tbody id="programs-tbody">
+            <!-- Poor Section -->
+            <tr class="section-main-row" data-section="poor" data-row="0">
+              <td class="section-label-cell" rowspan="2">Poor</td>
+              <td><input type="text" class="program-name" data-section="poor" data-row="0"></td>
+              <td><input type="text" class="program-class" data-section="poor" data-row="0"></td>
+              <td><input type="number" class="program-stat" data-section="poor" data-row="0" data-stat="per"></td>
+              <td><input type="number" class="program-stat" data-section="poor" data-row="0" data-stat="spd"></td>
+              <td>
+                <div class="program-dice-wrapper">
+                  <input type="text" class="program-atk-formula" data-section="poor" data-row="0" placeholder="ATK formula (e.g., 2d6+3)">
+                  <button class="program-roll-btn" data-section="poor" data-row="0" data-type="atk" title="Roll ATK">🎲</button>
+                  <div class="program-dice-result" data-section="poor" data-row="0" data-type="atk"></div>
+                </div>
+              </td>
+              <td>
+                <div class="program-dice-wrapper">
+                  <input type="text" class="program-def-formula" data-section="poor" data-row="0" placeholder="DEF formula (e.g., 1d10+2)">
+                  <button class="program-roll-btn" data-section="poor" data-row="0" data-type="def" title="Roll DEF">🎲</button>
+                  <div class="program-dice-result" data-section="poor" data-row="0" data-type="def"></div>
+                </div>
+              </td>
+              <td><input type="number" class="program-stat" data-section="poor" data-row="0" data-stat="rez"></td>
+              <td><input type="text" class="program-effect" data-section="poor" data-row="0"></td>
+              <td><input type="number" class="program-cost" data-section="poor" data-row="0"></td>
+              <td><button class="delete-row-btn" data-section="poor" data-row="0" title="Delete">×</button></td>
+            </tr>
+            <tr class="section-sub-row" data-section="poor" data-row="0">
+              <td colspan="10" class="sub-row-content">
+                <div class="sub-row-labels">
+                  <span>Slots</span>
+                  <span>Program Slots</span>
+                  <span>Hardware Slots</span>
+                </div>
+                <div class="sub-row-inputs">
+                  <input type="number" class="program-slots-input" data-section="poor" data-row="0" data-slot="slots" placeholder="0">
+                  <input type="number" class="program-slots-input" data-section="poor" data-row="0" data-slot="program" placeholder="0">
+                  <input type="number" class="program-slots-input" data-section="poor" data-row="0" data-slot="hardware" placeholder="0">
+                </div>
+              </td>
+            </tr>
+            
+            <!-- Standard Section -->
+            <tr class="section-main-row section-divider" data-section="standard" data-row="0">
+              <td class="section-label-cell" rowspan="2">Standard</td>
+              <td><input type="text" class="program-name" data-section="standard" data-row="0"></td>
+              <td><input type="text" class="program-class" data-section="standard" data-row="0"></td>
+              <td><input type="number" class="program-stat" data-section="standard" data-row="0" data-stat="per"></td>
+              <td><input type="number" class="program-stat" data-section="standard" data-row="0" data-stat="spd"></td>
+              <td>
+                <div class="program-dice-wrapper">
+                  <input type="text" class="program-atk-formula" data-section="standard" data-row="0" placeholder="ATK formula (e.g., 2d6+3)">
+                  <button class="program-roll-btn" data-section="standard" data-row="0" data-type="atk" title="Roll ATK">🎲</button>
+                  <div class="program-dice-result" data-section="standard" data-row="0" data-type="atk"></div>
+                </div>
+              </td>
+              <td>
+                <div class="program-dice-wrapper">
+                  <input type="text" class="program-def-formula" data-section="standard" data-row="0" placeholder="DEF formula (e.g., 1d10+2)">
+                  <button class="program-roll-btn" data-section="standard" data-row="0" data-type="def" title="Roll DEF">🎲</button>
+                  <div class="program-dice-result" data-section="standard" data-row="0" data-type="def"></div>
+                </div>
+              </td>
+              <td><input type="number" class="program-stat" data-section="standard" data-row="0" data-stat="rez"></td>
+              <td><input type="text" class="program-effect" data-section="standard" data-row="0"></td>
+              <td><input type="number" class="program-cost" data-section="standard" data-row="0"></td>
+              <td><button class="delete-row-btn" data-section="standard" data-row="0" title="Delete">×</button></td>
+            </tr>
+            <tr class="section-sub-row" data-section="standard" data-row="0">
+              <td colspan="10" class="sub-row-content">
+                <div class="sub-row-labels">
+                  <span>Slots</span>
+                  <span>Program Slots</span>
+                  <span>Hardware Slots</span>
+                </div>
+                <div class="sub-row-inputs">
+                  <input type="number" class="program-slots-input" data-section="standard" data-row="0" data-slot="slots" placeholder="0">
+                  <input type="number" class="program-slots-input" data-section="standard" data-row="0" data-slot="program" placeholder="0">
+                  <input type="number" class="program-slots-input" data-section="standard" data-row="0" data-slot="hardware" placeholder="0">
+                </div>
+              </td>
+            </tr>
+            
+            <!-- Excellent Section -->
+            <tr class="section-main-row section-divider" data-section="excellent" data-row="0">
+              <td class="section-label-cell" rowspan="2">Excellent</td>
+              <td><input type="text" class="program-name" data-section="excellent" data-row="0"></td>
+              <td><input type="text" class="program-class" data-section="excellent" data-row="0"></td>
+              <td><input type="number" class="program-stat" data-section="excellent" data-row="0" data-stat="per"></td>
+              <td><input type="number" class="program-stat" data-section="excellent" data-row="0" data-stat="spd"></td>
+              <td>
+                <div class="program-dice-wrapper">
+                  <input type="text" class="program-atk-formula" data-section="excellent" data-row="0" placeholder="ATK formula (e.g., 2d6+3)">
+                  <button class="program-roll-btn" data-section="excellent" data-row="0" data-type="atk" title="Roll ATK">🎲</button>
+                  <div class="program-dice-result" data-section="excellent" data-row="0" data-type="atk"></div>
+                </div>
+              </td>
+              <td>
+                <div class="program-dice-wrapper">
+                  <input type="text" class="program-def-formula" data-section="excellent" data-row="0" placeholder="DEF formula (e.g., 1d10+2)">
+                  <button class="program-roll-btn" data-section="excellent" data-row="0" data-type="def" title="Roll DEF">🎲</button>
+                  <div class="program-dice-result" data-section="excellent" data-row="0" data-type="def"></div>
+                </div>
+              </td>
+              <td><input type="number" class="program-stat" data-section="excellent" data-row="0" data-stat="rez"></td>
+              <td><input type="text" class="program-effect" data-section="excellent" data-row="0"></td>
+              <td><input type="number" class="program-cost" data-section="excellent" data-row="0"></td>
+              <td><button class="delete-row-btn" data-section="excellent" data-row="0" title="Delete">×</button></td>
+            </tr>
+            <tr class="section-sub-row" data-section="excellent" data-row="0">
+              <td colspan="10" class="sub-row-content">
+                <div class="sub-row-labels">
+                  <span>Slots</span>
+                  <span>Program Slots</span>
+                  <span>Hardware Slots</span>
+                </div>
+                <div class="sub-row-inputs">
+                  <input type="number" class="program-slots-input" data-section="excellent" data-row="0" data-slot="slots" placeholder="0">
+                  <input type="number" class="program-slots-input" data-section="excellent" data-row="0" data-slot="program" placeholder="0">
+                  <input type="number" class="program-slots-input" data-section="excellent" data-row="0" data-slot="hardware" placeholder="0">
+                </div>
+              </td>
+            </tr>
+            
+            <!-- Cyberarm Section -->
+            <tr class="section-main-row section-divider" data-section="cyberarm" data-row="0">
+              <td class="section-label-cell" rowspan="2">Cyberarm</td>
+              <td><input type="text" class="program-name" data-section="cyberarm" data-row="0"></td>
+              <td><input type="text" class="program-class" data-section="cyberarm" data-row="0"></td>
+              <td><input type="number" class="program-stat" data-section="cyberarm" data-row="0" data-stat="per"></td>
+              <td><input type="number" class="program-stat" data-section="cyberarm" data-row="0" data-stat="spd"></td>
+              <td>
+                <div class="program-dice-wrapper">
+                  <input type="text" class="program-atk-formula" data-section="cyberarm" data-row="0" placeholder="ATK formula (e.g., 2d6+3)">
+                  <button class="program-roll-btn" data-section="cyberarm" data-row="0" data-type="atk" title="Roll ATK">🎲</button>
+                  <div class="program-dice-result" data-section="cyberarm" data-row="0" data-type="atk"></div>
+                </div>
+              </td>
+              <td>
+                <div class="program-dice-wrapper">
+                  <input type="text" class="program-def-formula" data-section="cyberarm" data-row="0" placeholder="DEF formula (e.g., 1d10+2)">
+                  <button class="program-roll-btn" data-section="cyberarm" data-row="0" data-type="def" title="Roll DEF">🎲</button>
+                  <div class="program-dice-result" data-section="cyberarm" data-row="0" data-type="def"></div>
+                </div>
+              </td>
+              <td><input type="number" class="program-stat" data-section="cyberarm" data-row="0" data-stat="rez"></td>
+              <td><input type="text" class="program-effect" data-section="cyberarm" data-row="0"></td>
+              <td><input type="number" class="program-cost" data-section="cyberarm" data-row="0"></td>
+              <td><button class="delete-row-btn" data-section="cyberarm" data-row="0" title="Delete">×</button></td>
+            </tr>
+            <tr class="section-sub-row" data-section="cyberarm" data-row="0">
+              <td colspan="10" class="sub-row-content">
+                <div class="sub-row-labels">
+                  <span>Slots</span>
+                  <span>Program Slots</span>
+                  <span>Hardware Slots</span>
+                </div>
+                <div class="sub-row-inputs">
+                  <input type="number" class="program-slots-input" data-section="cyberarm" data-row="0" data-slot="slots" placeholder="0">
+                  <input type="number" class="program-slots-input" data-section="cyberarm" data-row="0" data-slot="program" placeholder="0">
+                  <input type="number" class="program-slots-input" data-section="cyberarm" data-row="0" data-slot="hardware" placeholder="0">
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="programs-footer">
+        <button class="add-section-btn" id="add-poor-btn">+ Add Poor Program</button>
+        <button class="add-section-btn" id="add-standard-btn">+ Add Standard Program</button>
+        <button class="add-section-btn" id="add-excellent-btn">+ Add Excellent Program</button>
+        <button class="add-section-btn" id="add-cyberarm-btn">+ Add Cyberarm Program</button>
+      </div>
+    </div>
+
+    <!-- Right Panel - Hardware & Notes -->
+    <div class="right-panel">
+      <!-- Hardware Table -->
+      <div class="hardware-block">
+        <div class="hardware-table-wrapper">
+          <table class="hardware-table">
+            <thead>
+              <tr>
+                <th class="hardware-name-col">Hardware</th>
+                <th class="hardware-effect-col">Effect</th>
+                <th class="hardware-cost-col">Cost</th>
+                <th class="hardware-action-col"></th>
+              </tr>
+            </thead>
+            <tbody id="hardware-tbody">
+              <tr class="hardware-row" data-row="0">
+                <td><input type="text" class="hardware-name" data-row="0"></td>
+                <td><input type="text" class="hardware-effect" data-row="0"></td>
+                <td><input type="number" class="hardware-cost" data-row="0"></td>
+                <td><button class="delete-hardware-btn" data-row="0" title="Delete">×</button></td>
+              </tr>
+              <tr class="hardware-row" data-row="1">
+                <td><input type="text" class="hardware-name" data-row="1"></td>
+                <td><input type="text" class="hardware-effect" data-row="1"></td>
+                <td><input type="number" class="hardware-cost" data-row="1"></td>
+                <td><button class="delete-hardware-btn" data-row="1" title="Delete">×</button></td>
+              </tr>
+              <tr class="hardware-row" data-row="2">
+                <td><input type="text" class="hardware-name" data-row="2"></td>
+                <td><input type="text" class="hardware-effect" data-row="2"></td>
+                <td><input type="number" class="hardware-cost" data-row="2"></td>
+                <td><button class="delete-hardware-btn" data-row="2" title="Delete">×</button></td>
+              </tr>
+              <tr class="hardware-add-row">
+                <td colspan="4">
+                  <button class="add-hardware-btn" id="add-hardware-btn" title="Add Hardware Row">+ Add Hardware</button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Notes -->
+      <div class="notes-block">
+        <div class="notes-header">Notes</div>
+        <textarea class="notes-textarea" id="cyberdeck-notes" placeholder=""></textarea>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- DICE ROLL DIALOG -->
+<div class="dialog-overlay" id="dice-dialog-overlay">
+  <div class="dialog dice-dialog">
+    <div class="dialog-header">
+      <span>Dice Roll</span>
+      <button class="dialog-close" id="dice-dialog-close">×</button>
+    </div>
+    <div class="dialog-content">
+      <div class="dice-options" id="dice-options">
+        <div class="dice-option-group">
+          <label>Dice Type</label>
+          <div class="dice-type-buttons">
+            <button class="dice-type-btn" data-dice="4">d4</button>
+            <button class="dice-type-btn" data-dice="6">d6</button>
+            <button class="dice-type-btn" data-dice="8">d8</button>
+            <button class="dice-type-btn active" data-dice="10">d10</button>
+            <button class="dice-type-btn" data-dice="12">d12</button>
+            <button class="dice-type-btn" data-dice="20">d20</button>
+          </div>
+        </div>
+        <div class="dice-option-group">
+          <label>Number of Dice</label>
+          <div class="dice-count-control">
+            <button class="dice-count-btn" id="dice-count-dec">-</button>
+            <input type="number" id="dice-count" value="1" min="1" max="10">
+            <button class="dice-count-btn" id="dice-count-inc">+</button>
+          </div>
+        </div>
+        <button class="dialog-btn dialog-btn-primary dice-roll-btn" id="dice-roll-confirm">Roll</button>
+      </div>
+      <div class="dice-result-section" id="dice-result-section" style="display: none;">
+        <div class="dice-rolls" id="dice-rolls"></div>
+        <div class="dice-total-display">
+          <span class="dice-total-label">Total:</span>
+          <span class="dice-total-value" id="dice-total-value">0</span>
+        </div>
+        <p class="dice-description" id="dice-description">Roll: 1d10</p>
+      </div>
+    </div>
+    <div class="dialog-footer">
+      <button class="dialog-btn" id="dice-dialog-cancel">Close</button>
+    </div>
+  </div>
+</div>
+
+<!-- HELP DIALOG -->
+<div class="help-dialog-overlay" id="help-dialog-overlay">
+  <div class="help-dialog">
+    <div class="help-dialog-header">
+      <span>Cyberdeck Help</span>
+      <button class="help-dialog-close" id="help-dialog-close">×</button>
+    </div>
+    <div class="help-dialog-content" id="help-dialog-content">
+      Loading...
+    </div>
+  </div>
+</div>
+
+<script src="../js/utils.js"></script>
+<script src="../js/scripts.js"></script>
+<script src="../js/weapon-dice.js"></script>
+
+</body>
+</html>

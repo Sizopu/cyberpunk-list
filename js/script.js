@@ -624,6 +624,11 @@ window.onload = () => {
   loadAllCharacterData();
 };
 
+// Auto-save on page unload
+window.addEventListener('beforeunload', () => {
+  saveAllCharacterData();
+});
+
 // Load character data from localStorage on page load
 function loadCharacterFromStorage() {
   const lifepathData = localStorage.getItem('lifepathData');
@@ -708,7 +713,7 @@ function saveAllCharacterData() {
   });
   
   // ID Block
-  const idFields = ['char_name', 'age', 'role', 'role_rank', 'xp_current', 'humanity_current', 'humanity_max', 'initiative'];
+  const idFields = ['char-name', 'age', 'role', 'role_rank', 'xp_current', 'humanity_current', 'humanity_max', 'initiative'];
   idFields.forEach(id => {
     const el = document.getElementById(id);
     if (el) charData[id] = el.value;
@@ -791,23 +796,27 @@ function saveAllCharacterData() {
 // Load all character data from localStorage
 function loadAllCharacterData() {
   const charData = JSON.parse(charStorage.getItem('characterData') || '{}');
-  
+
   // Stats
-  const statIds = ['stat_int', 'stat_ref', 'stat_dex', 'stat_tech', 'stat_cool', 'stat_will', 
-                   'stat_luck_current', 'stat_luck_max', 'stat_move', 'stat_body', 
+  const statIds = ['stat_int', 'stat_ref', 'stat_dex', 'stat_tech', 'stat_cool', 'stat_will',
+                   'stat_luck_current', 'stat_luck_max', 'stat_move', 'stat_body',
                    'stat_emp_current', 'stat_emp_max'];
   statIds.forEach(id => {
     const el = document.getElementById(id);
-    if (el && charData[id]) el.value = charData[id];
+    if (el) {
+      el.value = charData[id] !== undefined ? charData[id] : '';
+    }
   });
-  
-  // ID Block
-  const idFields = ['char_name', 'age', 'role', 'role_rank', 'xp_current', 'humanity_current', 'humanity_max', 'initiative'];
+
+  // ID Block - including char-name
+  const idFields = ['char-name', 'age', 'role', 'role_rank', 'xp_current', 'humanity_current', 'humanity_max', 'initiative'];
   idFields.forEach(id => {
     const el = document.getElementById(id);
-    if (el && charData[id]) el.value = charData[id];
+    if (el) {
+      el.value = charData[id] !== undefined ? charData[id] : '';
+    }
   });
-  
+
   // Avatar
   if (charData['avatar']) {
     loadAvatar(charData['avatar']);
@@ -817,20 +826,24 @@ function loadAllCharacterData() {
   const healthFields = ['hp_current', 'hp_max', 'death_save'];
   healthFields.forEach(id => {
     const el = document.getElementById(id);
-    if (el && charData[id]) el.value = charData[id];
+    if (el) {
+      el.value = charData[id] !== undefined ? charData[id] : '';
+    }
   });
   const seriouslyWounded = document.getElementById('seriously_wounded');
   if (seriouslyWounded && charData['seriously_wounded'] !== undefined) {
     seriouslyWounded.checked = charData['seriously_wounded'];
   }
-  
+
   // Armor
   const armorFields = ['armor_head_sp', 'armor_head_notes', 'armor_head_penalty',
                        'armor_body_sp', 'armor_body_notes', 'armor_body_penalty',
                        'armor_shield_sp', 'armor_shield_notes', 'armor_shield_penalty'];
   armorFields.forEach(id => {
     const el = document.getElementById(id);
-    if (el && charData[id]) el.value = charData[id];
+    if (el) {
+      el.value = charData[id] !== undefined ? charData[id] : '';
+    }
   });
   
   // Notes
@@ -939,12 +952,12 @@ function loadAllCharacterData() {
   const skills = JSON.parse(charStorage.getItem('skillsData') || '[]');
   if (skills.length > 0) {
     skills.forEach(skill => {
-      const row = document.querySelector(`.skill-table tr[data-stat="${skill.stat}"][data-skill-name="${skill.skillName}"]`);
+      const row = document.querySelector(`.skill-table tr[data-stat="${skill.stat}"][data-skill-name="${skill.skillName.toLowerCase()}"]`);
       if (row) {
         const modInput = row.querySelector('.mod-input');
         const lvlInput = row.querySelector('.lvl-input');
-        if (modInput && skill.mod) modInput.value = skill.mod;
-        if (lvlInput && skill.lvl) lvlInput.value = skill.lvl;
+        if (modInput && skill.mod !== undefined) modInput.value = skill.mod;
+        if (lvlInput && skill.lvl !== undefined) lvlInput.value = skill.lvl;
         updateRow(row);
       }
     });
@@ -954,14 +967,14 @@ function loadAllCharacterData() {
   const specialisedSkills = JSON.parse(charStorage.getItem('specialisedSkillsData') || '[]');
   if (specialisedSkills.length > 0) {
     const specRows = document.querySelectorAll('#specialised-skills-body tr');
-    
+
     // Если данных больше чем строк, добавляем новые
     if (specialisedSkills.length > specRows.length) {
       for (let i = specRows.length; i < specialisedSkills.length; i++) {
         addSpecialisedSkillRow();
       }
     }
-    
+
     const updatedRows = document.querySelectorAll('#specialised-skills-body tr');
     specialisedSkills.forEach((skill, index) => {
       if (index < updatedRows.length) {
@@ -972,8 +985,8 @@ function loadAllCharacterData() {
         const lvlInput = row.querySelector('.ss-lvl');
         if (statInput && skill.stat) statInput.value = skill.stat;
         if (nameInput && skill.name) nameInput.value = skill.name;
-        if (modInput && skill.mod) modInput.value = skill.mod;
-        if (lvlInput && skill.lvl) lvlInput.value = skill.lvl;
+        if (modInput && skill.mod !== undefined) modInput.value = skill.mod;
+        if (lvlInput && skill.lvl !== undefined) lvlInput.value = skill.lvl;
         updateSpecialisedRow(row);
       }
     });
@@ -994,21 +1007,22 @@ document.addEventListener('DOMContentLoaded', () => {
       el.addEventListener('input', saveCharacterToStorage);
     }
   });
-  
-  // Global auto-save for all inputs on the page
+
+  // Global auto-save for all inputs on the page with debounce
   document.addEventListener('input', (e) => {
-    // Save on any input change with debounce
     if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.tagName === 'SELECT') {
       clearTimeout(window.autoSaveTimeout);
       window.autoSaveTimeout = setTimeout(() => {
         saveAllCharacterData();
-      }, 500);
+      }, 300);
     }
   });
   
-  // Save before page unload
-  window.addEventListener('beforeunload', () => {
-    saveAllCharacterData();
+  // Save on navigation - save immediately before page changes
+  document.querySelectorAll('.nav-link').forEach(link => {
+    link.addEventListener('click', (e) => {
+      saveAllCharacterData();
+    });
   });
 });
 
@@ -1129,6 +1143,12 @@ function performInitiativeRoll(refValue) {
   // Roll 1d10
   const roll = Math.floor(Math.random() * 10) + 1;
   const total = roll + refValue;
+
+  // Save the rolled initiative to the input field
+  const initiativeInput = document.getElementById("initiative");
+  if (initiativeInput) {
+    initiativeInput.value = String(total);
+  }
 
   // Display result with animation
   displayDiceResult([roll], `${roll} + ${refValue} = ${total}`, `1d10 + ${refValue} (Initiative)`, true, 10);

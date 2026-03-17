@@ -20,14 +20,14 @@ function getCharStorageKey(key) {
 const charStorage = {
   getItem: function(key) {
     const charId = getCurrentCharacterId();
-    if (charId && !key.startsWith('character_')) {
+    if (charId) {
       return localStorage.getItem('character_' + charId + '_' + key);
     }
     return localStorage.getItem(key);
   },
   setItem: function(key, value) {
     const charId = getCurrentCharacterId();
-    if (charId && !key.startsWith('character_')) {
+    if (charId) {
       localStorage.setItem('character_' + charId + '_' + key, value);
     } else {
       localStorage.setItem(key, value);
@@ -45,9 +45,9 @@ function getElementValue(id) {
 function formatDate(timestamp) {
   if (!timestamp) return '';
   const date = new Date(timestamp);
-  return date.toLocaleDateString('en-US', { 
-    year: 'numeric', 
-    month: 'short', 
+  return date.toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'short',
     day: 'numeric',
     hour: '2-digit',
     minute: '2-digit'
