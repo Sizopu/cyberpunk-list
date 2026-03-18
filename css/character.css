@@ -8,10 +8,9 @@
 
 .sheet {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: 360px 580px 1fr;
   gap: 10px;
-  width: 100%;
-  max-width: 100%;
+  max-width: 1400px;
   margin: 10px auto;
   padding: 0 10px;
 }
