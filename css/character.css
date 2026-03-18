@@ -8,11 +8,17 @@
 
 .sheet {
   display: grid;
-  grid-template-columns: 360px 580px 1fr;
+  grid-template-columns: 1fr;
   gap: 10px;
   max-width: 1400px;
   margin: 10px auto;
   padding: 0 10px;
+}
+
+@media (min-width: 769px) {
+  .sheet {
+    grid-template-columns: 360px 580px 1fr;
+  }
 }
 
 .block {
