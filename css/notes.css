@@ -6,6 +6,7 @@
   margin: 0 auto;
   padding: 10px;
   width: 100%;
+  max-width: 100%;
 }
 
 .notes-container {
@@ -13,6 +14,7 @@
   grid-template-columns: 300px 1fr;
   gap: 10px;
   width: 100%;
+  max-width: 100%;
 }
 
 /* Left Panel - Notes List */
