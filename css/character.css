@@ -8,16 +8,16 @@
 
 .sheet {
   display: grid;
-  grid-template-columns: 1fr;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
   gap: 10px;
-  max-width: 1400px;
-  margin: 10px auto;
-  padding: 0 10px;
+  max-width: 1800px;
+  margin: 0 auto;
+  padding: 10px;
 }
 
-@media (min-width: 769px) {
+@media (min-width: 1400px) {
   .sheet {
-    grid-template-columns: 360px 580px 1fr;
+    grid-template-columns: 400px 650px 1fr;
   }
 }
 
@@ -27,6 +27,7 @@
   border-radius: 4px;
   position: relative;
   overflow: hidden;
+  width: 100%;
 }
 
 .block-header {
@@ -625,11 +626,17 @@
 .skills-content {
   padding: 12px;
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   gap: 12px;
   align-content: start;
   max-height: 1400px;
   overflow-y: auto;
+}
+
+@media (min-width: 1000px) {
+  .skills-content {
+    grid-template-columns: repeat(2, 1fr);
+  }
 }
 
 .skill-group {
@@ -828,10 +835,6 @@ input[type="checkbox"] {
 /* Responsive adjustments */
 @media (max-width: 1700px) {
   .sheet {
-    grid-template-columns: 1fr;
-  }
-
-  .skills-content {
     grid-template-columns: 1fr;
   }
 }
@@ -3380,25 +3383,13 @@ input[type="checkbox"] {
    ======================================== */
 @media (max-width: 768px) {
   .sheet {
-    grid-template-columns: 1fr !important;
     padding: 5px;
-    gap: 10px;
-    width: 100%;
-    max-width: 100%;
-  }
-
-  .left-column,
-  .middle-column,
-  .right-column {
-    width: 100%;
-    max-width: 100%;
   }
 
   .block {
     margin-bottom: 10px;
-    width: 100%;
   }
-  
+
   .block-header {
     font-size: 9px;
     padding: 6px 8px;

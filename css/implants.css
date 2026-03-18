@@ -2,15 +2,22 @@
    CYBERWARE PAGE STYLES
    =========================== */
 .cyberware-page {
-  max-width: 1400px;
+  width: 100%;
+  max-width: 1800px;
   margin: 0 auto;
   padding: 10px;
 }
 
 .cyberware-container {
   display: grid;
-  grid-template-columns: 450px 500px 1fr;
+  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
   gap: 10px;
+}
+
+@media (min-width: 1200px) {
+  .cyberware-container {
+    grid-template-columns: repeat(3, 1fr);
+  }
 }
 
 /* Common Cyber Block Styles */
