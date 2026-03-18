@@ -5,6 +5,8 @@
   padding: 10px;
   max-width: 1400px;
   margin: 0 auto;
+  width: 100%;
+  max-width: 100%;
 }
 
 .mobs-container {
@@ -12,6 +14,8 @@
   grid-template-columns: 350px 1fr;
   gap: 10px;
   min-height: calc(100vh - 60px);
+  width: 100%;
+  max-width: 100%;
 }
 
 /* Sidebar */
@@ -915,22 +919,27 @@
     width: 100%;
   }
 
+
   .mob-name-input {
     font-size: 12px;
     padding: 6px;
   }
 
+
   .mob-stats-block {
     margin-bottom: 10px;
   }
+
 
   .stats-label {
     font-size: 9px;
     padding: 6px 8px;
   }
 
+
   .stats-grid {
-    grid-template-columns: repeat(3, 1fr);
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
     gap: 5px;
   }
 
@@ -938,10 +947,13 @@
     font-size: 7px;
   }
 
+
   .stat-field input {
     font-size: 10px;
     padding: 4px;
+    width: 100%;
   }
+
 
   .mob-health-row {
     display: flex;
@@ -949,20 +961,24 @@
     gap: 8px;
   }
 
+
   .health-field label {
     font-size: 8px;
   }
+
 
   .health-field input {
     font-size: 10px;
     padding: 4px;
   }
 
+
   .mob-combat-section {
     display: flex;
     flex-direction: column;
     gap: 10px;
   }
+
 
   .weapons-section,
   .hand-weapons-section,
@@ -972,19 +988,33 @@
     overflow-x: auto;
   }
 
+
   .section-header {
     font-size: 9px;
     padding: 6px 8px;
   }
 
+
   .weapon-row {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 4px;
     font-size: 8px;
     grid-template-columns: 1fr 40px 40px 40px 24px;
   }
 
+
   .weapon-row input {
     font-size: 9px;
     padding: 4px;
+    width: 100%;
+  }
+
+  .delete-weapon-btn {
+    width: 24px;
+    height: 24px;
+    font-size: 14px;
+    justify-self: end;
   }
 
   .mob-weapon-dice-container {
@@ -992,46 +1022,64 @@
     align-items: flex-start;
   }
 
+
   .mob-weapon-dice-formula {
     min-width: 100%;
     font-size: 9px;
   }
 
+
   .mob-weapon-roll-btn {
     font-size: 12px;
     padding: 4px 8px;
   }
-  
+
   .armor-row {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 4px;
     font-size: 8px;
   }
-  
+
   .armor-row input {
     font-size: 9px;
     padding: 4px;
+    width: 100%;
   }
-  
+
   .mob-skills-section {
     min-width: auto;
     width: 100%;
     overflow-x: auto;
   }
-  
+
   .skill-bases-input {
     font-size: 9px;
     padding: 4px;
   }
-  
+
   .mob-skill-row {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 4px;
     font-size: 8px;
   }
-  
+
   .mob-skill-row select,
   .mob-skill-row input {
     font-size: 9px;
     padding: 4px;
+    width: 100%;
   }
-  
+
+  .mob-skill-roll-btn,
+  .delete-mob-skill-btn {
+    width: 28px;
+    height: 28px;
+    font-size: 14px;
+    justify-self: end;
+  }
+
   .add-mob-skill-btn,
   .remove-mob-skill-btn {
     font-size: 12px;
