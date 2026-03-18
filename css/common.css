@@ -8,11 +8,6 @@
   padding: 0;
 }
 
-html {
-  overflow-x: hidden;
-  width: 100%;
-}
-
 body {
   background: #1a1d24;
   font-family: 'Courier New', monospace;
@@ -35,7 +30,8 @@ body {
   border-bottom: 2px solid #3d4149;
   padding: 12px 20px;
   margin: 0;
-  position: relative;
+  position: sticky;
+  top: 0;
   z-index: 1000;
   width: 100%;
   left: 0;
@@ -182,7 +178,7 @@ body {
   }
 
   .nav-btn {
-    font-size: 9px;
+    font-size: 8px;
     padding: 6px 8px;
     white-space: nowrap;
     background: #232931;
