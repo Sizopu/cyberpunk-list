@@ -1000,7 +1000,6 @@
     gap: 10px;
     padding: 10px;
     width: 100%;
-    position: fixed;
   }
 
   .nav-links {
@@ -1021,7 +1020,6 @@
 
   .cyberware-page {
     padding: 5px;
-    margin-top: 100px;
   }
   
   .cyberware-container {
