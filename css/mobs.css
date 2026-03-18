@@ -5,6 +5,7 @@
   padding: 10px;
   max-width: 2400px;
   margin: 0 auto;
+  width: 100%;
 }
 
 .mobs-container {
@@ -12,6 +13,7 @@
   grid-template-columns: 350px 1fr;
   gap: 10px;
   min-height: calc(100vh - 60px);
+  width: 100%;
 }
 
 /* Sidebar */
@@ -850,15 +852,21 @@
     flex-direction: column;
     gap: 10px;
     padding: 10px;
+    width: 100%;
   }
-  
+
   .nav-links {
     flex-wrap: wrap;
     justify-content: center;
     gap: 5px;
   }
-  
+
   .nav-link {
+    font-size: 9px;
+    padding: 6px 8px;
+  }
+
+  .nav-btn {
     font-size: 9px;
     padding: 6px 8px;
   }
@@ -970,22 +978,27 @@
     flex-direction: column;
     gap: 10px;
   }
-  
+
   .weapons-section,
   .hand-weapons-section,
   .armor-section {
-    min-width: 400px;
+    overflow-x: auto;
+    max-width: 100%;
   }
-  
+
   .section-header {
     font-size: 9px;
     padding: 6px 8px;
   }
-  
+
   .weapon-row {
+    display: grid;
+    grid-template-columns: 1fr 60px 50px 50px 30px;
+    gap: 4px;
     font-size: 8px;
+    min-width: 300px;
   }
-  
+
   .weapon-row input {
     font-size: 9px;
     padding: 4px;
