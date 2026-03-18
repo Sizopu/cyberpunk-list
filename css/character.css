@@ -3607,10 +3607,3 @@ input[type="checkbox"] {
     flex-direction: column;
   }
 }
-
-/* Extra small screens */
-@media (max-width: 350px) {
-  .sheet {
-    grid-template-columns: 1fr !important;
-  }
-}

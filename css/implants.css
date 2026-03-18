@@ -1237,11 +1237,137 @@
     font-size: 8px;
     padding: 4px 8px;
   }
+
+  /* Aliases */
+  .aliases-block .cyber-block-content {
+    padding: 8px;
+  }
+  .aliases-input {
+    font-size: 10px;
+    padding: 6px;
+  }
+
+  /* Improvement Points */
+  .imp-row {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+  .imp-inputs {
+    flex-direction: column;
+    gap: 8px;
+  }
+  .imp-input-field label {
+    font-size: 8px;
+  }
+  .imp-input-field input {
+    font-size: 10px;
+    padding: 6px;
+  }
+
+  /* Reputation */
+  .rep-content {
+    padding: 8px;
+  }
+  .rep-input-field {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+  }
+  .rep-input-field label {
+    font-size: 8px;
+    min-width: auto;
+  }
+  .rep-input-field input {
+    width: 100%;
+    font-size: 10px;
+    padding: 6px;
+  }
+  .rep-content textarea {
+    height: 50px;
+    font-size: 10px;
+    padding: 6px;
+  }
+
+  /* Lifepath */
+  .lifepath-row {
+    grid-template-columns: 1fr;
+  }
+  .lifepath-field label {
+    font-size: 8px;
+  }
+  .lifepath-field input {
+    font-size: 10px;
+    height: auto;
+    padding: 6px;
+  }
+
+  /* Housing */
+  .housing-row {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+  .money-display {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 5px;
+  }
+  .money-input {
+    width: 100%;
+    min-width: auto;
+    font-size: 14px;
+    padding: 6px;
+  }
+
+  /* Inventory table */
+  .inventory-table {
+    font-size: 8px;
+    overflow-x: auto;
+    display: block;
+  }
+  .inventory-table th,
+  .inventory-table td {
+    padding: 4px;
+  }
+  .inventory-table input {
+    font-size: 9px;
+    padding: 4px;
+  }
+  .add-row-btn {
+    width: 28px;
+    height: 28px;
+    font-size: 16px;
+  }
+  .total-item span {
+    font-size: 12px;
+  }
 }
 
-/* Extra small screens */
-@media (max-width: 350px) {
-  .cyberware-container {
-    grid-template-columns: 1fr !important;
+@media (max-width: 480px) {
+  .cyberware-page {
+    padding: 5px;
+  }
+  .cyber-block-header {
+    font-size: 9px;
+    padding: 6px 8px;
+  }
+  .imp-input-field input,
+  .rep-input-field input,
+  .rep-content textarea,
+  .aliases-input {
+    font-size: 9px;
+    padding: 5px;
+  }
+  .lifepath-field label {
+    font-size: 7px;
+  }
+  .lifepath-field input {
+    font-size: 9px;
+    padding: 5px;
+  }
+  .money-input {
+    font-size: 12px;
+  }
+  .inventory-table {
+    min-width: 300px;
   }
 }
