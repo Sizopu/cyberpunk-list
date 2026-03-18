@@ -3,7 +3,7 @@
    ======================================== */
 .mobs-page {
   padding: 10px;
-  max-width: 2400px;
+  max-width: 1400px;
   margin: 0 auto;
 }
 
@@ -181,10 +181,12 @@
   border: 1px solid #3d4149;
   border-radius: 4px;
   min-height: calc(100vh - 80px);
+  width: 100%;
 }
 
 .mob-editor {
   height: 100%;
+  width: 100%;
 }
 
 .editor-placeholder {
@@ -200,6 +202,7 @@
 /* Mob Editor Content */
 .mob-editor-content {
   padding: 15px;
+  width: 100%;
 }
 
 .mob-name-input {
@@ -846,161 +849,154 @@
    MOBILE RESPONSIVE
    ======================================== */
 @media (max-width: 768px) {
-  .top-nav {
-    flex-direction: column;
-    gap: 10px;
-    padding: 10px;
-  }
-  
-  .nav-links {
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 5px;
-  }
-  
-  .nav-link {
-    font-size: 9px;
-    padding: 6px 8px;
-  }
-  
   .mobs-page {
     padding: 5px;
+    width: 100%;
+    max-width: 100%;
   }
-  
+
   .mobs-container {
     grid-template-columns: 1fr !important;
     gap: 5px;
+    width: 100%;
   }
-  
+
   .mobs-sidebar {
     max-height: 300px;
     overflow-y: auto;
+    width: 100%;
   }
-  
+
   .mobs-header {
     padding: 8px 10px;
   }
-  
+
   .mobs-header span {
     font-size: 9px;
   }
-  
+
   .add-mob-btn {
     width: 26px;
     height: 26px;
     font-size: 16px;
   }
-  
+
   .mobs-list {
     padding: 5px;
   }
-  
+
   .mob-item {
     padding: 8px;
     margin-bottom: 5px;
   }
-  
+
   .mob-item-name {
     font-size: 9px;
   }
-  
-  .mob-item-type {
+
+  .mob-item-initiative {
     font-size: 7px;
   }
-  
+
   .mob-item-btn {
     font-size: 12px;
     padding: 4px 6px;
   }
-  
+
   .mob-content-panel {
     min-height: 400px;
+    width: 100%;
+    overflow-x: auto;
   }
-  
+
   .mob-editor-content {
     padding: 10px;
     overflow-x: auto;
+    width: 100%;
   }
-  
+
   .mob-name-input {
     font-size: 12px;
     padding: 6px;
   }
-  
+
   .mob-stats-block {
     margin-bottom: 10px;
   }
-  
+
   .stats-label {
     font-size: 9px;
     padding: 6px 8px;
   }
-  
+
   .stats-grid {
     grid-template-columns: repeat(3, 1fr);
     gap: 5px;
   }
-  
+
   .stat-field label {
     font-size: 7px;
   }
-  
+
   .stat-field input {
     font-size: 10px;
     padding: 4px;
   }
-  
+
   .mob-health-row {
     display: flex;
     flex-direction: column;
     gap: 8px;
   }
-  
+
   .health-field label {
     font-size: 8px;
   }
-  
+
   .health-field input {
     font-size: 10px;
     padding: 4px;
   }
-  
+
   .mob-combat-section {
     display: flex;
     flex-direction: column;
     gap: 10px;
   }
-  
+
   .weapons-section,
   .hand-weapons-section,
   .armor-section {
-    min-width: 400px;
+    min-width: auto;
+    width: 100%;
+    overflow-x: auto;
   }
-  
+
   .section-header {
     font-size: 9px;
     padding: 6px 8px;
   }
-  
+
   .weapon-row {
     font-size: 8px;
+    grid-template-columns: 1fr 40px 40px 40px 24px;
   }
-  
+
   .weapon-row input {
     font-size: 9px;
     padding: 4px;
   }
-  
+
   .mob-weapon-dice-container {
     flex-direction: column;
     align-items: flex-start;
   }
-  
+
   .mob-weapon-dice-formula {
-    min-width: 200px;
+    min-width: 100%;
     font-size: 9px;
   }
-  
+
   .mob-weapon-roll-btn {
     font-size: 12px;
     padding: 4px 8px;
@@ -1016,7 +1012,9 @@
   }
   
   .mob-skills-section {
-    min-width: 400px;
+    min-width: auto;
+    width: 100%;
+    overflow-x: auto;
   }
   
   .skill-bases-input {
@@ -1057,62 +1055,55 @@
 }
 
 @media (max-width: 480px) {
-  .nav-brand {
-    font-size: 12px;
-  }
-  
-  .nav-link {
-    font-size: 8px;
-    padding: 4px 6px;
-  }
-  
   .mobs-header span {
     font-size: 8px;
   }
-  
+
   .add-mob-btn {
     width: 24px;
     height: 24px;
     font-size: 14px;
   }
-  
+
   .mob-item {
     padding: 6px;
   }
-  
+
   .mob-item-name {
     font-size: 8px;
   }
-  
+
   .mob-item-type {
     font-size: 6px;
   }
-  
+
   .stats-grid {
     grid-template-columns: repeat(2, 1fr);
   }
-  
+
   .stat-field label {
     font-size: 6px;
   }
-  
+
   .stat-field input {
     font-size: 9px;
   }
-  
+
   .weapons-section,
   .hand-weapons-section,
   .armor-section {
-    min-width: 350px;
+    min-width: auto;
+    width: 100%;
   }
-  
+
   .mob-weapon-dice-formula {
-    min-width: 150px;
+    min-width: 100%;
     font-size: 8px;
   }
-  
+
   .mob-skills-section {
-    min-width: 350px;
+    min-width: auto;
+    width: 100%;
   }
   
   .mob-skill-row {

@@ -167,9 +167,9 @@ function addWeapon(id, type = 'weapon') {
   const mob = mobs.find(m => m.id === id);
   if (mob) {
     if (type === 'weapon') {
-      mob.weapons.push({ name: '', dmg: '', mag: '', rof: '', notes: '', diceFormula: '' });
+      mob.weapons.push({ name: '', dmg: '', mag: '', rof: '', notes: '', diceFormula: '', attackSlots: [] });
     } else if (type === 'hand') {
-      mob.handWeapons.push({ name: '', dmg: '', rof: '', notes: '', diceFormula: '' });
+      mob.handWeapons.push({ name: '', dmg: '', rof: '', notes: '', diceFormula: '', attackSlots: [] });
     }
     renderMobEditor();
     saveMobs();
@@ -383,7 +383,7 @@ function renderMobEditor() {
               <input type="text" class="weapon-notes" placeholder="NOTES" value="${weapon.notes}" data-id="${mob.id}" data-type="weapon" data-index="${i}">
               <div class="mob-weapon-dice-container">
                 <div class="attack-slots">
-                  ${(weapon.attackSlots || [{formula: weapon.diceFormula || '', notes: ''}]).map((slot, j) => `
+                  ${(weapon.attackSlots || []).map((slot, j) => `
                     <div class="attack-slot">
                       <input type="text" class="mob-weapon-dice-formula" placeholder="3d6 + 2d10 + 5" value="${slot.formula || ''}" data-index="${j}">
                       <button class="mob-weapon-roll-btn" type="button" title="Roll Damage">🎲</button>
@@ -415,7 +415,7 @@ function renderMobEditor() {
               <input type="text" class="weapon-notes" placeholder="NOTES" value="${weapon.notes}" data-id="${mob.id}" data-type="hand" data-index="${i}">
               <div class="mob-weapon-dice-container">
                 <div class="attack-slots">
-                  ${(weapon.attackSlots || [{formula: weapon.diceFormula || '', notes: ''}]).map((slot, j) => `
+                  ${(weapon.attackSlots || []).map((slot, j) => `
                     <div class="attack-slot">
                       <input type="text" class="mob-weapon-dice-formula" placeholder="3d6 + 2d10 + 5" value="${slot.formula || ''}" data-index="${j}">
                       <button class="mob-weapon-roll-btn" type="button" title="Roll Damage">🎲</button>
@@ -537,6 +537,9 @@ function renderMobEditor() {
   // Weapons
   const addWeaponBtns = container.querySelectorAll('.add-weapon-btn');
   addWeaponBtns.forEach(btn => {
+    if (btn._hasAddWeaponListener) return;
+    btn._hasAddWeaponListener = true;
+    
     btn.addEventListener('click', () => {
       addWeapon(mob.id, btn.dataset.type);
     });
@@ -544,6 +547,9 @@ function renderMobEditor() {
   
   const weaponInputs = container.querySelectorAll('[data-type="weapon"], [data-type="hand"]');
   weaponInputs.forEach(input => {
+    if (input._hasWeaponListener) return;
+    input._hasWeaponListener = true;
+    
     input.addEventListener('input', (e) => {
       const className = e.target.className;
       let field = '';
@@ -571,51 +577,26 @@ function renderMobEditor() {
   
   const deleteWeaponBtns = container.querySelectorAll('.delete-weapon-btn');
   deleteWeaponBtns.forEach(btn => {
+    if (btn._hasDeleteListener) return;
+    btn._hasDeleteListener = true;
+    
     btn.addEventListener('click', (e) => {
       e.stopPropagation();
       deleteWeapon(mob.id, btn.dataset.type, parseInt(btn.dataset.index));
     });
   });
 
-  // Mob weapon dice roller
-  const diceRollBtns = container.querySelectorAll('.mob-weapon-roll-btn');
-  diceRollBtns.forEach(btn => {
-    btn.addEventListener('click', (e) => {
-      e.stopPropagation();
-      const attackSlot = btn.closest('.attack-slot');
-      const formulaInput = attackSlot.querySelector('.mob-weapon-dice-formula');
-      const resultContainer = attackSlot.closest('.mob-weapon-dice-container')?.querySelector('.mob-weapon-dice-result');
-      const formula = formulaInput.value.trim();
-
-      if (formula) {
-        rollMobWeaponDice(formula, resultContainer);
-        // Save dice formula
-        const weaponNotesRow = formulaInput.closest('.weapon-notes-row');
-        const weaponRow2 = weaponNotesRow.previousElementSibling;
-        const weaponType = weaponRow2.dataset.weaponType;
-        const weaponIndex = weaponRow2.dataset.weaponIndex;
-        const attackIndex = formulaInput.dataset.index;
-        const mob = mobs.find(m => m.id === selectedMobId);
-        if (mob) {
-          const weapons = weaponType === 'weapon' ? mob.weapons : mob.handWeapons;
-          if (weapons[weaponIndex] && weapons[weaponIndex].attackSlots[attackIndex]) {
-            weapons[weaponIndex].attackSlots[attackIndex].formula = formula;
-            saveMobs();
-          }
-        }
-      } else {
-        showDiceNotification('Введите формулу (например: 3d6 + 5)', 'warning');
-      }
-    });
-  });
-
   // Add attack button
   const addAttackBtns = container.querySelectorAll('.add-attack-btn');
   addAttackBtns.forEach(btn => {
+    if (btn._hasAddListener) return;
+    btn._hasAddListener = true;
+
     btn.addEventListener('click', (e) => {
       e.stopPropagation();
       const weaponNotesRow = btn.closest('.weapon-notes-row');
-      const weaponRow = weaponNotesRow.previousElementSibling;
+      const weaponRow = weaponNotesRow?.previousElementSibling;
+      if (!weaponRow) return;
       const weaponType = weaponRow.dataset.weaponType;
       const weaponIndex = weaponRow.dataset.weaponIndex;
       const mob = mobs.find(m => m.id === selectedMobId);
@@ -623,7 +604,7 @@ function renderMobEditor() {
         const weapons = weaponType === 'weapon' ? mob.weapons : mob.handWeapons;
         if (weapons[weaponIndex]) {
           if (!weapons[weaponIndex].attackSlots) {
-            weapons[weaponIndex].attackSlots = [{formula: weapons[weaponIndex].diceFormula || '', notes: ''}];
+            weapons[weaponIndex].attackSlots = [];
           }
           weapons[weaponIndex].attackSlots.push({formula: '', notes: ''});
           saveMobs();
@@ -636,12 +617,16 @@ function renderMobEditor() {
   // Remove attack button
   const removeAttackBtns = container.querySelectorAll('.remove-attack-btn');
   removeAttackBtns.forEach(btn => {
+    if (btn._hasRemoveListener) return;
+    btn._hasRemoveListener = true;
+    
     btn.addEventListener('click', (e) => {
       e.stopPropagation();
       const attackSlot = btn.closest('.attack-slot');
       const attackIndex = parseInt(attackSlot.querySelector('.mob-weapon-dice-formula').dataset.index);
       const weaponNotesRow = btn.closest('.weapon-notes-row');
-      const weaponRow = weaponNotesRow.previousElementSibling;
+      const weaponRow = weaponNotesRow?.previousElementSibling;
+      if (!weaponRow) return;
       const weaponType = weaponRow.dataset.weaponType;
       const weaponIndex = weaponRow.dataset.weaponIndex;
       const mob = mobs.find(m => m.id === selectedMobId);
@@ -664,11 +649,15 @@ function renderMobEditor() {
   // Save dice formula on input
   const diceFormulaInputs = container.querySelectorAll('.mob-weapon-dice-formula');
   diceFormulaInputs.forEach(input => {
+    if (input._hasFormulaListener) return;
+    input._hasFormulaListener = true;
+    
     input.addEventListener('input', (e) => {
       const attackSlot = input.closest('.attack-slot');
       const attackIndex = parseInt(input.dataset.index);
       const weaponNotesRow = input.closest('.weapon-notes-row');
-      const weaponRow = weaponNotesRow.previousElementSibling;
+      const weaponRow = weaponNotesRow?.previousElementSibling;
+      if (!weaponRow) return;
       const weaponType = weaponRow.dataset.weaponType;
       const weaponIndex = weaponRow.dataset.weaponIndex;
       const mob = mobs.find(m => m.id === selectedMobId);
@@ -685,11 +674,15 @@ function renderMobEditor() {
   // Save attack notes on input
   const attackNotesInputs = container.querySelectorAll('.mob-attack-notes');
   attackNotesInputs.forEach(input => {
+    if (input._hasNotesListener) return;
+    input._hasNotesListener = true;
+    
     input.addEventListener('input', (e) => {
       const attackSlot = input.closest('.attack-slot');
       const attackIndex = parseInt(input.dataset.index);
       const weaponNotesRow = input.closest('.weapon-notes-row');
-      const weaponRow = weaponNotesRow.previousElementSibling;
+      const weaponRow = weaponNotesRow?.previousElementSibling;
+      if (!weaponRow) return;
       const weaponType = weaponRow.dataset.weaponType;
       const weaponIndex = weaponRow.dataset.weaponIndex;
       const mob = mobs.find(m => m.id === selectedMobId);
@@ -820,6 +813,11 @@ function renderMobEditor() {
   cyberwareInput.addEventListener('input', (e) => {
     updateMob(mob.id, 'cyberware', e.target.value);
   });
+
+  // Setup mob weapon dice listeners - в конце после всех обработчиков
+  if (typeof setupMobWeaponDiceListeners === 'function') {
+    setupMobWeaponDiceListeners(container);
+  }
 }
 
 // Add mob skill
@@ -841,6 +839,21 @@ function loadMobs() {
   if (!saved) return;
 
   mobs = JSON.parse(saved);
+
+  // Migrate old mobs without attackSlots
+  mobs.forEach(mob => {
+    mob.weapons.forEach(weapon => {
+      if (!weapon.attackSlots) {
+        weapon.attackSlots = weapon.diceFormula ? [{ formula: weapon.diceFormula, notes: '' }] : [{ formula: '', notes: '' }];
+      }
+    });
+    mob.handWeapons.forEach(weapon => {
+      if (!weapon.attackSlots) {
+        weapon.attackSlots = weapon.diceFormula ? [{ formula: weapon.diceFormula, notes: '' }] : [{ formula: '', notes: '' }];
+      }
+    });
+  });
+  saveMobs();
 }
 
 // ==================== SAVE/LOAD FUNCTIONS ====================

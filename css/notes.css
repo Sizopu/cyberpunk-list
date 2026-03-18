@@ -2,7 +2,8 @@
    NOTES PAGE STYLES
    =========================== */
 .notes-page {
-  max-width: 1400px;
+  width: 100%;
+  max-width: 100%;
   margin: 0 auto;
   padding: 10px;
 }
@@ -11,6 +12,7 @@
   display: grid;
   grid-template-columns: 300px 1fr;
   gap: 10px;
+  width: 100%;
 }
 
 /* Left Panel - Notes List */
@@ -398,59 +400,48 @@
    MOBILE RESPONSIVE
    ======================================== */
 @media (max-width: 768px) {
-  .top-nav {
-    flex-direction: column;
-    gap: 10px;
-    padding: 10px;
-  }
-  
-  .nav-links {
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 5px;
-  }
-  
-  .nav-link {
-    font-size: 9px;
-    padding: 6px 8px;
-  }
-  
   .notes-page {
     padding: 5px;
+    width: 100%;
+    max-width: 100%;
   }
-  
+
   .notes-container {
     grid-template-columns: 1fr !important;
     gap: 5px;
+    width: 100%;
   }
-  
+
   .notes-sidebar {
     max-height: 250px;
     overflow-y: auto;
+    width: 100%;
   }
-  
+
   .notes-header {
     padding: 8px 10px;
   }
-  
+
   .notes-header span {
     font-size: 9px;
   }
-  
+
   .add-note-btn {
     width: 26px;
     height: 26px;
     font-size: 16px;
   }
-  
+
   .notes-content-panel {
     min-height: 400px;
+    width: 100%;
   }
-  
+
   .note-editor-content {
     padding: 10px;
+    width: 100%;
   }
-  
+
   .note-title-input {
     font-size: 12px;
     padding: 6px;

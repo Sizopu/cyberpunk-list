@@ -303,133 +303,116 @@
    MOBILE RESPONSIVE
    ======================================== */
 @media (max-width: 768px) {
-  .top-nav {
-    flex-direction: column;
-    gap: 10px;
-    padding: 10px;
-  }
-  
-  .nav-links {
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 5px;
-  }
-  
-  .nav-link {
-    font-size: 9px;
-    padding: 6px 8px;
-  }
-  
-  .nav-btn {
-    font-size: 9px;
-    padding: 6px 10px;
-  }
-  
   .characters-page {
     padding: 5px;
+    width: 100%;
+    max-width: 100%;
   }
-  
+
   .characters-container {
     grid-template-columns: 1fr !important;
     gap: 5px;
+    width: 100%;
   }
-  
+
   .characters-sidebar {
     max-height: 300px;
     overflow-y: auto;
+    width: 100%;
   }
-  
+
   .characters-header {
     padding: 8px 10px;
   }
-  
+
   .characters-header span {
     font-size: 9px;
   }
-  
+
   .add-character-btn {
     width: 26px;
     height: 26px;
     font-size: 16px;
   }
-  
+
   .characters-list {
     padding: 5px;
   }
-  
+
   .character-item {
     padding: 8px;
     margin-bottom: 5px;
   }
-  
+
   .character-item-name {
     font-size: 9px;
   }
-  
+
   .character-item-desc {
     font-size: 7px;
   }
-  
+
   .character-item-date {
     font-size: 6px;
   }
-  
+
   .character-item-btn {
     font-size: 12px;
     padding: 4px 6px;
   }
-  
+
   .character-details-panel {
     min-height: 400px;
+    width: 100%;
   }
-  
+
   .character-detail-section {
     padding: 10px;
   }
-  
+
   .character-detail-section h3 {
     font-size: 10px;
     padding: 6px 8px;
   }
-  
+
   .detail-grid {
     grid-template-columns: repeat(2, 1fr);
     gap: 8px;
   }
-  
+
   .detail-item-label {
     font-size: 8px;
   }
-  
+
   .detail-item-value {
     font-size: 10px;
   }
-  
+
   .stats-summary {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     gap: 5px;
   }
-  
+
   .stat-summary-item {
     padding: 5px;
   }
-  
+
   .stat-label {
     font-size: 7px;
   }
-  
+
   .stat-value {
     font-size: 11px;
   }
-  
+
   .character-actions {
     display: flex;
     flex-direction: column;
     gap: 8px;
     padding: 10px;
   }
-  
+
   .action-btn {
     width: 100%;
     padding: 10px;
@@ -438,57 +421,48 @@
 }
 
 @media (max-width: 480px) {
-  .nav-brand {
-    font-size: 12px;
-  }
-  
-  .nav-link {
-    font-size: 8px;
-    padding: 4px 6px;
-  }
-  
   .characters-header span {
     font-size: 8px;
   }
-  
+
   .add-character-btn {
     width: 24px;
     height: 24px;
     font-size: 14px;
   }
-  
+
   .character-item {
     padding: 6px;
   }
-  
+
   .character-item-name {
     font-size: 8px;
   }
-  
+
   .character-item-desc {
     font-size: 6px;
   }
-  
+
   .character-item-date {
     font-size: 5px;
   }
-  
+
   .detail-grid {
     grid-template-columns: 1fr;
   }
-  
+
   .stats-summary {
     grid-template-columns: repeat(2, 1fr);
   }
-  
+
   .stat-label {
     font-size: 6px;
   }
-  
+
   .stat-value {
     font-size: 10px;
   }
-  
+
   .action-btn {
     font-size: 8px;
     padding: 8px;

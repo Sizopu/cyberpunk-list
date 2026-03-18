@@ -8,9 +8,10 @@
 
 .sheet {
   display: grid;
-  grid-template-columns: 360px 580px 1fr;
+  grid-template-columns: repeat(3, 1fr);
   gap: 10px;
-  max-width: 2400px;
+  width: 100%;
+  max-width: 100%;
   margin: 10px auto;
   padding: 0 10px;
 }
@@ -3373,37 +3374,24 @@ input[type="checkbox"] {
    MOBILE RESPONSIVE
    ======================================== */
 @media (max-width: 768px) {
-  .top-nav {
-    flex-direction: column;
-    gap: 10px;
-    padding: 10px;
-  }
-  
-  .nav-links {
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 5px;
-  }
-  
-  .nav-link {
-    font-size: 9px;
-    padding: 6px 8px;
-  }
-  
   .sheet {
     grid-template-columns: 1fr !important;
     padding: 5px;
     gap: 10px;
+    width: 100%;
+    max-width: 100%;
   }
-  
+
   .left-column,
   .middle-column,
   .right-column {
-    width: 100% !important;
+    width: 100%;
+    max-width: 100%;
   }
-  
+
   .block {
     margin-bottom: 10px;
+    width: 100%;
   }
   
   .block-header {
@@ -3434,7 +3422,7 @@ input[type="checkbox"] {
     font-size: 8px;
     overflow-x: auto;
     display: block;
-    min-width: 400px;
+    min-width: 300px;
   }
   
   .skill-table th,
@@ -3448,49 +3436,50 @@ input[type="checkbox"] {
   .weapons-content {
     overflow-x: auto;
   }
-  
+
   .weapon-row {
-    min-width: 600px;
+    min-width: 450px;
   }
-  
+
   /* ID block */
   .id-content {
     flex-direction: column;
     gap: 10px;
+    padding: 10px;
   }
-  
+
   .fingerprint-area {
     width: 100%;
     display: flex;
     justify-content: center;
   }
-  
+
   .id-fields {
     width: 100%;
   }
-  
+
   .id-row {
     flex-direction: column;
     gap: 5px;
   }
-  
+
   .id-row label {
     min-width: 100%;
     font-size: 8px;
   }
-  
+
   .id-row input {
     font-size: 10px;
     padding: 4px;
   }
-  
+
   /* Armor */
   .armor-content {
     overflow-x: auto;
   }
-  
+
   .armor-section {
-    min-width: 400px;
+    min-width: 300px;
     margin-bottom: 10px;
   }
   
@@ -3566,66 +3555,63 @@ input[type="checkbox"] {
 }
 
 @media (max-width: 480px) {
-  .nav-brand {
-    font-size: 12px;
-  }
-  
-  .nav-link {
-    font-size: 8px;
-    padding: 4px 6px;
-  }
-  
   .block-header {
     font-size: 8px;
     padding: 6px 8px;
   }
-  
+
   .stat-row label {
     min-width: 30px;
     font-size: 7px;
   }
-  
+
   input[type="text"],
   input[type="number"] {
     font-size: 9px;
     padding: 4px;
   }
-  
+
   /* Skills - stack vertically */
   .skills-content {
     grid-template-columns: 1fr !important;
   }
-  
+
   .skill-group {
     margin-bottom: 15px;
   }
-  
+
   .skill-table {
-    min-width: 350px;
+    min-width: 250px;
   }
-  
+
   .specialised-skills-table {
-    min-width: 350px;
+    min-width: 250px;
   }
-  
+
   /* Weapons */
   .weapon-row {
-    min-width: 500px;
+    min-width: 350px;
   }
-  
+
   /* Armor */
   .armor-section {
-    min-width: 350px;
+    min-width: 280px;
   }
   
   /* Stats in 1 column */
   .stats-vertical {
     grid-template-columns: 1fr;
   }
-  
+
   /* Health row in 1 column */
   .health-row {
     flex-direction: column;
   }
 }
 
+/* Extra small screens */
+@media (max-width: 350px) {
+  .sheet {
+    grid-template-columns: 1fr !important;
+  }
+}

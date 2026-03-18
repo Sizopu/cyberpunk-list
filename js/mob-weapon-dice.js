@@ -1,5 +1,5 @@
 // Mob Weapon Dice Roller - бросок кубиков для оружия мобов
-// Поддерживает формат: 3d6 + 2d10 + 5
+// Копия механизма из weapon-dice.js
 
 // Парсинг формулы кубиков
 function parseMobDiceFormula(formula) {
@@ -55,7 +55,7 @@ function parseMobDiceFormula(formula) {
 }
 
 // Бросок кубиков по формуле
-function rollMobWeaponDice(formula, resultContainer) {
+function rollMobWeaponDice(formula, weaponRow, attackSlot) {
   const parsed = parseMobDiceFormula(formula);
 
   if (parsed.error) {
@@ -88,7 +88,8 @@ function rollMobWeaponDice(formula, resultContainer) {
         type: `${part.count}d${part.sides}`,
         rolls: diceRolls,
         sum: diceSum,
-        sign: sign
+        sign: sign,
+        sides: part.sides
       });
 
       detailString += ` ${signChar} ${diceRolls.join('+')}[${diceSum}]`;
@@ -104,11 +105,25 @@ function rollMobWeaponDice(formula, resultContainer) {
     detailString = detailString.substring(3);
   }
 
-  showMobWeaponDiceResult(rolls, total, detailString, resultContainer);
+  showMobWeaponDiceResult(rolls, total, detailString, weaponRow, attackSlot);
 }
 
 // Показ результата броска
-function showMobWeaponDiceResult(rolls, total, detailString, resultContainer) {
+function showMobWeaponDiceResult(rolls, total, detailString, weaponRow, attackSlot) {
+  // Находим или создаём контейнер для результата
+  let resultContainer;
+
+  if (attackSlot) {
+    // Ищем результат после этого attackSlot
+    const diceContainer = attackSlot.closest('.mob-weapon-dice-container');
+    resultContainer = diceContainer.querySelector('.mob-weapon-dice-result');
+    if (!resultContainer) {
+      resultContainer = document.createElement('div');
+      resultContainer.className = 'mob-weapon-dice-result';
+      diceContainer.appendChild(resultContainer);
+    }
+  }
+
   if (!resultContainer) return;
 
   let rollsHtml = '';
@@ -155,26 +170,51 @@ function showMobWeaponDiceResult(rolls, total, detailString, resultContainer) {
   }, 10);
 }
 
-// Уведомления
-function showDiceNotification(message, type = 'info') {
-  let notification = document.querySelector('.dice-notification');
+// Настройка слушателей для оружия мобов - вызывается после рендеринга
+function setupMobWeaponDiceListeners(container) {
+  // Настройка кнопок броска - без клонирования!
+  const rollBtns = container.querySelectorAll('.mob-weapon-roll-btn');
+  rollBtns.forEach(btn => {
+    // Проверяем, есть ли уже обработчик (чтобы не дублировать)
+    if (btn._hasRollListener) return;
+    btn._hasRollListener = true;
 
-  if (!notification) {
-    notification = document.createElement('div');
-    notification.className = 'dice-notification';
-    document.body.appendChild(notification);
-  }
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const attackSlot = btn.closest('.attack-slot');
+      const weaponRow = attackSlot.closest('.weapon-row');
+      const formulaInput = attackSlot.querySelector('.mob-weapon-dice-formula');
+      const formula = formulaInput.value.trim();
+      if (formula) {
+        rollMobWeaponDice(formula, weaponRow, attackSlot);
+      } else {
+        showDiceNotification('Введите формулу (например: 3d6 + 5)', 'warning');
+      }
+    });
+  });
 
-  notification.textContent = message;
-  notification.className = `dice-notification ${type}`;
-  notification.style.display = 'block';
+  // Поддержка Enter для броска
+  const formulaInputs = container.querySelectorAll('.mob-weapon-dice-formula');
+  formulaInputs.forEach(input => {
+    if (input._hasEnterListener) return;
+    input._hasEnterListener = true;
 
-  setTimeout(() => {
-    notification.style.display = 'none';
-  }, 3000);
+    input.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        const attackSlot = input.closest('.attack-slot');
+        const weaponRow = attackSlot.closest('.weapon-row');
+        const formula = input.value.trim();
+        if (formula) {
+          rollMobWeaponDice(formula, weaponRow, attackSlot);
+        }
+      }
+    });
+  });
 }
 
-// Экспорт функций
-window.rollMobWeaponDice = rollMobWeaponDice;
-window.parseMobDiceFormula = parseMobDiceFormula;
-window.showDiceNotification = showDiceNotification;
+// Уведомления
+function showDiceNotification(message, type = 'info') {
+  // Простая реализация через console для мобов
+  console.log(`[${type}] ${message}`);
+}

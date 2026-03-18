@@ -139,8 +139,8 @@ function performMobSkillRoll(baseValue, skillName, seriouslyWounded = false) {
 
   // Ensure baseValue is a number
   const base = parseInt(baseValue) || 0;
-  const swModifier = seriouslyWounded ? -2 : 0;
-  const swText = seriouslyWounded ? ' (SW -2)' : '';
+  const swModifier = seriouslyWounded ? -1 : 0;
+  const swText = seriouslyWounded ? ' (SW -1)' : '';
 
   dialogOverlay.classList.add("active");
   diceOptions.style.display = "none";

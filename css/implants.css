@@ -2,14 +2,15 @@
    CYBERWARE PAGE STYLES
    =========================== */
 .cyberware-page {
-  max-width: 2400px;
+  width: 100%;
+  max-width: 100%;
   margin: 0 auto;
   padding: 10px;
 }
 
 .cyberware-container {
   display: grid;
-  grid-template-columns: 450px 500px 1fr;
+  grid-template-columns: repeat(3, 1fr);
   gap: 10px;
 }
 
@@ -995,55 +996,42 @@
    MOBILE RESPONSIVE
    ======================================== */
 @media (max-width: 768px) {
-  .top-nav {
-    flex-direction: column;
-    gap: 10px;
-    padding: 10px;
-  }
-  
-  .nav-links {
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 5px;
-  }
-  
-  .nav-link {
-    font-size: 9px;
-    padding: 6px 8px;
-  }
-  
   .cyberware-page {
     padding: 5px;
+    width: 100%;
+    max-width: 100%;
   }
-  
+
   .cyberware-container {
     grid-template-columns: 1fr !important;
     gap: 5px;
+    width: 100%;
   }
-  
+
   .left-panel,
   .right-panel {
     width: 100%;
+    max-width: 100%;
   }
-  
+
   .cyber-header {
     padding: 8px 10px;
   }
-  
+
   .cyber-header span {
     font-size: 9px;
   }
-  
+
   .add-cyber-btn {
     width: 26px;
     height: 26px;
     font-size: 16px;
   }
-  
+
   .cyber-block {
     margin-bottom: 8px;
   }
-  
+
   .cyber-block-header {
     font-size: 9px;
     padding: 6px 8px;
@@ -1249,5 +1237,12 @@
   .load-data-btn {
     font-size: 8px;
     padding: 4px 8px;
+  }
+}
+
+/* Extra small screens */
+@media (max-width: 350px) {
+  .cyberware-container {
+    grid-template-columns: 1fr !important;
   }
 }
